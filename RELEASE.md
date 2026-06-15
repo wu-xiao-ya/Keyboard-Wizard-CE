@@ -4,8 +4,8 @@
 - Target: `Minecraft 26.1.2` + `NeoForge 26.1.2.76`
 - Java: `25`
 - Build command: `.\gradlew.bat assemble`
-- Release jar: `build/libs/mkw-2.1.0-neoforge.26.1.2.jar`
-- Source jar: `build/libs/mkw-2.1.0-neoforge.26.1.2-sources.jar`
+- Release jar: `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0.jar`
+- Source jar: `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0-sources.jar`
 
 Before publishing:
 

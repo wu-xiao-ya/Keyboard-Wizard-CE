@@ -25,6 +25,6 @@ $env:NEOFORGE_LOCAL_MAVEN='<path-to-local-neoforge-cache>'
 .\gradlew.bat assemble --offline
 ```
 
-The release jar is written to `build/libs/mkw-2.1.0-neoforge.26.1.2.jar`; the matching source jar is `build/libs/mkw-2.1.0-neoforge.26.1.2-sources.jar`.
+The release jar is written to `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0-sources.jar`.
 
 When distributing a release jar, provide the corresponding source for that jar together with the binary.
