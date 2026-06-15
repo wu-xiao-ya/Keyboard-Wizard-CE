@@ -37,6 +37,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: 按键精灵社区版（Keyboard Wizard CE） NeoForge 1.21.1 ${{ github.ref_name }}
+          target_commitish: ${{ github.sha }}
           files: |
             build/libs/*.jar
             build/release/*.zip
