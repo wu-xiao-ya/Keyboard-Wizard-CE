@@ -1,6 +1,6 @@
-# Modern KeyWizard CE
+# 按键精灵社区版（Keyboard Wizard CE）
 
-This branch is the Community Edition / unofficial port of Modern KeyWizard for Minecraft 1.20.1 + Forge.
+This branch is the Community Edition / unofficial port of Modern KeyWizard, published as 按键精灵社区版（Keyboard Wizard CE） for Minecraft 1.20.1 + Forge.
 
 - Branch: `ce/forge-1.20.1`
 - Upstream license: AGPL-3.0-only

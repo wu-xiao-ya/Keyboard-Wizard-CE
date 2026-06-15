@@ -37,7 +37,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     @SuppressWarnings("resource")
     public KeyWizardScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.literal(ModernKeyWizard.MODID));
+        super(parent, Minecraft.getInstance().options, Component.translatable("screen.mkw.title"));
     }
 
     @Override

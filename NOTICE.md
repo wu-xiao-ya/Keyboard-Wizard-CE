@@ -1,5 +1,6 @@
 # Notice
 
+- Distribution name: 按键精灵社区版（Keyboard Wizard CE）.
 - Original author: the upstream Modern KeyWizard / Keyboard Wizard authors.
 - CE maintenance: community-maintained Forge 1.20.1 port on branch `ce/forge-1.20.1`.
 - Modification target: Minecraft 1.20.1 + Forge.
