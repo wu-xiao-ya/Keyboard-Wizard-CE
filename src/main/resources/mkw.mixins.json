@@ -4,10 +4,7 @@
   "package": "committee.nova.mkw.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
-  "client": [
-    "AccessorKeyMapping",
-    "MixinControlsOptionsScreen"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }

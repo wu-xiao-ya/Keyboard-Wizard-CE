@@ -1,7 +1,6 @@
 package committee.nova.mkw.util;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import committee.nova.mkw.mixin.AccessorKeyMapping;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.extensions.IKeyMappingExtension;
@@ -23,7 +22,9 @@ public class KeyBindingUtil {
     public static final String DYNAMIC_CATEGORY_NONE = "key.categories.mkw.no_modifier";
 
     public static ArrayList<String> getCategories() {
-        return AccessorKeyMapping.mkw$getCategorySortOrder().keySet().stream()
+        return java.util.Arrays.stream(Minecraft.getInstance().options.keyMappings)
+                .map(KeyMapping::getCategory)
+                .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -49,7 +50,7 @@ public class KeyBindingUtil {
     }
 
     public static InputConstants.Key getKey(KeyMapping keyMapping) {
-        return ((AccessorKeyMapping) keyMapping).mkw$getKey();
+        return keyMapping.getKey();
     }
 
     public static KeyModifier getModifier(KeyMapping keyMapping) {
