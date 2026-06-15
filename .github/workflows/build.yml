@@ -30,8 +30,15 @@ jobs:
       - name: Build
         run: ./gradlew build --warning-mode all
 
+      - name: Generate checksums
+        run: |
+          cd build/libs
+          sha256sum *.jar > SHA256SUMS.txt
+
       - name: Upload jars
         uses: actions/upload-artifact@v4
         with:
           name: keyboard-wizard-ce-forge-1.20.1
-          path: build/libs/*.jar
+          path: |
+            build/libs/*.jar
+            build/libs/SHA256SUMS.txt
