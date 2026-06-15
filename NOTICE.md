@@ -1,6 +1,6 @@
 # NOTICE
 
-Modern KeyWizard CE is an unofficial Community Edition port of Modern KeyWizard.
+按键精灵社区版（Keyboard Wizard CE） is an unofficial Community Edition port of Modern KeyWizard.
 
 - Original author: MrNerdy42, Tapio
 - CE maintenance: Community Edition maintainers for `ce/neoforge-26.1.2`

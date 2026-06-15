@@ -1,6 +1,6 @@
-# Modern KeyWizard CE
+# 按键精灵社区版（Keyboard Wizard CE）
 
-Modern KeyWizard Community Edition / unofficial port for `Minecraft 26.1.2` on `NeoForge 26.1.2.76`.
+Modern KeyWizard Community Edition / unofficial port, published as 按键精灵社区版（Keyboard Wizard CE）, for `Minecraft 26.1.2` on `NeoForge 26.1.2.76`.
 
 - Branch: `ce/neoforge-26.1.2`
 - Java: `25`
