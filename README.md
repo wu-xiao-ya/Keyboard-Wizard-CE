@@ -27,4 +27,6 @@ $env:NEOFORGE_LOCAL_MAVEN='<path-to-local-neoforge-cache>'
 
 The release jar is written to `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0-sources.jar`.
 
+See `CHANGELOG.md` for the CE port change summary.
+
 When distributing a release jar, provide the corresponding source for that jar together with the binary.

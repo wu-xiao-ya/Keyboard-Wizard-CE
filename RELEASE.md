@@ -7,6 +7,7 @@
 - Release jar: `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0.jar`
 - Source jar: `build/libs/keyboard-wizard-ce-neoforge-26.1.2-2.1.0-sources.jar`
 - Checksum file: `build/libs/SHA256SUMS.txt`
+- Changelog: `CHANGELOG.md`
 
 Before publishing:
 

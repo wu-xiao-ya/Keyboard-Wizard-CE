@@ -1,0 +1,10 @@
+# Changelog
+
+## 2.1.0 CE - 2026-06-15
+
+- Ported 按键精灵社区版（Keyboard Wizard CE） to Minecraft 26.1.2 + NeoForge 26.1.2.76.
+- Migrated GUI rendering, input events, key mapping access, and resource identifiers to the 26.1.2 API shape.
+- Added NeoForge mod metadata and kept the original `mkw` mod id for compatibility.
+- Added AGPL license files, CE notice, release checklist, and GitHub Actions build workflow.
+- Bundled README, NOTICE, COPYING, and LICENSE files into the release jar.
+- Published release artifacts as `keyboard-wizard-ce-neoforge-26.1.2-2.1.0`.
