@@ -8,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -20,10 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyWizardScreen extends OptionsSubScreen {
-    private static final WidgetSprites SCREEN_TOGGLE_SPRITES = new WidgetSprites(
-            ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
-            ModernKeyWizard.SCREEN_TOGGLE_WIDGETS
-    );
+    private static final Component SCREEN_TOGGLE_LABEL = Component.literal("<>");
 
     private final int[] mouseCodes = {
             GLFW.GLFW_MOUSE_BUTTON_1,
@@ -72,12 +67,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.keyboard = KeyboardWidgetBuilder.standardKeyboard(this, bindingListWidth + 15, this.height / 2.0F - 90.0F, this.width - (bindingListWidth + 15), 180);
         this.categorySelector = new CategorySelectorWidget(this, bindingListWidth + 15, 5, maxCategoryWidth + 20, 20);
 
-        ImageButton screenToggleButton = new ImageButton(
-                this.width - 22,
-                this.height - 22,
-                20,
-                20,
-                SCREEN_TOGGLE_SPRITES,
+        Button screenToggleButton = createScreenToggleButton(
+                this.width - 24,
+                this.height - 24,
                 btn -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
         );
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
@@ -146,6 +138,12 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     @Override
     protected void addOptions() {
+    }
+
+    public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
+        return Button.builder(SCREEN_TOGGLE_LABEL, onPress)
+                .bounds(x, y, 22, 20)
+                .build();
     }
 
     @Override

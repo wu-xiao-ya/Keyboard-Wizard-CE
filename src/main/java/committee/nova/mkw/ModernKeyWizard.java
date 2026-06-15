@@ -4,10 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import committee.nova.mkw.gui.KeyWizardScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -23,8 +20,6 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard {
     public static final String MODID = "mkw";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
-    private static final WidgetSprites SCREEN_TOGGLE_SPRITES = new WidgetSprites(SCREEN_TOGGLE_WIDGETS, SCREEN_TOGGLE_WIDGETS);
 
     private static final KeyMapping KEY_OPEN_KEY_WIZARD = new KeyMapping(
             "key." + MODID + ".openKeyWizard",
@@ -51,23 +46,17 @@ public class ModernKeyWizard {
         public static void onClientTick(ClientTickEvent.Post event) {
             Minecraft client = Minecraft.getInstance();
             while (KEY_OPEN_KEY_WIZARD.consumeClick()) {
-                client.setScreen(new KeyWizardScreen(client.screen));
+                client.setScreen(new KeyWizardScreen(null));
             }
         }
 
         @SubscribeEvent
         public static void onScreenInit(ScreenEvent.Init.Post event) {
             if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
-            event.addListener(new ImageButton(
-                    controlsScreen.width - 22,
-                    controlsScreen.height - 22,
-                    20,
-                    20,
-                    SCREEN_TOGGLE_SPRITES,
-                    btn -> {
-                        Minecraft client = Minecraft.getInstance();
-                        client.setScreen(new KeyWizardScreen(controlsScreen));
-                    }
+            event.addListener(KeyWizardScreen.createScreenToggleButton(
+                    controlsScreen.width - 24,
+                    controlsScreen.height - 24,
+                    btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))
             ));
         }
     }
