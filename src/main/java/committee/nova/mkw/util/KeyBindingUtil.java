@@ -1,11 +1,11 @@
 package committee.nova.mkw.util;
 
-import committee.nova.mkb.ModernKeyBinding;
-import committee.nova.mkw.mixin.AccessorKeyBinding;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.InputUtil.Key;
+import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.mixin.AccessorKeyMapping;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.client.extensions.IKeyMappingExtension;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,17 +22,17 @@ public class KeyBindingUtil {
     public static final String DYNAMIC_CATEGORY_SHIFT = "key.categories.mkw.shift";
     public static final String DYNAMIC_CATEGORY_NONE = "key.categories.mkw.no_modifier";
 
-    /**
-     * Get a list of all binding categories
-     */
     public static ArrayList<String> getCategories() {
-        return AccessorKeyBinding.getKeyCategories().stream().sorted().collect(Collectors.toCollection(ArrayList<String>::new));
+        return AccessorKeyMapping.mkw$getCategorySortOrder().stream()
+                .map(category -> category.label().getString())
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static ArrayList<String> getCategoriesWithDynamics() {
         ArrayList<String> categories = getCategories();
         categories.add(0, DYNAMIC_CATEGORY_UNBOUND);
-        if (!ModernKeyBinding.nonConflictKeys()) categories.add(0, DYNAMIC_CATEGORY_CONFLICTS);
+        categories.add(0, DYNAMIC_CATEGORY_CONFLICTS);
         categories.add(0, DYNAMIC_CATEGORY_ALL);
         categories.add(DYNAMIC_CATEGORY_CTRL);
         categories.add(DYNAMIC_CATEGORY_ALT);
@@ -41,12 +41,27 @@ public class KeyBindingUtil {
         return categories;
     }
 
-    @SuppressWarnings("resource")
-    public static Map<Key, Integer> getBindingCountsByKey() {
-        HashMap<InputUtil.Key, Integer> map = new HashMap<>();
-        for (KeyBinding b : MinecraftClient.getInstance().options.allKeys) {
-            map.merge(((AccessorKeyBinding) b).getBoundKey(), 1, Integer::sum);
+    public static Map<InputConstants.Key, Integer> getBindingCountsByKey() {
+        HashMap<InputConstants.Key, Integer> map = new HashMap<>();
+        for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
+            map.merge(getKey(b), 1, Integer::sum);
         }
         return Collections.unmodifiableMap(map);
+    }
+
+    public static InputConstants.Key getKey(KeyMapping keyMapping) {
+        return ((AccessorKeyMapping) keyMapping).mkw$getKey();
+    }
+
+    public static KeyModifier getModifier(KeyMapping keyMapping) {
+        return ((IKeyMappingExtension) keyMapping).getKeyModifier();
+    }
+
+    public static void setModifierAndKey(KeyMapping keyMapping, KeyModifier modifier, InputConstants.Key key) {
+        ((IKeyMappingExtension) keyMapping).setKeyModifierAndCode(modifier, key);
+    }
+
+    public static void resetToDefault(KeyMapping keyMapping) {
+        ((IKeyMappingExtension) keyMapping).setToDefault();
     }
 }

@@ -1,36 +1,38 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.KeyBindingUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 
-public class CategorySelectorWidget extends PressableWidget implements TickableElement {
+public class CategorySelectorWidget extends AbstractButton implements TickableElement {
     public KeyWizardScreen keyWizardScreen;
     public boolean extended = false;
 
     public BindingCategoryListWidget categoryList;
 
     public CategorySelectorWidget(KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
-        super(x, y, width, height, Text.of(""));
+        super(x, y, width, height, Component.empty());
         this.keyWizardScreen = keyWizardScreen;
-        MinecraftClient c = MinecraftClient.getInstance();
-        int listItemHeight = c.textRenderer.fontHeight + 7;
+        Minecraft minecraft = Minecraft.getInstance();
+        int listItemHeight = minecraft.font.lineHeight + 7;
         int listHeight = KeyBindingUtil.getCategoriesWithDynamics().size() * listItemHeight + 10;
         int listBottom = this.getY() + this.height + listHeight;
         if (listBottom > this.keyWizardScreen.height) {
             listHeight = this.keyWizardScreen.height - this.getY() - this.height - 10;
         }
-        this.categoryList = new BindingCategoryListWidget(c, this.getY() + this.height, this.getX(), this.width, listHeight, listItemHeight);
-
+        this.categoryList = new BindingCategoryListWidget(minecraft, this.getY() + this.height, this.getX(), this.width, listHeight, listItemHeight);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        boolean listClicked = this.categoryList.mouseClicked(mouseX, mouseY, button);
-        boolean thisClicked = super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        boolean listClicked = this.categoryList.mouseClicked(event, doubleClick);
+        boolean thisClicked = super.mouseClicked(event, doubleClick);
         if (!(listClicked || thisClicked)) {
             this.extended = false;
         }
@@ -38,48 +40,49 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-
+    protected void updateWidgetNarration(NarrationElementOutput output) {
+        output.add(NarratedElementType.TITLE, this.getMessage());
     }
 
     @Override
-    public void onPress() {
-        this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+    public void onPress(InputWithModifiers input) {
         this.extended = !this.extended;
     }
 
     @Override
-    public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        super.render(ctx, mouseX, mouseY, delta);
-        this.categoryList.render(ctx, mouseX, mouseY, delta);
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        this.extractDefaultSprite(graphics);
+        this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
+        this.categoryList.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
     public void tick() {
-        this.setMessage(Text.translatable(this.getSelectedCategory()));
+        this.setMessage(Component.translatable(this.getSelectedCategory()));
         this.categoryList.visible = this.extended;
     }
 
     public String getSelectedCategory() {
-        if (this.categoryList.getSelectedOrNull() == null) {
+        if (this.categoryList.getSelected() == null) {
             return KeyBindingUtil.DYNAMIC_CATEGORY_ALL;
         }
-        return ((BindingCategoryListWidget.CategoryEntry) this.categoryList.getSelectedOrNull()).category;
+        return ((BindingCategoryListWidget.CategoryEntry) this.categoryList.getSelected()).category;
     }
 
     public BindingCategoryListWidget getCategoryList() {
         return this.categoryList;
     }
 
-    private static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
-
-        public BindingCategoryListWidget(MinecraftClient client, int top, int left, int width, int height, int itemHeight) {
-            super(client, top, left, width, height, itemHeight);
+    public static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
+        public BindingCategoryListWidget(Minecraft minecraft, int top, int left, int width, int height, int itemHeight) {
+            super(minecraft, top, left, width, height, itemHeight);
 
             for (String c : KeyBindingUtil.getCategoriesWithDynamics()) {
                 this.addEntry(new CategoryEntry(c));
             }
-            this.setSelected(this.children().get(0));
+            if (!this.children().isEmpty()) {
+                this.setSelected(this.children().get(0));
+            }
         }
 
         public class CategoryEntry extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
@@ -90,16 +93,13 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
             }
 
             @Override
-            public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawTextWithShadow(client.textRenderer, Text.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
+            public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+                graphics.text(minecraft.font, Component.translatable(this.category), this.getContentX() + 1, this.getContentY(), 0xFFFFFFFF);
             }
-
         }
 
         @Override
-        public void appendNarrations(NarrationMessageBuilder var1) {
-
+        protected void updateWidgetNarration(NarrationElementOutput output) {
         }
     }
-
 }

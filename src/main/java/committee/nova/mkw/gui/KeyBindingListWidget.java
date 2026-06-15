@@ -1,17 +1,14 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkb.api.IKeyBinding;
-import committee.nova.mkb.keybinding.KeyModifier;
-import committee.nova.mkw.mixin.AccessorKeyBinding;
+import com.mojang.blaze3d.platform.InputConstants;
 import committee.nova.mkw.util.KeyBindingUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -25,21 +22,23 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private String currentCategory = KeyBindingUtil.DYNAMIC_CATEGORY_ALL;
 
     public KeyBindingListWidget(KeyWizardScreen keyWizardScreen, int top, int left, int width, int height, int itemHeight) {
-        super(MinecraftClient.getInstance(), top, left, width, height, itemHeight);
+        super(Minecraft.getInstance(), top, left, width, height, itemHeight);
         this.keyWizardScreen = keyWizardScreen;
 
-        for (KeyBinding k : this.client.options.allKeys) {
+        for (KeyMapping k : this.minecraft.options.keyMappings) {
             this.addEntry(new BindingEntry(k));
         }
-        this.setSelected(this.children().get(0));
+        if (!this.children().isEmpty()) {
+            this.setSelected(this.children().get(0));
+        }
     }
 
     @Nullable
-    public KeyBinding getSelectedKeyBinding() {
-        if (this.getSelectedOrNull() == null) {
+    public KeyMapping getSelectedKeyMapping() {
+        if (this.getSelected() == null) {
             return null;
         }
-        return ((BindingEntry) this.getSelectedOrNull()).keyBinding;
+        return ((BindingEntry) this.getSelected()).keyMapping;
     }
 
     private void updateList() {
@@ -47,11 +46,9 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
 
         if (categoryUpdate || filterUpdate) {
-            if (categoryUpdate) {
-                this.currentCategory = this.keyWizardScreen.getSelectedCategory();
-            }
+            if (categoryUpdate) this.currentCategory = this.keyWizardScreen.getSelectedCategory();
 
-            KeyBinding[] bindings = getBindingsByCategory(this.currentCategory);
+            KeyMapping[] bindings = getBindingsByCategory(this.currentCategory);
 
             if (filterUpdate) {
                 this.currentFilterText = this.keyWizardScreen.getFilterText();
@@ -62,9 +59,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
             this.children().clear();
             if (bindings.length > 0) {
-                for (KeyBinding k : bindings) {
-                    this.addEntry(new BindingEntry(k));
-                }
+                for (KeyMapping k : bindings) this.addEntry(new BindingEntry(k));
                 this.setSelected(this.children().get(0));
             } else {
                 this.setSelected(null);
@@ -73,11 +68,9 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
-    private KeyBinding[] filterBindings(KeyBinding[] bindings, String filterText) {
-        KeyBinding[] bindingsFiltered = bindings;
-        String keyNameRegex = "<.*>";
-        Matcher keyNameMatcher = Pattern.compile(keyNameRegex).matcher(filterText);
-
+    private KeyMapping[] filterBindings(KeyMapping[] bindings, String filterText) {
+        KeyMapping[] bindingsFiltered = bindings;
+        Matcher keyNameMatcher = Pattern.compile("<.*>").matcher(filterText);
 
         if (keyNameMatcher.find()) {
             String keyNameWithBrackets = keyNameMatcher.group();
@@ -93,48 +86,45 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         return bindingsFiltered;
     }
 
-    private KeyBinding[] filterBindingsByName(KeyBinding[] bindings, String bindingName) {
+    private KeyMapping[] filterBindingsByName(KeyMapping[] bindings, String bindingName) {
         String[] words = bindingName.split("\\s+");
         return Arrays.stream(bindings).filter(binding -> {
             boolean flag = true;
             for (String w : words) {
-                flag = flag && I18n.translate(binding.getTranslationKey()).toLowerCase().contains(w.toLowerCase());
+                flag = flag && I18n.get(binding.getName()).toLowerCase().contains(w.toLowerCase());
             }
             return flag;
-        }).toArray(KeyBinding[]::new);
+        }).toArray(KeyMapping[]::new);
     }
 
-    private KeyBinding[] filterBindingsByKey(KeyBinding[] bindings, String keyName) {
-        return Arrays.stream(bindings).filter(b -> {
-            Text t = ((AccessorKeyBinding) b).getBoundKey().getLocalizedText();
-            if (t instanceof TranslatableTextContent) {
-                return I18n.translate(((TranslatableTextContent) t).getKey()).equalsIgnoreCase(keyName);
-            } else {
-                return t.getString().equalsIgnoreCase(keyName);
-            }
-        }).toArray(KeyBinding[]::new);
+    private KeyMapping[] filterBindingsByKey(KeyMapping[] bindings, String keyName) {
+        return Arrays.stream(bindings)
+                .filter(b -> KeyBindingUtil.getKey(b).getDisplayName().getString().equalsIgnoreCase(keyName))
+                .toArray(KeyMapping[]::new);
     }
 
-    private KeyBinding[] getBindingsByCategory(String category) {
-        KeyBinding[] bindings = Arrays.copyOf(this.client.options.allKeys, this.client.options.allKeys.length);
+    private KeyMapping[] getBindingsByCategory(String category) {
+        KeyMapping[] bindings = Arrays.copyOf(this.minecraft.options.keyMappings, this.minecraft.options.keyMappings.length);
         switch (category) {
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALL:
                 return bindings;
             case KeyBindingUtil.DYNAMIC_CATEGORY_CONFLICTS:
-                Map<InputUtil.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
-                return Arrays.stream(bindings).filter(b -> bindingCounts.get(((AccessorKeyBinding) b).getBoundKey()) > 1 && ((AccessorKeyBinding) b).getBoundKey().getCode() != -1).toArray(KeyBinding[]::new);
+                Map<InputConstants.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
+                return Arrays.stream(bindings)
+                        .filter(b -> bindingCounts.getOrDefault(KeyBindingUtil.getKey(b), 0) > 1 && KeyBindingUtil.getKey(b).getValue() != InputConstants.UNKNOWN.getValue())
+                        .toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
-                return Arrays.stream(bindings).filter(KeyBinding::isUnbound).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(KeyMapping::isUnbound).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
-                return Arrays.stream(bindings).filter(k -> ((IKeyBinding) k).getKeyModifier().equals(KeyModifier.CONTROL)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(KeyModifier.CONTROL)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALT:
-                return Arrays.stream(bindings).filter(k -> ((IKeyBinding) k).getKeyModifier().equals(KeyModifier.ALT)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(KeyModifier.ALT)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_SHIFT:
-                return Arrays.stream(bindings).filter(k -> ((IKeyBinding) k).getKeyModifier().equals(KeyModifier.SHIFT)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(KeyModifier.SHIFT)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_NONE:
-                return Arrays.stream(bindings).filter(k -> ((IKeyBinding) k).getKeyModifier().equals(KeyModifier.NONE)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(KeyModifier.NONE)).toArray(KeyMapping[]::new);
             default:
-                return Arrays.stream(bindings).filter(b -> b.getCategory().equals(category)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(b -> b.getCategory().label().getString().equals(Component.translatable(category).getString())).toArray(KeyMapping[]::new);
         }
     }
 
@@ -144,27 +134,20 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
+        private final KeyMapping keyMapping;
 
-        private final KeyBinding keyBinding;
-
-        public BindingEntry(KeyBinding keyBinding) {
-            this.keyBinding = keyBinding;
+        public BindingEntry(KeyMapping keyMapping) {
+            this.keyMapping = keyMapping;
         }
 
         @Override
-        public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            ctx.drawTextWithShadow(client.textRenderer, Text.translatable(this.keyBinding.getTranslationKey()), x, y, 0xFFFFFFFF);
-            int color = 0xFF999999;
-            ctx.drawTextWithShadow(client.textRenderer, this.keyBinding.getBoundKeyLocalizedText(), x, y + client.textRenderer.fontHeight + 5, color);
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            graphics.text(minecraft.font, Component.translatable(this.keyMapping.getName()), this.getContentX(), this.getContentY(), 0xFFFFFFFF);
+            graphics.text(minecraft.font, this.keyMapping.getTranslatedKeyMessage(), this.getContentX(), this.getContentY() + minecraft.font.lineHeight + 5, 0xFF999999);
         }
-
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder var1) {
-        // TODO Auto-generated method stub
-
+    protected void updateWidgetNarration(NarrationElementOutput output) {
     }
-
-
 }

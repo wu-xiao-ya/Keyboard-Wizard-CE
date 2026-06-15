@@ -1,33 +1,57 @@
 package committee.nova.mkw;
 
 import committee.nova.mkw.gui.KeyWizardScreen;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
-public class ModernKeyWizard implements ClientModInitializer {
+@Mod(ModernKeyWizard.MODID)
+public class ModernKeyWizard {
     public static final String MODID = "mkw";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final Identifier SCREEN_TOGGLE_WIDGETS = new Identifier(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
 
-    private static KeyBinding keyOpenKeyWizard;
+    private static KeyMapping keyOpenKeyWizard;
+    private static final KeyMapping.Category MKW_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MODID, "bindings"));
 
-    @Override
-    public void onInitializeClient() {
+    public ModernKeyWizard(IEventBus modEventBus) {
         LOGGER.debug("{} initialized!", MODID);
-
-        keyOpenKeyWizard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + MODID + ".openKeyWizard", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings"));
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (keyOpenKeyWizard.wasPressed()) {
-                client.setScreen(new KeyWizardScreen(client.currentScreen));
-            }
-        });
+        modEventBus.addListener(ModernKeyWizard::registerKeyMappings);
     }
 
+    private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        keyOpenKeyWizard = new KeyMapping(
+                "key." + MODID + ".openKeyWizard",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_F7,
+                MKW_CATEGORY
+        );
+        event.register(keyOpenKeyWizard);
+    }
+
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+    public static class ClientEvents {
+        @SubscribeEvent
+        public static void onClientTick(ClientTickEvent.Post event) {
+            Minecraft client = Minecraft.getInstance();
+            if (keyOpenKeyWizard == null) {
+                return;
+            }
+
+            while (keyOpenKeyWizard.consumeClick()) {
+                client.setScreen(new KeyWizardScreen(client.screen));
+            }
+        }
+    }
 }
