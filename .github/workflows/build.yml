@@ -1,0 +1,37 @@
+name: Build CE
+
+on:
+  push:
+    branches:
+      - ce/forge-1.20.1
+  pull_request:
+    branches:
+      - ce/forge-1.20.1
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew build --warning-mode all
+
+      - name: Upload jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkw-forge-1.20.1
+          path: build/libs/*.jar
