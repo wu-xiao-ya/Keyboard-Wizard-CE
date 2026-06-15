@@ -58,6 +58,52 @@ tasks.named('jar', Jar).configure {
     }
 }
 
+def releaseFiles = [
+        tasks.named('jar'),
+        tasks.named('sourcesJar')
+]
+
+tasks.register('generateReleaseChecksums') {
+    group = 'distribution'
+    description = 'Generates SHA-256 checksums for release jars.'
+    dependsOn releaseFiles
+
+    outputs.file(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+
+    doLast {
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        def outputFile = layout.buildDirectory.file('release/SHA256SUMS.txt').get().asFile
+        outputFile.parentFile.mkdirs()
+        outputFile.text = releaseFiles.collect { provider ->
+            def file = provider.get().archiveFile.get().asFile
+            digest.reset()
+            file.withInputStream { input ->
+                byte[] buffer = new byte[8192]
+                int read
+                while ((read = input.read(buffer)) != -1) {
+                    digest.update(buffer, 0, read)
+                }
+            }
+            "${digest.digest().encodeHex()}  mods/${file.name}"
+        }.join(System.lineSeparator()) + System.lineSeparator()
+    }
+}
+
+tasks.register('releaseBundle', Zip) {
+    group = 'distribution'
+    description = 'Packages release jars, checksums, and legal notices.'
+    dependsOn releaseFiles
+    dependsOn tasks.named('generateReleaseChecksums')
+    archiveFileName = "${archives_base_name}-${mod_version}-release.zip"
+    destinationDirectory = layout.buildDirectory.dir('release')
+
+    from(releaseFiles.collect { it.get().archiveFile }) {
+        into 'mods'
+    }
+    from(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+    from(['README.md', 'NOTICE.md', 'LICENSE.md', 'COPYING.md', 'CHANGELOG.md', 'RELEASE.md'])
+}
+
 processResources {
     filteringCharset = 'UTF-8'
 
