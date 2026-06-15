@@ -4,8 +4,8 @@
 - Target: `Minecraft 1.20.1` + `Forge 47.4.20`
 - Java: `17`
 - Build command: `.\gradlew.bat build --warning-mode all`
-- Release jar: `build/libs/mkw-forge-1.20.1-2.1.0.jar`
-- Source jar: `build/libs/mkw-forge-1.20.1-2.1.0-sources.jar`
+- Release jar: `build/libs/keyboard-wizard-ce-forge-1.20.1-2.1.0.jar`
+- Source jar: `build/libs/keyboard-wizard-ce-forge-1.20.1-2.1.0-sources.jar`
 
 Before publishing:
 
