@@ -25,6 +25,7 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             listHeight = this.keyWizardScreen.height - this.getY() - this.height - 10;
         }
         this.categoryList = new BindingCategoryListWidget(minecraft, this.getY() + this.height, this.getX(), this.width, listHeight, listItemHeight);
+        this.categoryList.visible = this.extended;
     }
 
     @Override
@@ -50,7 +51,6 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(graphics, mouseX, mouseY, partialTick);
-        this.categoryList.render(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
