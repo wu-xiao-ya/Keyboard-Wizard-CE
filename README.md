@@ -17,4 +17,6 @@ Use Java 17.
 
 The release jar is written to `build/libs/keyboard-wizard-ce-forge-1.20.1-2.1.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-forge-1.20.1-2.1.0-sources.jar`.
 
+See `CHANGELOG.md` for the CE port change summary.
+
 When distributing a jar, please also provide the matching source code for that build.
