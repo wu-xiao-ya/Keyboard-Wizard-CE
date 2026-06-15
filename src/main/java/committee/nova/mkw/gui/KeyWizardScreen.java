@@ -44,7 +44,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private EditBox searchBar;
 
     public KeyWizardScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.literal(ModernKeyWizard.MODID));
+        super(parent, Minecraft.getInstance().options, Component.translatable("screen.mkw.title"));
     }
 
     @Override

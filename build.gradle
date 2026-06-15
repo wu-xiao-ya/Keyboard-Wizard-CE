@@ -47,7 +47,15 @@ tasks.withType(JavaCompile).configureEach {
     options.release = 21
 }
 
+tasks.named('jar', Jar).configure {
+    from(['LICENSE.md', 'COPYING.md', 'NOTICE.md', 'README.md']) {
+        into 'META-INF'
+    }
+}
+
 processResources {
+    filteringCharset = 'UTF-8'
+
     def replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,

@@ -1,5 +1,7 @@
 # NOTICE
 
+Distribution name: 按键精灵社区版（Keyboard Wizard CE）.
+
 Original author: the upstream Modern KeyWizard / Keyboard Wizard authors.
 
 Community Edition maintenance: this `ce/neoforge-1.21.1` branch.
