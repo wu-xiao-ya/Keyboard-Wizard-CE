@@ -23,6 +23,8 @@ Before publishing:
 GitHub Release:
 
 ```powershell
+git remote set-url origin <your-fork-or-ce-repo-url>
+git push -u origin ce/neoforge-1.21.1
 git tag neoforge-1.21.1-v2.1.0
 git push origin neoforge-1.21.1-v2.1.0
 ```
