@@ -1,0 +1,14 @@
+# NOTICE
+
+Original author: the upstream Modern KeyWizard / Keyboard Wizard authors.
+
+Community Edition maintenance: this `ce/neoforge-1.21.1` branch.
+
+Modification target: `Minecraft 1.21.1 + NeoForge`.
+
+License obligations:
+
+- This branch remains under `AGPL-3.0-only` for the upstream Modern KeyWizard codebase.
+- Keyboard Wizard upstream code remains under `MIT` where applicable.
+- Any distributed jar must be accompanied by the corresponding source code for the exact build.
+- Modified source should carry the modification date and clear CE attribution.

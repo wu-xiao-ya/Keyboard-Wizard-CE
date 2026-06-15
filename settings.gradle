@@ -1,9 +1,53 @@
 pluginManagement {
+    def localNeoMaven = providers.gradleProperty('neoLocalMaven')
+            .orElse(providers.environmentVariable('NEOFORGE_LOCAL_MAVEN'))
+            .orNull
     repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+        if (localNeoMaven) {
+            maven {
+                name = 'LocalNeoForgedCache'
+                url = uri(localNeoMaven)
+                metadataSources {
+                    mavenPom()
+                    gradleMetadata()
+                    artifact()
+                }
+            }
         }
         gradlePluginPortal()
+        maven {
+            name = 'NeoForged'
+            url = 'https://maven.neoforged.net/releases'
+        }
     }
 }
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+dependencyResolutionManagement {
+    def localNeoMaven = providers.gradleProperty('neoLocalMaven')
+            .orElse(providers.environmentVariable('NEOFORGE_LOCAL_MAVEN'))
+            .orNull
+    repositories {
+        if (localNeoMaven) {
+            maven {
+                name = 'LocalNeoForgedCache'
+                url = uri(localNeoMaven)
+                metadataSources {
+                    mavenPom()
+                    gradleMetadata()
+                    artifact()
+                }
+            }
+        }
+        mavenCentral()
+        maven {
+            name = 'NeoForged'
+            url = 'https://maven.neoforged.net/releases'
+        }
+    }
+}
+
+rootProject.name = 'ModernKeyWizard'
