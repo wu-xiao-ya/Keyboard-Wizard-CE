@@ -1,0 +1,41 @@
+name: Release CE
+
+on:
+  push:
+    tags:
+      - neoforge-1.21.1-v*
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build release bundle
+        run: ./gradlew assemble releaseBundle
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: 按键精灵社区版（Keyboard Wizard CE） NeoForge 1.21.1 ${{ github.ref_name }}
+          files: |
+            build/libs/*.jar
+            build/release/*.zip
+            build/release/SHA256SUMS.txt
+          body_path: CHANGELOG.md

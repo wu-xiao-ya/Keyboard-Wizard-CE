@@ -10,6 +10,7 @@
 - Release bundle: `build/release/keyboard-wizard-ce-neoforge-1.21.1-2.1.0-release.zip`
 - Checksum file: `build/release/SHA256SUMS.txt`
 - Changelog: `CHANGELOG.md`
+- Release tag pattern: `neoforge-1.21.1-v*`
 
 Before publishing:
 
@@ -18,3 +19,12 @@ Before publishing:
 3. Run `.\gradlew.bat releaseBundle`.
 4. Publish the release bundle, or publish the release jar, matching source jar, and checksum file together.
 5. Mark the release as 按键精灵社区版（Keyboard Wizard CE）, a Community Edition / unofficial port.
+
+GitHub Release:
+
+```powershell
+git tag neoforge-1.21.1-v2.1.0
+git push origin neoforge-1.21.1-v2.1.0
+```
+
+The `Release CE` workflow builds the bundle and uploads the jars, release zip, and checksum file to the GitHub Release.
