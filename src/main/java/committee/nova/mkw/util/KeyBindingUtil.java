@@ -1,11 +1,10 @@
 package committee.nova.mkw.util;
 
-import committee.nova.mkb.ModernKeyBinding;
 import committee.nova.mkw.mixin.AccessorKeyBinding;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.InputUtil.Key;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.InputConstants.Key;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +31,7 @@ public class KeyBindingUtil {
     public static ArrayList<String> getCategoriesWithDynamics() {
         ArrayList<String> categories = getCategories();
         categories.add(0, DYNAMIC_CATEGORY_UNBOUND);
-        if (!ModernKeyBinding.nonConflictKeys()) categories.add(0, DYNAMIC_CATEGORY_CONFLICTS);
+        categories.add(0, DYNAMIC_CATEGORY_CONFLICTS);
         categories.add(0, DYNAMIC_CATEGORY_ALL);
         categories.add(DYNAMIC_CATEGORY_CTRL);
         categories.add(DYNAMIC_CATEGORY_ALT);
@@ -43,10 +42,11 @@ public class KeyBindingUtil {
 
     @SuppressWarnings("resource")
     public static Map<Key, Integer> getBindingCountsByKey() {
-        HashMap<InputUtil.Key, Integer> map = new HashMap<>();
-        for (KeyBinding b : MinecraftClient.getInstance().options.allKeys) {
+        HashMap<InputConstants.Key, Integer> map = new HashMap<>();
+        for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
             map.merge(((AccessorKeyBinding) b).getBoundKey(), 1, Integer::sum);
         }
         return Collections.unmodifiableMap(map);
     }
 }
+

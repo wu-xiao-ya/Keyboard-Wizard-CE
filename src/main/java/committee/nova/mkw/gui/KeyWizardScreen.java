@@ -1,44 +1,43 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkb.api.IKeyBinding;
-import committee.nova.mkb.keybinding.KeyModifier;
 import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.util.KeyBindingUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.ControlsOptionsScreen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.controls.ControlsScreen;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-public class KeyWizardScreen extends GameOptionsScreen {
+public class KeyWizardScreen extends OptionsSubScreen {
 
     private final int[] mouseCodes = {GLFW.GLFW_MOUSE_BUTTON_1, GLFW.GLFW_MOUSE_BUTTON_2, GLFW.GLFW_MOUSE_BUTTON_3, GLFW.GLFW_MOUSE_BUTTON_4, GLFW.GLFW_MOUSE_BUTTON_5, GLFW.GLFW_MOUSE_BUTTON_6, GLFW.GLFW_MOUSE_BUTTON_7, GLFW.GLFW_MOUSE_BUTTON_8};
     private int mouseCodeIndex = 0;
 
     private KeyboardWidget keyboard;
     private KeyboardWidget mouseButton;
-    private ButtonWidget mousePlus;
-    private ButtonWidget mouseMinus;
+    private Button mousePlus;
+    private Button mouseMinus;
     private KeyBindingListWidget bindingList;
     private CategorySelectorWidget categorySelector;
-    private TexturedButtonWidget screenToggleButton;
-    private TextFieldWidget searchBar;
-    private ButtonWidget resetBinding;
-    private ButtonWidget resetAll;
-    private ButtonWidget clearBinding;
+    private ImageButton screenToggleButton;
+    private EditBox searchBar;
+    private Button resetBinding;
+    private Button resetAll;
+    private Button clearBinding;
 
     @SuppressWarnings("resource")
     public KeyWizardScreen(Screen parent) {
-        super(parent, MinecraftClient.getInstance().options, Text.of(ModernKeyWizard.MODID));
+        super(parent, Minecraft.getInstance().options, Component.literal(ModernKeyWizard.MODID));
     }
 
     @Override
@@ -49,90 +48,90 @@ public class KeyWizardScreen extends GameOptionsScreen {
         int mouseButtonHeight = 20;
 
         int maxBindingNameWidth = 0;
-        if (this.client == null) return;
-        for (KeyBinding k : this.client.options.allKeys) {
-            int w = this.textRenderer.getWidth(Text.translatable(k.getTranslationKey()));
+        if (this.minecraft == null) return;
+        for (KeyMapping k : this.minecraft.options.keyMappings) {
+            int w = this.font.width(Component.translatable(k.getName()));
             if (w > maxBindingNameWidth)
                 maxBindingNameWidth = w;
         }
 
         int maxCategoryWidth = 0;
         for (String s : KeyBindingUtil.getCategories()) {
-            int w = this.textRenderer.getWidth(Text.translatable(s));
+            int w = this.font.width(Component.translatable(s));
             if (w > maxCategoryWidth)
                 maxCategoryWidth = w;
         }
 
         int bindingListWidth = (maxBindingNameWidth + 20);
-        this.bindingList = new KeyBindingListWidget(this, 10, 10, bindingListWidth, this.height - 40, this.textRenderer.fontHeight * 3 + 10);
+        this.bindingList = new KeyBindingListWidget(this, 10, 10, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
         this.keyboard = KeyboardWidgetBuilder.standardKeyboard(this, bindingListWidth + 15, this.height / 2.0F - 90.0F, this.width - (bindingListWidth + 15), 180);
         this.categorySelector = new CategorySelectorWidget(this, bindingListWidth + 15, 5, maxCategoryWidth + 20, 20);
-        this.screenToggleButton = new TexturedButtonWidget(this.width - 22, this.height - 22, 20, 20, 20, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, (btn) -> this.client.setScreen(new ControlsOptionsScreen(this.parent, this.gameOptions)));
-        this.searchBar = new TextFieldWidget(this.textRenderer, 10, this.height - 20, bindingListWidth, 14, Text.of(""));
-        this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputUtil.Type.MOUSE);
-        this.mousePlus = ButtonWidget.builder(Text.of("+"), b -> {
+        this.screenToggleButton = new ImageButton(this.width - 22, this.height - 22, 20, 20, 20, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, (btn) -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options)));
+        this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.literal(""));
+        this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+        this.mousePlus = Button.builder(Component.literal("+"), b -> {
             this.mouseCodeIndex++;
             if (this.mouseCodeIndex >= this.mouseCodes.length) {
                 this.mouseCodeIndex = 0;
             }
-            this.remove(this.mouseButton);
-            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputUtil.Type.MOUSE);
-            this.addDrawableChild(this.mouseButton);
-        }).dimensions((int) this.mouseButton.getAnchorX() + 83, (int) this.mouseButton.getAnchorY(), 25, 20).build();
-        this.mouseMinus = ButtonWidget.builder(Text.of("-"), b -> {
+            this.removeWidget(this.mouseButton);
+            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+            this.addRenderableWidget(this.mouseButton);
+        }).bounds((int) this.mouseButton.getAnchorX() + 83, (int) this.mouseButton.getAnchorY(), 25, 20).build();
+        this.mouseMinus = Button.builder(Component.literal("-"), b -> {
             this.mouseCodeIndex--;
             if (this.mouseCodeIndex < 0) {
                 this.mouseCodeIndex = this.mouseCodes.length - 1;
             }
-            this.remove(this.mouseButton);
-            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputUtil.Type.MOUSE);
-            this.addDrawableChild(this.mouseButton);
-        }).dimensions((int) this.mouseButton.getAnchorX() - 26, (int) this.mouseButton.getAnchorY(), 25, 20).build();
-        this.resetBinding = ButtonWidget.builder(Text.translatable("controls.reset"), b -> {
-            KeyBinding selectedBinding = this.getSelectedKeyBinding();
+            this.removeWidget(this.mouseButton);
+            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+            this.addRenderableWidget(this.mouseButton);
+        }).bounds((int) this.mouseButton.getAnchorX() - 26, (int) this.mouseButton.getAnchorY(), 25, 20).build();
+        this.resetBinding = Button.builder(Component.translatable("controls.reset"), b -> {
+            KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
-            ((IKeyBinding) selectedBinding).setToDefault();
-            KeyBinding.updateKeysByCode();
-        }).dimensions(bindingListWidth + 15, this.height - 23, 50, 20).build();
-        this.clearBinding = ButtonWidget.builder(Text.translatable("gui.clear"), b -> {
-            KeyBinding selectedBinding = this.getSelectedKeyBinding();
+            selectedBinding.setToDefault();
+            KeyMapping.resetMapping();
+        }).bounds(bindingListWidth + 15, this.height - 23, 50, 20).build();
+        this.clearBinding = Button.builder(Component.translatable("gui.clear"), b -> {
+            KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
-            ((IKeyBinding) selectedBinding).setKeyModifierAndCode(KeyModifier.NONE, InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_UNKNOWN));
-            KeyBinding.updateKeysByCode();
-        }).dimensions(bindingListWidth + 66, this.height - 23, 50, 20).build();
-        this.resetAll = ButtonWidget.builder(Text.translatable("controls.resetAll"), b -> {
-            final Screen current = client.currentScreen;
-            client.setScreen(new ResetAllConfirmScreen(y -> {
+            selectedBinding.setKeyModifierAndCode(KeyModifier.NONE, InputConstants.UNKNOWN);
+            KeyMapping.resetMapping();
+        }).bounds(bindingListWidth + 66, this.height - 23, 50, 20).build();
+        this.resetAll = Button.builder(Component.translatable("controls.resetAll"), b -> {
+            final Screen current = minecraft.screen;
+            minecraft.setScreen(new ResetAllConfirmScreen(y -> {
                 if (y) {
-                    for (KeyBinding k : this.gameOptions.allKeys) ((IKeyBinding) k).setToDefault();
-                    KeyBinding.updateKeysByCode();
+                    for (KeyMapping k : this.options.keyMappings) k.setToDefault();
+                    KeyMapping.resetMapping();
                 }
-                client.setScreen(current);
+                minecraft.setScreen(current);
             }));
-        }).dimensions(bindingListWidth + 117, this.height - 23, 70, 20).build();
-        this.addDrawableChild(this.bindingList);
-        this.addDrawableChild(this.keyboard);
-        this.addDrawableChild(this.categorySelector);
-        this.addDrawableChild(this.categorySelector.getCategoryList());
-        this.addDrawableChild(this.screenToggleButton);
-        this.addDrawableChild(this.searchBar);
-        this.addDrawableChild(this.mouseButton);
-        this.addDrawableChild(this.mousePlus);
-        this.addDrawableChild(this.mouseMinus);
-        this.addDrawableChild(this.resetBinding);
-        this.addDrawableChild(this.clearBinding);
-        this.addDrawableChild(this.resetAll);
+        }).bounds(bindingListWidth + 117, this.height - 23, 70, 20).build();
+        this.addRenderableWidget(this.bindingList);
+        this.addRenderableWidget(this.keyboard);
+        this.addRenderableWidget(this.categorySelector);
+        this.addRenderableWidget(this.categorySelector.getCategoryList());
+        this.addRenderableWidget(this.screenToggleButton);
+        this.addRenderableWidget(this.searchBar);
+        this.addRenderableWidget(this.mouseButton);
+        this.addRenderableWidget(this.mousePlus);
+        this.addRenderableWidget(this.mouseMinus);
+        this.addRenderableWidget(this.resetBinding);
+        this.addRenderableWidget(this.clearBinding);
+        this.addRenderableWidget(this.resetAll);
     }
 
     @Override
-    public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
         this.renderBackground(ctx);
         super.render(ctx, mouseX, mouseY, delta);
     }
 
     @Override
     public void tick() {
-        for (Element e : this.children()) {
+        for (GuiEventListener e : this.children()) {
             if (e instanceof TickableElement) {
                 ((TickableElement) e).tick();
             }
@@ -140,8 +139,8 @@ public class KeyWizardScreen extends GameOptionsScreen {
     }
 
     @Nullable
-    public KeyBinding getSelectedKeyBinding() {
-        return this.bindingList.getSelectedKeyBinding();
+    public KeyMapping getSelectedKeyMapping() {
+        return this.bindingList.getSelectedKeyMapping();
     }
 
     public boolean getCategorySelectorExtended() {
@@ -153,11 +152,12 @@ public class KeyWizardScreen extends GameOptionsScreen {
     }
 
     public String getFilterText() {
-        return this.searchBar.getText();
+        return this.searchBar.getValue();
     }
 
     public void setSearchText(String s) {
-        this.searchBar.setText(s);
+        this.searchBar.setValue(s);
     }
 
 }
+

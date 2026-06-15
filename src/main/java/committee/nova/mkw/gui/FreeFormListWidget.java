@@ -2,32 +2,32 @@ package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import committee.nova.mkw.util.DrawingUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSelectionList;
 
 import java.util.Objects;
 
-public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> extends EntryListWidget<FreeFormListWidget<E>.Entry> {
+public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> extends AbstractSelectionList<FreeFormListWidget<E>.Entry> {
     public boolean visible = true;
 
-    public FreeFormListWidget(MinecraftClient client, int top, int left, int width, int height, int itemHeight) {
+    public FreeFormListWidget(Minecraft client, int top, int left, int width, int height, int itemHeight) {
         super(client, 0, 0, 0, 0, itemHeight);
-        this.top = top;
-        this.left = left;
+        this.y0 = top;
+        this.x0 = left;
         this.height = height;
         this.width = width;
 
-        this.bottom = top + height;
-        this.right = left + width;
+        this.y1 = top + height;
+        this.x1 = left + width;
 
         this.setRenderBackground(false);
-        this.setRenderHorizontalShadows(false);
+        this.setRenderTopAndBottom(false);
     }
 
     @Override
-    protected int getScrollbarPositionX() {
-        return this.left + this.width - 5;
+    protected int getScrollbarPosition() {
+        return this.x0 + this.width - 5;
     }
 
     @Override
@@ -36,19 +36,19 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    public void renderBackground(DrawContext ctx) {
-        ctx.fillGradient(this.left, this.top, this.right, this.bottom, -1072689136, -804253680);
+    public void renderBackground(GuiGraphics ctx) {
+        ctx.fillGradient(this.x0, this.y0, this.x1, this.y1, -1072689136, -804253680);
     }
 
     @Override
-    protected void renderList(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        double scaleH = this.client.getWindow().getHeight() / (double) this.client.getWindow().getScaledHeight();
-        double scaleW = this.client.getWindow().getWidth() / (double) this.client.getWindow().getScaledWidth();
-        RenderSystem.enableScissor((int) (this.left * scaleW), (int) (this.client.getWindow().getHeight() - (this.bottom * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
+    protected void renderList(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+        double scaleH = this.minecraft.getWindow().getHeight() / (double) this.minecraft.getWindow().getGuiScaledHeight();
+        double scaleW = this.minecraft.getWindow().getWidth() / (double) this.minecraft.getWindow().getGuiScaledWidth();
+        RenderSystem.enableScissor((int) (this.x0 * scaleW), (int) (this.minecraft.getWindow().getHeight() - (this.y1 * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
 
-        for (int i = 0; i < this.getEntryCount(); ++i) {
-            if (this.isSelectedEntry(i)) {
-                DrawingUtil.drawNoFillRect(ctx.getMatrices(), this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight() - 8, this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
+        for (int i = 0; i < this.getItemCount(); ++i) {
+            if (this.isSelectedItem(i)) {
+                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight() - 8, this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
             }
 
             Entry entry = getEntry(i);
@@ -59,7 +59,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             this.renderBackground(ctx);
             super.render(ctx, mouseX, mouseY, delta);
@@ -113,9 +113,9 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
         return this.visible && super.isMouseOver(mouseX, mouseY);
     }
 
-    public abstract class Entry extends EntryListWidget.Entry<FreeFormListWidget<E>.Entry> {
+    public abstract class Entry extends AbstractSelectionList.Entry<FreeFormListWidget<E>.Entry> {
         @Override
-        public abstract void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta);
+        public abstract void render(GuiGraphics ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta);
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -131,4 +131,9 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
             FreeFormListWidget.this.setSelected(this);
         }
     }
+
+    @Override
+    public void updateNarration(net.minecraft.client.gui.narration.NarrationElementOutput output) {
+    }
 }
+
