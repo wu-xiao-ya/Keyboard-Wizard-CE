@@ -4,8 +4,8 @@
 - Target: `Minecraft 1.21.1` + `NeoForge 21.1.219`
 - Java: `21`
 - Build command: `.\gradlew.bat assemble`
-- Release jar: `build/libs/mkw-neoforge-1.21.1-2.1.0.jar`
-- Source jar: `build/libs/mkw-neoforge-1.21.1-2.1.0-sources.jar`
+- Release jar: `build/libs/keyboard-wizard-ce-neoforge-1.21.1-2.1.0.jar`
+- Source jar: `build/libs/keyboard-wizard-ce-neoforge-1.21.1-2.1.0-sources.jar`
 
 Before publishing:
 
