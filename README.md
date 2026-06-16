@@ -4,7 +4,8 @@ Modern KeyWizard Community Edition / unofficial port, published as 按键精灵�
 
 - Branch: `ce/neoforge-26.1.2`
 - Mod id: `keyboard_wizard_ce`
-- Authors: MrNerdy42, Tapio, wu-xiao-ya
+- Current author: WuXiaoYa
+- Original authors: MrNerdy42, Tapio
 - Java: `25`
 - Target: Minecraft `26.1.2` + NeoForge `26.1.2.x`
 - Modification date: `2026-06-16`
