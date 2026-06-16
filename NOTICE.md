@@ -5,8 +5,9 @@
 - Mod id: `keyboard_wizard_ce`
 - Original author: MrNerdy42, Tapio
 - CE maintenance: wu-xiao-ya, Community Edition maintainers for `ce/neoforge-26.1.2`
-- Modification target: `Minecraft 26.1.2` + `NeoForge 26.1.2.76`
-- Modification date: `2026-06-15`
+- Modification target: `Minecraft 26.1.2` + `NeoForge 26.1.2.x`
+- Modification date: `2026-06-16`
+- Current branch builds include CE background assets, layout switching, and the Controls screen toggle button.
 
 License obligations:
 
