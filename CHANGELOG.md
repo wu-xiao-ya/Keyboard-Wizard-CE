@@ -2,8 +2,11 @@
 
 ## 1.0.0 CE - 2026-06-17
 
+- Added the NeoForge 26.2 branch based on the existing 26.1.2 CE implementation.
+- Targeted Minecraft `26.2` with NeoForge `26.2.0.0-beta`.
+- Kept the existing CE feature set: direct F7 opening, main / numpad / auxiliary layouts, CE background texture, Controls screen toggle button, and `keyboard_wizard_ce` metadata.
 - Restarted the Community Edition version line at 1.0.0.
-- Published this branch under release tag neoforge-26.1.2-v1.0.0.
+- Published this branch under release tag neoforge-26.2-v1.0.0.
 - Preserved the current CE feature set and metadata under keyboard_wizard_ce.
 
 ## Unreleased branch build - 2026-06-16
@@ -14,7 +17,7 @@
 - Added the vanilla Controls screen bottom-right toggle button.
 - Rendered the toggle button from the packaged GUI texture instead of a missing sprite-atlas lookup.
 - Changed CE identity and metadata to `keyboard_wizard_ce`.
-- Latest verified Actions build: `27618961660`.
+- Latest verified Actions build: pending for `ce/neoforge-26.2`.
 
 ## 2.1.0 CE - 2026-06-15
 

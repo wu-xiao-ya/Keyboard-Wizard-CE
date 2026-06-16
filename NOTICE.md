@@ -4,9 +4,9 @@
 
 - Mod id: `keyboard_wizard_ce`
 - Current CE version: `1.0.0`.
-- Current author / CE maintenance: WuXiaoYa, Community Edition maintainer for `ce/neoforge-26.1.2`
+- Current author / CE maintenance: WuXiaoYa, Community Edition maintainer for `ce/neoforge-26.2`
 - Original authors: MrNerdy42, Tapio.
-- Modification target: `Minecraft 26.1.2` + `NeoForge 26.1.2.x`
+- Modification target: `Minecraft 26.2` + `NeoForge 26.2.0.0-beta`
 - Modification date: `2026-06-17`
 - Current branch builds include CE background assets, layout switching, and the Controls screen toggle button.
 

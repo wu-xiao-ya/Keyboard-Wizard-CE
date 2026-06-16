@@ -1,14 +1,14 @@
 # 按键精灵社区版（Keyboard Wizard CE）
 
-Modern KeyWizard Community Edition / unofficial port, published as 按键精灵社区版（Keyboard Wizard CE）, for `Minecraft 26.1.2` on `NeoForge 26.1.2.76`.
+Modern KeyWizard Community Edition / unofficial port, published as 按键精灵社区版（Keyboard Wizard CE）, for `Minecraft 26.2` on `NeoForge 26.2.0.0-beta`.
 
-- Branch: `ce/neoforge-26.1.2`
+- Branch: `ce/neoforge-26.2`
 - Mod id: `keyboard_wizard_ce`
 - CE version: `1.0.0`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
 - Java: `25`
-- Target: Minecraft `26.1.2` + NeoForge `26.1.2.x`
+- Target: Minecraft `26.2` + NeoForge `26.2.0.0-beta`
 - Modification date: `2026-06-17`
 - Original project license: `AGPL-3.0-only`
 - Upstream Keyboard Wizard license: `MIT`
@@ -39,9 +39,9 @@ $env:NEOFORGE_LOCAL_MAVEN='<path-to-local-neoforge-cache>'
 .\gradlew.bat assemble --offline
 ```
 
-The release jar is written to `build/libs/keyboard-wizard-ce-neoforge-26.1.2-1.0.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-neoforge-26.1.2-1.0.0-sources.jar`.
+The release jar is written to `build/libs/keyboard-wizard-ce-neoforge-26.2-1.0.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-neoforge-26.2-1.0.0-sources.jar`.
 
-Release tag: [`neoforge-26.1.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.0).
+Release tag: [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0).
 
 See `CHANGELOG.md` for the CE port change summary.
 

@@ -3,7 +3,7 @@ name: Release CE
 on:
   push:
     tags:
-      - neoforge-26.1.2-v*
+      - neoforge-26.2-v*
   workflow_dispatch:
 
 permissions:
@@ -36,7 +36,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: 按键精灵社区版（Keyboard Wizard CE） NeoForge 26.1.2 ${{ github.ref_name }}
+          name: 按键精灵社区版（Keyboard Wizard CE） NeoForge 26.2 ${{ github.ref_name }}
           target_commitish: ${{ github.sha }}
           files: |
             build/libs/*.jar

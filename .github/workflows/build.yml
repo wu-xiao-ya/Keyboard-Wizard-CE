@@ -3,10 +3,10 @@ name: Build CE
 on:
   push:
     branches:
-      - ce/neoforge-26.1.2
+      - ce/neoforge-26.2
   pull_request:
     branches:
-      - ce/neoforge-26.1.2
+      - ce/neoforge-26.2
   workflow_dispatch:
 
 env:
@@ -36,7 +36,7 @@ jobs:
       - name: Upload jars
         uses: actions/upload-artifact@v4
         with:
-          name: keyboard-wizard-ce-neoforge-26.1.2
+          name: keyboard-wizard-ce-neoforge-26.2
           path: |
             build/libs/*.jar
             build/release/*.zip
