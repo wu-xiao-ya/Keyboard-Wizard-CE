@@ -5,7 +5,6 @@ import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
@@ -136,12 +135,6 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.addRenderableWidget(resetBinding);
         this.addRenderableWidget(clearBinding);
         this.addRenderableWidget(resetAll);
-    }
-
-    @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        this.extractBackground(graphics, mouseX, mouseY, partialTick);
-        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
