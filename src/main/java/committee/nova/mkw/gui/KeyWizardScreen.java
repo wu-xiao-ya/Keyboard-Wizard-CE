@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -150,7 +151,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
         graphics.blit(BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 512, 512);
         graphics.fill(0, 0, this.width, this.height, 0x77000000);
-        super.render(graphics, mouseX, mouseY, partialTick);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(graphics, mouseX, mouseY, partialTick);
+        }
     }
 
     @Override
