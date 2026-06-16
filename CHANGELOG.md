@@ -1,5 +1,11 @@
 # Changelog
 
+## Localization fix - 2026-06-17
+
+- Added the singular key category localization key key.category.keyboard_wizard_ce.bindings so the Controls screen shows the Keyboard Wizard CE category name instead of the raw translation key.
+- Latest verified Actions build: 27646857844.
+
+
 ## 1.0.0 CE - 2026-06-17
 
 - Restarted the Community Edition version line at 1.0.0.
@@ -24,6 +30,7 @@
 - Added AGPL license files, CE notice, release checklist, and GitHub Actions build workflow.
 - Bundled README, NOTICE, COPYING, and LICENSE files into the release jar.
 - Published release artifacts as `keyboard-wizard-ce-neoforge-26.1.2-2.1.0`.
+
 
 
 
