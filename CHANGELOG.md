@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased branch builds - 2026-06-16
+
+- Added a repository status update for all maintained CE branches.
+- Documented the current branch build artifacts from GitHub Actions separately from the v2.1.0 release tags.
+- Documented the current CE feature set: direct F7 opening, main / numpad / auxiliary layout switching, CE background texture, and Controls screen toggle button.
+- Documented recent branch fixes:
+  - Forge 1.20.1 now registers the Controls screen toggle through the Forge screen init event.
+  - NeoForge 1.21.1 and 26.1.2 now render the Controls screen toggle from packaged GUI textures instead of missing atlas sprites.
+  - CE mod identity and metadata are aligned on `keyboard_wizard_ce`.
+
 ## 2.1.0 CE - 2026-06-15
 
 - Published 按键精灵社区版（Keyboard Wizard CE） as a community-maintained CE distribution.
