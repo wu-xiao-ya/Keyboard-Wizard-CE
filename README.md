@@ -17,6 +17,8 @@ This branch is maintained as a Community Edition port. It is not the upstream pr
 
 ## Current branch features
 
+- Includes localization for the NeoForge key category id key.category.keyboard_wizard_ce.bindings.
+
 - F7 opens Keyboard Wizard CE directly in-game.
 - Main keyboard, numpad, and auxiliary key layouts are available from the CE screen.
 - The vanilla Controls screen has a bottom-right toggle button for Keyboard Wizard CE.
@@ -43,8 +45,11 @@ The release jar is written to `build/libs/keyboard-wizard-ce-neoforge-26.2-1.0.0
 
 Release tag: [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0).
 
+Latest verified branch build: [GitHub Actions run 27646882891](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646882891).
+
 See `CHANGELOG.md` for the CE port change summary.
 
 When distributing a release jar, provide the corresponding source for that jar together with the binary.
+
 
 

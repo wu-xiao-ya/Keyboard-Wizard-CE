@@ -8,12 +8,13 @@
 - Original authors: MrNerdy42, Tapio.
 - Modification target: `Minecraft 26.2` + `NeoForge 26.2.0.0-beta`
 - Modification date: `2026-06-17`
-- Current branch builds include CE background assets, layout switching, and the Controls screen toggle button.
+- Current branch builds include CE background assets, layout switching, the Controls screen toggle button, and key category localization.
 
 License obligations:
 
 - The original project is distributed under `AGPL-3.0-only`.
 - Upstream Keyboard Wizard is licensed under `MIT`.
 - When distributing the jar, the corresponding source for that jar must be provided together with it.
+
 
 
