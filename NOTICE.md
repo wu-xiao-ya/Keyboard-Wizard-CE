@@ -8,7 +8,9 @@ Original author: the upstream Modern KeyWizard / Keyboard Wizard authors.
 
 Community Edition maintenance: wu-xiao-ya, this `ce/neoforge-1.21.1` branch.
 
-Modification target: `Minecraft 1.21.1 + NeoForge`.
+Modification target: `Minecraft 1.21.1 + NeoForge 21.1.219+`.
+
+Current branch builds include CE background assets, layout switching, and the Controls screen toggle button.
 
 License obligations:
 
