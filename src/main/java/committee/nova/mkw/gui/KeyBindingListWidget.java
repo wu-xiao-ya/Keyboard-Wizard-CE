@@ -1,6 +1,5 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -105,7 +104,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
     private KeyMapping[] filterBindingsByKey(KeyMapping[] bindings, String keyName) {
         return Arrays.stream(bindings).filter(b -> {
-            Component t = ((AccessorKeyBinding) b).getBoundKey().getDisplayName();
+            Component t = b.getKey().getDisplayName();
             if (t.getContents() instanceof TranslatableContents contents) {
                 return I18n.get(contents.getKey()).equalsIgnoreCase(keyName);
             } else {
@@ -121,7 +120,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 return bindings;
             case KeyBindingUtil.DYNAMIC_CATEGORY_CONFLICTS:
                 Map<InputConstants.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
-                return Arrays.stream(bindings).filter(b -> bindingCounts.get(((AccessorKeyBinding) b).getBoundKey()) > 1 && ((AccessorKeyBinding) b).getBoundKey().getValue() != InputConstants.UNKNOWN.getValue()).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(b -> bindingCounts.get(b.getKey()) > 1 && b.getKey().getValue() != InputConstants.UNKNOWN.getValue()).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
                 return Arrays.stream(bindings).filter(KeyMapping::isUnbound).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:

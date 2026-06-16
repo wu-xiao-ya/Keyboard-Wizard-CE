@@ -1,6 +1,5 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -180,7 +179,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         private void updateTooltip() {
             ArrayList<String> tooltipText = new ArrayList<>();
             for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
-                if (((AccessorKeyBinding) b).getBoundKey().equals(this.key)) {
+                if (b.getKey().equals(this.key)) {
                     tooltipText.add(I18n.get(b.getName()));
                 }
             }

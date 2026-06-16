@@ -1,6 +1,5 @@
 package committee.nova.mkw.util;
 
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -50,7 +49,7 @@ public class KeyBindingUtil {
     public static Map<Key, Integer> getBindingCountsByKey() {
         HashMap<InputConstants.Key, Integer> map = new HashMap<>();
         for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
-            map.merge(((AccessorKeyBinding) b).getBoundKey(), 1, Integer::sum);
+            map.merge(b.getKey(), 1, Integer::sum);
         }
         return Collections.unmodifiableMap(map);
     }
