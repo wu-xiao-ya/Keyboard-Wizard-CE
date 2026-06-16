@@ -8,10 +8,10 @@
 
 | 目标 | 源码分支 | Java | 最新分支构建 | 基线 Release |
 | --- | --- | --- | --- | --- |
-| Minecraft 1.20.1 + Forge 47.4.10+ | `ce/forge-1.20.1` | 17 | GitHub Actions | [`forge-1.20.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v1.0.0) |
-| Minecraft 1.21.1 + NeoForge 21.1.219+ | `ce/neoforge-1.21.1` | 21 | GitHub Actions | [`neoforge-1.21.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v1.0.0) |
-| Minecraft 26.1.2 + NeoForge 26.1.2.x | `ce/neoforge-26.1.2` | 25 | GitHub Actions | [`neoforge-26.1.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.0) |
-| Minecraft 26.2 + NeoForge 26.2.0.0-beta | `ce/neoforge-26.2` | 25 | [Actions run 27646319618](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646319618) | pending |
+| Minecraft 1.20.1 + Forge 47.4.10+ | `ce/forge-1.20.1` | 17 | [Actions run 27646830595](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646830595) | [`forge-1.20.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v1.0.0) |
+| Minecraft 1.21.1 + NeoForge 21.1.219+ | `ce/neoforge-1.21.1` | 21 | [Actions run 27646836029](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646836029) | [`neoforge-1.21.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v1.0.0) |
+| Minecraft 26.1.2 + NeoForge 26.1.2.x | `ce/neoforge-26.1.2` | 25 | [Actions run 27646857844](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646857844) | [`neoforge-26.1.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.0) |
+| Minecraft 26.2 + NeoForge 26.2.0.0-beta | `ce/neoforge-26.2` | 25 | [Actions run 27646882891](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646882891) | pending |
 
 CE 项目从 `1.0.0` 重新开始版本线。旧 `v2.1.0` tag 属于早期过渡构建，后续发布以 `v1.x.x` 为准。
 
@@ -24,6 +24,7 @@ CE 项目从 `1.0.0` 重新开始版本线。旧 `v2.1.0` tag 属于早期过渡
 - 支持主键区、小键盘、辅助键三套键位布局切换。
 - 控制设置界面右下角提供原版 Controls 与 Keyboard Wizard CE 的切换按钮。
 - CE 界面使用独立背景材质，按钮图标使用随模组打包的材质文件。
+- 已补充 key.category.keyboard_wizard_ce.bindings，按键控制界面不再显示原始翻译键。
 
 ## 分支策略
 
@@ -57,3 +58,4 @@ Forge 1.20.1 分支也可以执行：
 - Modern KeyWizard 上游：https://github.com/VulpesStella/ModernKeyWizard
 - Keyboard Wizard 上游：https://github.com/Fuzss/keyboardwizard
 - Legacy reference：https://github.com/MrNerdy42/keywizard-legacy
+

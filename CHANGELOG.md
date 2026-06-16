@@ -1,5 +1,11 @@
 # Changelog
 
+## Localization fix - 2026-06-17
+
+- Added key.category.keyboard_wizard_ce.bindings on all maintained branches so the Keyboard Wizard CE category name renders correctly in Controls screens.
+- Latest verified Actions builds: Forge 1.20.1 27646830595, NeoForge 1.21.1 27646836029, NeoForge 26.1.2 27646857844, NeoForge 26.2 27646882891.
+
+
 ## 26.2 preview branch - 2026-06-17
 
 - Added `ce/neoforge-26.2` for Minecraft 26.2 + NeoForge 26.2.0.0-beta.
@@ -36,3 +42,4 @@
 - Added GitHub Actions build and release workflows for each version branch.
 - Added AGPL license files, CE notices, release documentation, and SHA-256 release checksums.
 - Bundled README, NOTICE, COPYING, and LICENSE files into published jars.
+
