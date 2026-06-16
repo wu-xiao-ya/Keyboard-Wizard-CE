@@ -14,11 +14,13 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyWizardScreen extends OptionsSubScreen {
+    private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
 
     private final int[] mouseCodes = {GLFW.GLFW_MOUSE_BUTTON_1, GLFW.GLFW_MOUSE_BUTTON_2, GLFW.GLFW_MOUSE_BUTTON_3, GLFW.GLFW_MOUSE_BUTTON_4, GLFW.GLFW_MOUSE_BUTTON_5, GLFW.GLFW_MOUSE_BUTTON_6, GLFW.GLFW_MOUSE_BUTTON_7, GLFW.GLFW_MOUSE_BUTTON_8};
     private int mouseCodeIndex = 0;
@@ -43,7 +45,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     @SuppressWarnings("resource")
     public KeyWizardScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.translatable("screen.mkw.title"));
+        super(parent, Minecraft.getInstance().options, Component.translatable("screen.keyboard_wizard_ce.title"));
     }
 
     @Override
@@ -137,6 +139,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
     @Override
     public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
         this.renderBackground(ctx);
+        ctx.blit(BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 512, 512);
+        ctx.fill(0, 0, this.width, this.height, 0x77000000);
         super.render(ctx, mouseX, mouseY, delta);
     }
 
@@ -150,7 +154,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     private Component getLayoutButtonLabel() {
-        return Component.translatable("gui.mkw.layout", this.keyboardLayout.getDisplayName());
+        return Component.translatable("gui.keyboard_wizard_ce.layout", this.keyboardLayout.getDisplayName());
     }
 
     private void cycleKeyboardLayout() {

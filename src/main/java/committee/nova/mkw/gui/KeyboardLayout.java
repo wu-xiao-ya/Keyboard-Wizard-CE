@@ -3,9 +3,9 @@ package committee.nova.mkw.gui;
 import net.minecraft.network.chat.Component;
 
 public enum KeyboardLayout {
-    MAIN("gui.mkw.layout.main"),
-    NUMPAD("gui.mkw.layout.numpad"),
-    AUXILIARY("gui.mkw.layout.auxiliary");
+    MAIN("gui.keyboard_wizard_ce.layout.main"),
+    NUMPAD("gui.keyboard_wizard_ce.layout.numpad"),
+    AUXILIARY("gui.keyboard_wizard_ce.layout.auxiliary");
 
     private final String translationKey;
 

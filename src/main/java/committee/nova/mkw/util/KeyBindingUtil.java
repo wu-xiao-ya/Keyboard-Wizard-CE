@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class KeyBindingUtil {
-    public static final String DYNAMIC_CATEGORY_ALL = "key.categories.mkw.all";
-    public static final String DYNAMIC_CATEGORY_CONFLICTS = "key.categories.mkw.conflicts";
-    public static final String DYNAMIC_CATEGORY_UNBOUND = "key.categories.mkw.unbound";
-    public static final String DYNAMIC_CATEGORY_CTRL = "key.categories.mkw.ctrl";
-    public static final String DYNAMIC_CATEGORY_ALT = "key.categories.mkw.alt";
-    public static final String DYNAMIC_CATEGORY_SHIFT = "key.categories.mkw.shift";
-    public static final String DYNAMIC_CATEGORY_NONE = "key.categories.mkw.no_modifier";
+    public static final String DYNAMIC_CATEGORY_ALL = "key.categories.keyboard_wizard_ce.all";
+    public static final String DYNAMIC_CATEGORY_CONFLICTS = "key.categories.keyboard_wizard_ce.conflicts";
+    public static final String DYNAMIC_CATEGORY_UNBOUND = "key.categories.keyboard_wizard_ce.unbound";
+    public static final String DYNAMIC_CATEGORY_CTRL = "key.categories.keyboard_wizard_ce.ctrl";
+    public static final String DYNAMIC_CATEGORY_ALT = "key.categories.keyboard_wizard_ce.alt";
+    public static final String DYNAMIC_CATEGORY_SHIFT = "key.categories.keyboard_wizard_ce.shift";
+    public static final String DYNAMIC_CATEGORY_NONE = "key.categories.keyboard_wizard_ce.no_modifier";
 
     /**
      * Get a list of all binding categories
