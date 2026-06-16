@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0 CE - 2026-06-17
+
+- Restarted the Community Edition version line at 1.0.0.
+- Published this branch under release tag forge-1.20.1-v1.0.0.
+- Preserved the current CE feature set and metadata under keyboard_wizard_ce.
+
 ## Unreleased branch build - 2026-06-16
 
 - Added the in-game F7 path that opens Keyboard Wizard CE directly.
@@ -16,3 +22,8 @@
 - Added AGPL license files, CE notice, release checklist, and GitHub Actions build workflow.
 - Bundled README, NOTICE, COPYING, and LICENSE files into the release jar.
 - Published release artifacts as `keyboard-wizard-ce-forge-1.20.1-2.1.0`.
+
+
+
+
+
