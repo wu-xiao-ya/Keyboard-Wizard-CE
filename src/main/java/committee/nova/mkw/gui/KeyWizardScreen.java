@@ -8,9 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -24,10 +22,6 @@ import org.lwjgl.glfw.GLFW;
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
-    private static final WidgetSprites SCREEN_TOGGLE_SPRITES = new WidgetSprites(
-            ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
-            ModernKeyWizard.SCREEN_TOGGLE_WIDGETS
-    );
 
     private final int[] mouseCodes = {
             GLFW.GLFW_MOUSE_BUTTON_1,
@@ -178,7 +172,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
-        return new ImageButton(x, y, 20, 20, SCREEN_TOGGLE_SPRITES, onPress);
+        return new TextureButton(x, y, onPress);
     }
 
     private Button createLayoutButton(KeyboardLayout layout, int x, int y) {
@@ -230,5 +224,17 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     public void setSearchText(String s) {
         this.searchBar.setValue(s);
+    }
+
+    private static class TextureButton extends Button {
+        private TextureButton(int x, int y, Button.OnPress onPress) {
+            super(x, y, 20, 20, Component.empty(), onPress, DEFAULT_NARRATION);
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            int textureY = this.isHoveredOrFocused() ? 20 : 0;
+            graphics.blit(ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0.0F, textureY, 20, 20, 40, 40);
+        }
     }
 }
