@@ -4,9 +4,7 @@
   "package": "committee.nova.mkw.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
-  "client": [
-    "MixinControlsOptionsScreen"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
