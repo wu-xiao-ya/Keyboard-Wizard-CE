@@ -24,7 +24,8 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             listHeight = this.keyWizardScreen.height - this.getY() - this.height - 10;
         }
         this.categoryList = new BindingCategoryListWidget(c, this.getY() + this.height, this.getX(), this.width, listHeight, listItemHeight);
-
+        this.categoryList.visible = false;
+        this.setMessage(Component.translatable(this.getSelectedCategory()));
     }
 
     @Override
