@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod(ModernKeyWizard.MODID)
 public class ModernKeyWizard {
-    public static final String MODID = "mkw";
+    public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
 

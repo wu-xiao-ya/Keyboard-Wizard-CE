@@ -3,6 +3,8 @@
 Modern KeyWizard Community Edition / unofficial port, published as 按键精灵社区版（Keyboard Wizard CE）, for `Minecraft 26.1.2` on `NeoForge 26.1.2.76`.
 
 - Branch: `ce/neoforge-26.1.2`
+- Mod id: `keyboard_wizard_ce`
+- Authors: MrNerdy42, Tapio, wu-xiao-ya
 - Java: `25`
 - Modification date: `2026-06-15`
 - Original project license: `AGPL-3.0-only`

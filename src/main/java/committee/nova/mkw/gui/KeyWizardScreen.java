@@ -5,6 +5,7 @@ import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
@@ -13,12 +14,15 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyWizardScreen extends OptionsSubScreen {
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
     private static final WidgetSprites SCREEN_TOGGLE_SPRITES = new WidgetSprites(
             ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
@@ -51,7 +55,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private Button auxiliaryLayoutButton;
 
     public KeyWizardScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.translatable("screen.mkw.title"));
+        super(parent, Minecraft.getInstance().options, Component.translatable("screen.keyboard_wizard_ce.title"));
     }
 
     @Override
@@ -160,6 +164,13 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.addRenderableWidget(resetBinding);
         this.addRenderableWidget(clearBinding);
         this.addRenderableWidget(resetAll);
+    }
+
+    @Override
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, 0, 0, 0.0F, 0.0F, this.width, this.height, 512, 512);
+        graphics.fill(0, 0, this.width, this.height, 0x77000000);
     }
 
     @Override
