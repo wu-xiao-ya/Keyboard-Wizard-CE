@@ -10,7 +10,7 @@ Original authors: MrNerdy42, Tapio.
 
 Modification target: `Minecraft 1.21.1 + NeoForge 21.1.219+`.
 
-Current branch builds include CE background assets, layout switching, and the Controls screen toggle button.
+Current branch builds include CE background assets, layout switching, the Controls screen toggle button, and key category localization.
 
 License obligations:
 
@@ -18,5 +18,6 @@ License obligations:
 - Keyboard Wizard upstream code remains under `MIT` where applicable.
 - Any distributed jar must be accompanied by the corresponding source code for the exact build.
 - Modified source should carry the modification date and clear CE attribution.
+
 
 
