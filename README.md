@@ -3,6 +3,8 @@
 This repository is the Community Edition and unofficial port of Modern KeyWizard, published as 按键精灵社区版（Keyboard Wizard CE） for `Minecraft 1.21.1 + NeoForge`.
 
 - Branch: `ce/neoforge-1.21.1`
+- Mod id: `keyboard_wizard_ce`
+- Authors: MrNerdy42, Tapio, wu-xiao-ya
 - Upstream project license: `AGPL-3.0-only`
 - Upstream Keyboard Wizard license: `MIT`
 - Modification date: `2026-06-15`

@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod(ModernKeyWizard.MODID)
 public class ModernKeyWizard {
-    public static final String MODID = "mkw";
+    public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     private static final KeyMapping KEY_OPEN_KEY_WIZARD = new KeyMapping(

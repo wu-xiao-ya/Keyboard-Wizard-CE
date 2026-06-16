@@ -48,7 +48,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private Button layoutButton;
 
     public KeyWizardScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.translatable("screen.mkw.title"));
+        super(parent, Minecraft.getInstance().options, Component.translatable("screen.keyboard_wizard_ce.title"));
     }
 
     @Override
@@ -167,7 +167,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     private Component getLayoutButtonLabel() {
-        return Component.translatable("gui.mkw.layout", this.keyboardLayout.getDisplayName());
+        return Component.translatable("gui.keyboard_wizard_ce.layout", this.keyboardLayout.getDisplayName());
     }
 
     private void cycleKeyboardLayout() {

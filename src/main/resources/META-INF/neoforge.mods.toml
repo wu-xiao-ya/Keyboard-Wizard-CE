@@ -10,7 +10,7 @@ authors = "${mod_authors}"
 description = '''${mod_description}'''
 
 [[mixins]]
-config = "mkw.mixins.json"
+config = "keyboard_wizard_ce.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"

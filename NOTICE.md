@@ -2,9 +2,11 @@
 
 Distribution name: 按键精灵社区版（Keyboard Wizard CE）.
 
+Mod id: `keyboard_wizard_ce`.
+
 Original author: the upstream Modern KeyWizard / Keyboard Wizard authors.
 
-Community Edition maintenance: this `ce/neoforge-1.21.1` branch.
+Community Edition maintenance: wu-xiao-ya, this `ce/neoforge-1.21.1` branch.
 
 Modification target: `Minecraft 1.21.1 + NeoForge`.
 

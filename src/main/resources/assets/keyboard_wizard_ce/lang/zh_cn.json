@@ -1,0 +1,23 @@
+{
+  "key.categories.keyboard_wizard_ce.all": "所有按键绑定",
+  "key.categories.keyboard_wizard_ce.conflicts": "冲突按键绑定",
+  "key.categories.keyboard_wizard_ce.unbound": "未绑定",
+  "key.categories.keyboard_wizard_ce.bindings": "按键精灵社区版（Keyboard Wizard CE）",
+  "screen.keyboard_wizard_ce.title": "按键精灵社区版（Keyboard Wizard CE）",
+  "key.categories.keyboard_wizard_ce.ctrl": "修饰键：CTRL",
+  "key.categories.keyboard_wizard_ce.alt": "修饰键：ALT",
+  "key.categories.keyboard_wizard_ce.shift": "修饰键：SHIFT",
+  "key.categories.keyboard_wizard_ce.no_modifier": "修饰键：NONE",
+  "gui.clear": "清除",
+  "gui.confirm.resetAll": "确认重置全部按键绑定？",
+  "key.keyboard_wizard_ce.openKeyWizard": "打开按键精灵社区版",
+  "gui.keyboard_wizard_ce.layout": "布局：%s",
+  "gui.keyboard_wizard_ce.layout.main": "主键盘",
+  "gui.keyboard_wizard_ce.layout.numpad": "小键盘",
+  "gui.keyboard_wizard_ce.layout.auxiliary": "辅助键",
+  "key.mouse.4": "Mouse4",
+  "key.mouse.5": "Mouse5",
+  "key.mouse.6": "Mouse6",
+  "key.mouse.7": "Mouse7",
+  "key.mouse.8": "Mouse8"
+}
