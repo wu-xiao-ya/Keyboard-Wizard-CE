@@ -7,7 +7,16 @@ This branch is the Community Edition / unofficial port of Modern KeyWizard, publ
 - Authors: MrNerdy42, Tapio, wu-xiao-ya
 - Upstream license: AGPL-3.0-only
 - Upstream project: Keyboard Wizard (MIT)
-- Modified on: `2026-06-15`
+- Target: Minecraft `1.20.1` + Forge `47.4.10+`
+- Modified on: `2026-06-16`
+
+## Current branch features
+
+- F7 opens Keyboard Wizard CE directly in-game.
+- Main keyboard, numpad, and auxiliary key layouts are available from the CE screen.
+- The vanilla Controls screen has a bottom-right toggle button for Keyboard Wizard CE.
+- The CE screen uses the packaged community background texture.
+- CE identity is published under `keyboard_wizard_ce`.
 
 ## Build
 
@@ -18,6 +27,8 @@ Use Java 17.
 ```
 
 The release jar is written to `build/libs/keyboard-wizard-ce-forge-1.20.1-2.1.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-forge-1.20.1-2.1.0-sources.jar`.
+
+Latest verified branch build: [GitHub Actions run 27617673586](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27617673586).
 
 See `CHANGELOG.md` for the CE port change summary.
 
