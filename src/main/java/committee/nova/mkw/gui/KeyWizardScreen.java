@@ -19,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyWizardScreen extends OptionsSubScreen {
+    private static final int KEYBOARD_HEIGHT = 180;
     private static final WidgetSprites SCREEN_TOGGLE_SPRITES = new WidgetSprites(
             ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
             ModernKeyWizard.SCREEN_TOGGLE_WIDGETS
@@ -41,6 +42,13 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private KeyBindingListWidget bindingList;
     private CategorySelectorWidget categorySelector;
     private EditBox searchBar;
+    private KeyboardLayout keyboardLayout = KeyboardLayout.MAIN;
+    private float keyboardAnchorX;
+    private float keyboardAnchorY;
+    private float keyboardWidth;
+    private Button mainLayoutButton;
+    private Button numpadLayoutButton;
+    private Button auxiliaryLayoutButton;
 
     public KeyWizardScreen(Screen parent) {
         super(parent, Minecraft.getInstance().options, Component.translatable("screen.mkw.title"));
@@ -68,8 +76,15 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
         int bindingListWidth = maxBindingNameWidth + 20;
         this.bindingList = new KeyBindingListWidget(this, 10, 10, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
-        this.keyboard = KeyboardWidgetBuilder.standardKeyboard(this, bindingListWidth + 15, this.height / 2.0F - 90.0F, this.width - (bindingListWidth + 15), 180);
+        this.keyboardAnchorX = bindingListWidth + 15;
+        this.keyboardAnchorY = this.height / 2.0F - KEYBOARD_HEIGHT / 2.0F;
+        this.keyboardWidth = this.width - this.keyboardAnchorX;
+        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
         this.categorySelector = new CategorySelectorWidget(this, bindingListWidth + 15, 5, maxCategoryWidth + 20, 20);
+        this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, bindingListWidth + 15, 28);
+        this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, bindingListWidth + 91, 28);
+        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, bindingListWidth + 167, 28);
+        updateLayoutButtons();
 
         ImageButton screenToggleButton = new ImageButton(
                 this.width - 22,
@@ -127,6 +142,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.addRenderableWidget(this.keyboard);
         this.addRenderableWidget(this.categorySelector);
         this.addRenderableWidget(this.categorySelector.getCategoryList());
+        this.addRenderableWidget(this.mainLayoutButton);
+        this.addRenderableWidget(this.numpadLayoutButton);
+        this.addRenderableWidget(this.auxiliaryLayoutButton);
         this.addRenderableWidget(screenToggleButton);
         this.addRenderableWidget(this.searchBar);
         this.addRenderableWidget(this.mouseButton);
@@ -139,6 +157,27 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     @Override
     protected void addOptions() {
+    }
+
+    private Button createLayoutButton(KeyboardLayout layout, int x, int y) {
+        return Button.builder(layout.getDisplayName(), b -> setKeyboardLayout(layout))
+                .bounds(x, y, 74, 20)
+                .build();
+    }
+
+    private void setKeyboardLayout(KeyboardLayout layout) {
+        if (this.keyboardLayout == layout) return;
+        this.keyboardLayout = layout;
+        this.removeWidget(this.keyboard);
+        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
+        this.addRenderableWidget(this.keyboard);
+        updateLayoutButtons();
+    }
+
+    private void updateLayoutButtons() {
+        if (this.mainLayoutButton != null) this.mainLayoutButton.active = this.keyboardLayout != KeyboardLayout.MAIN;
+        if (this.numpadLayoutButton != null) this.numpadLayoutButton.active = this.keyboardLayout != KeyboardLayout.NUMPAD;
+        if (this.auxiliaryLayoutButton != null) this.auxiliaryLayoutButton.active = this.keyboardLayout != KeyboardLayout.AUXILIARY;
     }
 
     @Override
