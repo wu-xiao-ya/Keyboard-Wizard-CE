@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.InputConstants.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,8 +25,13 @@ public class KeyBindingUtil {
     /**
      * Get a list of all binding categories
      */
+    @SuppressWarnings("resource")
     public static ArrayList<String> getCategories() {
-        return AccessorKeyBinding.getKeyCategories().stream().sorted().collect(Collectors.toCollection(ArrayList<String>::new));
+        LinkedHashSet<String> categories = new LinkedHashSet<>();
+        for (KeyMapping keyMapping : Minecraft.getInstance().options.keyMappings) {
+            categories.add(keyMapping.getCategory());
+        }
+        return categories.stream().sorted().collect(Collectors.toCollection(ArrayList<String>::new));
     }
 
     public static ArrayList<String> getCategoriesWithDynamics() {
