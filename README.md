@@ -4,7 +4,8 @@ This branch is the Community Edition / unofficial port of Modern KeyWizard, publ
 
 - Branch: `ce/forge-1.20.1`
 - Mod id: `keyboard_wizard_ce`
-- Authors: MrNerdy42, Tapio, wu-xiao-ya
+- Current author: WuXiaoYa
+- Original authors: MrNerdy42, Tapio
 - Upstream license: AGPL-3.0-only
 - Upstream project: Keyboard Wizard (MIT)
 - Target: Minecraft `1.20.1` + Forge `47.4.10+`
