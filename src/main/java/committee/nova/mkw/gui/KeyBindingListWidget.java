@@ -57,7 +57,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 }
             }
 
-            this.children().clear();
+            this.clearEntries();
             if (bindings.length > 0) {
                 for (KeyMapping k : bindings) this.addEntry(new BindingEntry(k));
                 this.setSelected(this.children().get(0));
