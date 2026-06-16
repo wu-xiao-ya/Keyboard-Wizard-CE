@@ -34,6 +34,12 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private Button resetBinding;
     private Button resetAll;
     private Button clearBinding;
+    private Button layoutButton;
+    private KeyboardLayout keyboardLayout = KeyboardLayout.MAIN;
+    private float keyboardAnchorX;
+    private float keyboardAnchorY;
+    private float keyboardWidth;
+    private static final int KEYBOARD_HEIGHT = 180;
 
     @SuppressWarnings("resource")
     public KeyWizardScreen(Screen parent) {
@@ -64,8 +70,12 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
         int bindingListWidth = (maxBindingNameWidth + 20);
         this.bindingList = new KeyBindingListWidget(this, 10, 10, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
-        this.keyboard = KeyboardWidgetBuilder.standardKeyboard(this, bindingListWidth + 15, this.height / 2.0F - 90.0F, this.width - (bindingListWidth + 15), 180);
+        this.keyboardAnchorX = bindingListWidth + 15;
+        this.keyboardAnchorY = this.height / 2.0F - KEYBOARD_HEIGHT / 2.0F;
+        this.keyboardWidth = this.width - this.keyboardAnchorX;
+        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
         this.categorySelector = new CategorySelectorWidget(this, bindingListWidth + 15, 5, maxCategoryWidth + 20, 20);
+        this.layoutButton = Button.builder(getLayoutButtonLabel(), b -> cycleKeyboardLayout()).bounds(this.width - 140, 5, 115, 20).build();
         this.screenToggleButton = new ImageButton(this.width - 22, this.height - 22, 20, 20, 20, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, (btn) -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options)));
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.literal(""));
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
@@ -113,6 +123,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.addRenderableWidget(this.keyboard);
         this.addRenderableWidget(this.categorySelector);
         this.addRenderableWidget(this.categorySelector.getCategoryList());
+        this.addRenderableWidget(this.layoutButton);
         this.addRenderableWidget(this.screenToggleButton);
         this.addRenderableWidget(this.searchBar);
         this.addRenderableWidget(this.mouseButton);
@@ -136,6 +147,15 @@ public class KeyWizardScreen extends OptionsSubScreen {
                 ((TickableElement) e).tick();
             }
         }
+    }
+
+    private Component getLayoutButtonLabel() {
+        return Component.translatable("gui.mkw.layout", this.keyboardLayout.getDisplayName());
+    }
+
+    private void cycleKeyboardLayout() {
+        this.keyboardLayout = this.keyboardLayout.next();
+        this.rebuildWidgets();
     }
 
     @Nullable
