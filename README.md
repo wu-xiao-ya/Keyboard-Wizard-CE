@@ -11,7 +11,7 @@
 | Minecraft 1.20.1 + Forge 47.4.10+ | `ce/forge-1.20.1` | 17 | [Actions run 27646830595](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646830595) | [`forge-1.20.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v1.0.0) |
 | Minecraft 1.21.1 + NeoForge 21.1.219+ | `ce/neoforge-1.21.1` | 21 | [Actions run 27646836029](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646836029) | [`neoforge-1.21.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v1.0.0) |
 | Minecraft 26.1.2 + NeoForge 26.1.2.x | `ce/neoforge-26.1.2` | 25 | [Actions run 27646857844](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646857844) | [`neoforge-26.1.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.0) |
-| Minecraft 26.2 + NeoForge 26.2.0.0-beta | `ce/neoforge-26.2` | 25 | [Actions run 27646882891](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646882891) | pending |
+| Minecraft 26.2 + NeoForge 26.2.0.0-beta | `ce/neoforge-26.2` | 25 | [Actions run 27647213392](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27647213392) | [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0) |
 
 CE 项目从 `1.0.0` 重新开始版本线。旧 `v2.1.0` tag 属于早期过渡构建，后续发布以 `v1.x.x` 为准。
 
@@ -58,4 +58,5 @@ Forge 1.20.1 分支也可以执行：
 - Modern KeyWizard 上游：https://github.com/VulpesStella/ModernKeyWizard
 - Keyboard Wizard 上游：https://github.com/Fuzss/keyboardwizard
 - Legacy reference：https://github.com/MrNerdy42/keywizard-legacy
+
 

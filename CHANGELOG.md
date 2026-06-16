@@ -1,5 +1,11 @@
 # Changelog
 
+## NeoForge 26.2 release - 2026-06-17
+
+- Published `neoforge-26.2-v1.0.0` from Actions run 27647213392.
+- Release includes the key category localization fix and matching source/checksum artifacts.
+
+
 ## Localization fix - 2026-06-17
 
 - Added key.category.keyboard_wizard_ce.bindings on all maintained branches so the Keyboard Wizard CE category name renders correctly in Controls screens.
@@ -11,7 +17,7 @@
 - Added `ce/neoforge-26.2` for Minecraft 26.2 + NeoForge 26.2.0.0-beta.
 - Ported the 26.1.2 CE feature set to the 26.2 screen API changes.
 - Verified GitHub Actions build `27646123159`.
-- Release is pending until runtime testing is complete.
+- Release was pending until runtime testing completed; current published tag is neoforge-26.2-v1.0.0.
 
 ## 1.0.0 CE - 2026-06-17
 
@@ -42,4 +48,6 @@
 - Added GitHub Actions build and release workflows for each version branch.
 - Added AGPL license files, CE notices, release documentation, and SHA-256 release checksums.
 - Bundled README, NOTICE, COPYING, and LICENSE files into published jars.
+
+
 
