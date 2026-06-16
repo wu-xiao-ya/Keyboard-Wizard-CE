@@ -8,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -24,10 +22,6 @@ import org.lwjgl.glfw.GLFW;
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
-    private static final WidgetSprites SCREEN_TOGGLE_SPRITES = new WidgetSprites(
-            ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
-            ModernKeyWizard.SCREEN_TOGGLE_WIDGETS
-    );
 
     private final int[] mouseCodes = {
             GLFW.GLFW_MOUSE_BUTTON_1,
@@ -97,12 +91,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY);
         updateLayoutButtons();
 
-        ImageButton screenToggleButton = new ImageButton(
+        Button screenToggleButton = createScreenToggleButton(
                 this.width - 22,
                 this.height - 22,
-                20,
-                20,
-                SCREEN_TOGGLE_SPRITES,
                 btn -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
         );
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
@@ -177,6 +168,10 @@ public class KeyWizardScreen extends OptionsSubScreen {
     protected void addOptions() {
     }
 
+    public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
+        return new TextureButton(x, y, onPress);
+    }
+
     private Button createLayoutButton(KeyboardLayout layout, int x, int y) {
         return Button.builder(layout.getDisplayName(), b -> setKeyboardLayout(layout))
                 .bounds(x, y, 74, 20)
@@ -226,5 +221,17 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     public void setSearchText(String s) {
         this.searchBar.setValue(s);
+    }
+
+    private static class TextureButton extends Button {
+        private TextureButton(int x, int y, Button.OnPress onPress) {
+            super(x, y, 20, 20, Component.empty(), onPress, DEFAULT_NARRATION);
+        }
+
+        @Override
+        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+            int textureY = this.isHoveredOrFocused() ? 20 : 0;
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0.0F, textureY, 20, 20, 40, 40);
+        }
     }
 }
