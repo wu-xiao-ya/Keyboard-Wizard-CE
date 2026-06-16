@@ -8,16 +8,17 @@
 
 | 目标 | 源码分支 | Java | 最新分支构建 | 基线 Release |
 | --- | --- | --- | --- | --- |
-| Minecraft 1.20.1 + Forge 47.4.10+ | `ce/forge-1.20.1` | 17 | [Actions run 27617673586](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27617673586) | [`forge-1.20.1-v2.1.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v2.1.0) |
-| Minecraft 1.21.1 + NeoForge 21.1.219+ | `ce/neoforge-1.21.1` | 21 | [Actions run 27619621187](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27619621187) | [`neoforge-1.21.1-v2.1.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v2.1.0) |
-| Minecraft 26.1.2 + NeoForge 26.1.2.x | `ce/neoforge-26.1.2` | 25 | [Actions run 27618961660](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27618961660) | [`neoforge-26.1.2-v2.1.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v2.1.0) |
+| Minecraft 1.20.1 + Forge 47.4.10+ | `ce/forge-1.20.1` | 17 | GitHub Actions | [`forge-1.20.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v1.0.0) |
+| Minecraft 1.21.1 + NeoForge 21.1.219+ | `ce/neoforge-1.21.1` | 21 | GitHub Actions | [`neoforge-1.21.1-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v1.0.0) |
+| Minecraft 26.1.2 + NeoForge 26.1.2.x | `ce/neoforge-26.1.2` | 25 | GitHub Actions | [`neoforge-26.1.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.0) |
 
-Release tag 是 v2.1.0 基线构建。分支上的最新修复和界面调整以 GitHub Actions 构建为准。
+CE 项目从 `1.0.0` 重新开始版本线。旧 `v2.1.0` tag 属于早期过渡构建，后续发布以 `v1.x.x` 为准。
 
 ## 当前功能
 
 - 模组名：按键精灵社区版（Keyboard Wizard CE）。
 - Mod id：`keyboard_wizard_ce`。
+- 当前 CE 版本：`1.0.0`。
 - F7 在游戏内直接打开 Keyboard Wizard CE。
 - 支持主键区、小键盘、辅助键三套键位布局切换。
 - 控制设置界面右下角提供原版 Controls 与 Keyboard Wizard CE 的切换按钮。

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0 CE - 2026-06-17
+
+- Restarted the Community Edition version line at `1.0.0`.
+- Updated supported release tags to:
+  - `forge-1.20.1-v1.0.0`
+  - `neoforge-1.21.1-v1.0.0`
+  - `neoforge-26.1.2-v1.0.0`
+- Kept the existing CE feature set: direct F7 opening, main / numpad / auxiliary layouts, CE background texture, Controls screen toggle button, and `keyboard_wizard_ce` metadata.
+
 ## Unreleased branch builds - 2026-06-16
 
 - Added a repository status update for all maintained CE branches.
