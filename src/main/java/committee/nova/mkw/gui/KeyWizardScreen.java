@@ -94,7 +94,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         Button screenToggleButton = createScreenToggleButton(
                 this.width - 22,
                 this.height - 22,
-                btn -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
+                btn -> this.minecraft.setScreenAndShow(new ControlsScreen(this.lastScreen, this.options))
         );
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
@@ -130,13 +130,13 @@ public class KeyWizardScreen extends OptionsSubScreen {
         }).bounds(bindingListWidth + 66, this.height - 23, 50, 20).build();
 
         Button resetAll = Button.builder(Component.translatable("controls.resetAll"), b -> {
-            final Screen current = this.minecraft.screen;
-            this.minecraft.setScreen(new ResetAllConfirmScreen(confirm -> {
+            final Screen current = this.minecraft.gui.screen();
+            this.minecraft.setScreenAndShow(new ResetAllConfirmScreen(confirm -> {
                 if (confirm) {
                     for (KeyMapping k : this.options.keyMappings) KeyBindingUtil.resetToDefault(k);
                     KeyMapping.resetMapping();
                 }
-                this.minecraft.setScreen(current);
+                this.minecraft.setScreenAndShow(current);
             }));
         }).bounds(bindingListWidth + 117, this.height - 23, 70, 20).build();
 

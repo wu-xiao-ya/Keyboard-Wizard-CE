@@ -50,7 +50,7 @@ public class ModernKeyWizard {
             }
 
             while (keyOpenKeyWizard.consumeClick()) {
-                client.setScreen(new KeyWizardScreen(client.screen));
+                client.setScreenAndShow(new KeyWizardScreen(client.gui.screen()));
             }
         }
     }

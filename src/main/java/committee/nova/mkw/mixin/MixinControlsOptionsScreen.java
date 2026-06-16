@@ -27,7 +27,7 @@ public abstract class MixinControlsOptionsScreen extends OptionsSubScreen {
                 this.height - 22,
                 btn -> {
                     if (minecraft == null) return;
-                    minecraft.setScreen(new KeyWizardScreen(this.lastScreen));
+                    minecraft.setScreenAndShow(new KeyWizardScreen(this.lastScreen));
                 }
         );
         this.addRenderableWidget(screenToggleButton);
