@@ -80,10 +80,17 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.keyboardAnchorY = this.height / 2.0F - KEYBOARD_HEIGHT / 2.0F;
         this.keyboardWidth = this.width - this.keyboardAnchorX;
         this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
-        this.categorySelector = new CategorySelectorWidget(this, bindingListWidth + 15, 5, maxCategoryWidth + 20, 20);
-        this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, bindingListWidth + 15, 28);
-        this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, bindingListWidth + 91, 28);
-        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, bindingListWidth + 167, 28);
+        int categorySelectorX = bindingListWidth + 15;
+        int categorySelectorY = 5;
+        int categorySelectorWidth = maxCategoryWidth + 20;
+        int layoutButtonWidth = 74;
+        int layoutButtonGap = 4;
+        int layoutButtonX = categorySelectorX + categorySelectorWidth + 8;
+
+        this.categorySelector = new CategorySelectorWidget(this, categorySelectorX, categorySelectorY, categorySelectorWidth, 20);
+        this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, layoutButtonX, categorySelectorY);
+        this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, layoutButtonX + layoutButtonWidth + layoutButtonGap, categorySelectorY);
+        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY);
         updateLayoutButtons();
 
         ImageButton screenToggleButton = new ImageButton(
