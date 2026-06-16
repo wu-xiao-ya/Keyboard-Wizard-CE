@@ -6,6 +6,7 @@
   - `ce/forge-1.20.1`
   - `ce/neoforge-1.21.1`
   - `ce/neoforge-26.1.2`
+  - `ce/neoforge-26.2`
 - Current CE mod id: `keyboard_wizard_ce`.
 - Current CE version line starts at `1.0.0`.
 - Old `v2.1.0` tags are early transitional builds; current publishing should use `v1.x.x` tags.

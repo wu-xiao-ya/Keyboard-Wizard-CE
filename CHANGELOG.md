@@ -1,5 +1,12 @@
 # Changelog
 
+## 26.2 preview branch - 2026-06-17
+
+- Added `ce/neoforge-26.2` for Minecraft 26.2 + NeoForge 26.2.0.0-beta.
+- Ported the 26.1.2 CE feature set to the 26.2 screen API changes.
+- Verified GitHub Actions build `27646123159`.
+- Release is pending until runtime testing is complete.
+
 ## 1.0.0 CE - 2026-06-17
 
 - Restarted the Community Edition version line at `1.0.0`.
