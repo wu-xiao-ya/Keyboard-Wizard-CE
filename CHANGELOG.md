@@ -17,7 +17,7 @@
 - Added the vanilla Controls screen bottom-right toggle button.
 - Rendered the toggle button from the packaged GUI texture instead of a missing sprite-atlas lookup.
 - Changed CE identity and metadata to `keyboard_wizard_ce`.
-- Latest verified Actions build: pending for `ce/neoforge-26.2`.
+- Latest verified Actions build: `27646123159`.
 
 ## 2.1.0 CE - 2026-06-15
 
