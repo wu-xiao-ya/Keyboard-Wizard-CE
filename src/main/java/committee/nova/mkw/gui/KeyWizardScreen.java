@@ -19,9 +19,18 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
+
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
+    private static final List<Component> HELP_TOOLTIP = List.of(
+            Component.translatable("gui.keyboard_wizard_ce.help.title"),
+            Component.translatable("gui.keyboard_wizard_ce.help.select"),
+            Component.translatable("gui.keyboard_wizard_ce.help.middle_click"),
+            Component.translatable("gui.keyboard_wizard_ce.help.colors"),
+            Component.translatable("gui.keyboard_wizard_ce.help.search")
+    );
 
     private final int[] mouseCodes = {
             GLFW.GLFW_MOUSE_BUTTON_1,
@@ -47,6 +56,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private Button mainLayoutButton;
     private Button numpadLayoutButton;
     private Button auxiliaryLayoutButton;
+    private Button helpButton;
     public static final String KEY_FILTER_PREFIX = "#key#";
 
     public KeyWizardScreen(Screen parent) {
@@ -97,6 +107,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
                 this.height - 22,
                 btn -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
         );
+        this.helpButton = Button.builder(Component.literal("?"), b -> {})
+                .bounds(this.width - 47, this.height - 22, 20, 20)
+                .build();
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
 
@@ -148,6 +161,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.addRenderableWidget(this.mainLayoutButton);
         this.addRenderableWidget(this.numpadLayoutButton);
         this.addRenderableWidget(this.auxiliaryLayoutButton);
+        this.addRenderableWidget(this.helpButton);
         this.addRenderableWidget(screenToggleButton);
         this.addRenderableWidget(this.searchBar);
         this.addRenderableWidget(this.mouseButton);
@@ -165,6 +179,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
         graphics.fill(0, 0, this.width, this.height, 0x77000000);
         for (Renderable renderable : this.renderables) {
             renderable.render(graphics, mouseX, mouseY, partialTick);
+        }
+        if (this.helpButton != null && this.helpButton.isHoveredOrFocused()) {
+            graphics.renderComponentTooltip(this.font, HELP_TOOLTIP, mouseX, mouseY);
         }
     }
 
