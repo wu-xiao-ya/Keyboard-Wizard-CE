@@ -12,6 +12,8 @@ Modification target: `Minecraft 1.21.1 + NeoForge 21.1.219+`.
 
 Current branch builds include CE background assets, layout switching, the Controls screen toggle button, and key category localization.
 
+Art assets: WI_8614_ice.
+
 License obligations:
 
 - This branch remains under `AGPL-3.0-only` for the upstream Modern KeyWizard codebase.

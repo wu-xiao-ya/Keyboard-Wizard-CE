@@ -44,17 +44,19 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private void updateList() {
         boolean filterUpdate = !this.currentFilterText.equals(this.keyWizardScreen.getFilterText());
         boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
+        boolean keyFilter = this.keyWizardScreen.getFilterText().startsWith(KeyWizardScreen.KEY_FILTER_PREFIX);
 
         if (categoryUpdate || filterUpdate) {
             if (categoryUpdate) this.currentCategory = this.keyWizardScreen.getSelectedCategory();
 
-            KeyMapping[] bindings = getBindingsByCategory(this.currentCategory);
+            KeyMapping[] bindings = getBindingsByCategory(keyFilter ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
 
             if (filterUpdate) {
                 this.currentFilterText = this.keyWizardScreen.getFilterText();
-                if (!this.currentFilterText.equals("")) {
-                    bindings = filterBindings(bindings, this.currentFilterText);
-                }
+            }
+
+            if (!this.currentFilterText.equals("")) {
+                bindings = filterBindings(bindings, this.currentFilterText, keyFilter);
             }
 
             this.clearEntries();
@@ -68,8 +70,12 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
-    private KeyMapping[] filterBindings(KeyMapping[] bindings, String filterText) {
+    private KeyMapping[] filterBindings(KeyMapping[] bindings, String filterText, boolean keyFilter) {
         KeyMapping[] bindingsFiltered = bindings;
+        if (keyFilter) {
+            filterText = filterText.substring(KeyWizardScreen.KEY_FILTER_PREFIX.length());
+        }
+
         Matcher keyNameMatcher = Pattern.compile("<.*>").matcher(filterText);
 
         if (keyNameMatcher.find()) {

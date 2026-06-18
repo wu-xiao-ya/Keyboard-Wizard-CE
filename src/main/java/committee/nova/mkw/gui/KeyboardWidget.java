@@ -134,6 +134,20 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         }
 
         @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (!this.active || !this.visible || !this.isHovered()) {
+                return false;
+            }
+
+            if (button == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
+                keyWizardScreen.setSearchTextForKey(this.key);
+                return true;
+            }
+
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        @Override
         protected void updateWidgetNarration(NarrationElementOutput output) {
             output.add(NarratedElementType.TITLE, this.getMessage());
         }
@@ -141,7 +155,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         @Override
         public void onPress() {
             if (Screen.hasAltDown() && Screen.hasControlDown()) {
-                keyWizardScreen.setSearchText("<" + this.getMessage().getString() + ">");
+                keyWizardScreen.setSearchTextForKey(this.key);
                 return;
             }
 
