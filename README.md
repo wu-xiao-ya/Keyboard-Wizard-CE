@@ -4,7 +4,7 @@ This repository is the Community Edition and unofficial port of Modern KeyWizard
 
 - Branch: `ce/neoforge-1.21.1`
 - Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.0`
+- CE version: `1.0.1`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
 - Art assets: WI_8614_ice

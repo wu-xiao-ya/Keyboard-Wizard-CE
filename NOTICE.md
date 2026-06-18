@@ -4,6 +4,8 @@ Distribution name: 按键精灵社区版（Keyboard Wizard CE）.
 
 Mod id: `keyboard_wizard_ce`.
 
+Current CE version: `1.0.1`.
+
 Current author / Community Edition maintenance: WuXiaoYa, this `ce/neoforge-1.21.1` branch.
 
 Original authors: MrNerdy42, Tapio.
