@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "${name}",
+    "description": "A client-side key binding manager that helps find conflicts and rebind controls from an on-screen keyboard.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ${authorList},
+    "credits": "${credits}",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

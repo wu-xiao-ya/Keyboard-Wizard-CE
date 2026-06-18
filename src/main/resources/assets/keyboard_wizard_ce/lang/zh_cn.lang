@@ -1,0 +1,20 @@
+language.name=Simplified Chinese
+language.region=CN
+language.code=zh_cn
+
+categories.all=All Bindings
+categories.conflicts=Conflicting
+categories.unbound=Unbound
+
+gui.openKeyWiz=Keyboard Wizard
+gui.done=Done
+gui.resetBinding=Reset Binding
+gui.clearBinding=Clear Binding
+gui.activeModifier=Active Modifier
+gui.bindingCategories=Binding Categories
+gui.page=Page
+gui.mouse=Mouse
+
+keywizard.keybind.openKeyboardWizard=Open Key Wizard
+key.keyboard_wizard_ce.openKeyWizard=Open Keyboard Wizard CE
+key.categories.keyboard_wizard_ce.bindings=Keyboard Wizard CE

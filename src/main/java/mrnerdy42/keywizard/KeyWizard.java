@@ -1,35 +1,27 @@
 package mrnerdy42.keywizard;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import mrnerdy42.keywizard.handlers.ClientEventHandler;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-@Mod(KeyWizard.MODID)
+@Mod(modid = KeyWizard.MODID, name = KeyWizard.NAME, version = KeyWizard.VERSION, acceptedMinecraftVersions = "[1.12.2]", clientSideOnly = true)
 public class KeyWizard {
-	
-	public static final String MODID = "keywizard";
-	
-	public static final Logger LOGGER = LogManager.getLogger(MODID);
-	
-	
-	public KeyWizard() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-        
-        ModLoadingContext.get().registerConfig(Type.CLIENT, KeyWizardConfig.SPEC, "keywizard-client.toml");
-	}
-	
-    public void clientSetup(final FMLClientSetupEvent e) {
-    	LOGGER.log(Level.DEBUG, MODID);
-    	MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+
+    public static final String MODID = "keyboard_wizard_ce";
+    public static final String NAME = "\u6309\u952e\u7cbe\u7075\u793e\u533a\u7248\uff08Keyboard Wizard CE\uff09";
+    public static final String VERSION = "1.0.0";
+
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
+
+    @SidedProxy(clientSide = "mrnerdy42.keywizard.ClientProxy", serverSide = "mrnerdy42.keywizard.CommonProxy")
+    public static CommonProxy proxy;
+
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.init();
     }
 }

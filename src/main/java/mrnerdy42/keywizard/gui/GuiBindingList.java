@@ -111,7 +111,7 @@ public class GuiBindingList extends GuiScrollingList {
 		case "categories.unbound":
 			return Arrays.stream(bindings).filter(binding -> binding.getKeyCode() == 0).toArray(KeyBinding[]::new);
 		default:
-			return Arrays.stream(bindings).filter(binding -> binding.getKeyCategory() == category).toArray(KeyBinding[]::new);
+			return Arrays.stream(bindings).filter(binding -> binding.getKeyCategory().equals(category)).toArray(KeyBinding[]::new);
 		}
 	}
 	
