@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -140,6 +141,9 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
+        private static final String CATEGORY_PREFIX = "key.categories.";
+        private static final int CATEGORY_RIGHT_PADDING = 4;
+        private static final int CATEGORY_BOTTOM_PADDING = 3;
         private final KeyMapping keyMapping;
 
         public BindingEntry(KeyMapping keyMapping) {
@@ -150,6 +154,32 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             graphics.drawString(minecraft.font, Component.translatable(this.keyMapping.getName()), x, y, 0xFFFFFFFF);
             graphics.drawString(minecraft.font, this.keyMapping.getTranslatedKeyMessage(), x, y + minecraft.font.lineHeight + 5, 0xFF999999);
+            String categoryText = getCategoryDisplayLabel(this.keyMapping);
+            int maxCategoryWidth = entryWidth - CATEGORY_RIGHT_PADDING * 2;
+            if (maxCategoryWidth > 0 && !categoryText.isEmpty()) {
+                String clippedCategoryText = minecraft.font.plainSubstrByWidth(categoryText, maxCategoryWidth);
+                int categoryX = x + entryWidth - CATEGORY_RIGHT_PADDING - minecraft.font.width(clippedCategoryText);
+                int categoryY = y + entryHeight - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
+                graphics.drawString(minecraft.font, clippedCategoryText, categoryX, categoryY, 0xFF808080);
+            }
+        }
+
+        private String getCategoryDisplayLabel(KeyMapping keyMapping) {
+            String category = keyMapping.getCategory();
+            String translatedCategory = Component.translatable(category).getString();
+            if (category.startsWith(CATEGORY_PREFIX)) {
+                return getCategoryDisplayLabel(category.substring(CATEGORY_PREFIX.length()), translatedCategory);
+            }
+
+            return translatedCategory;
+        }
+
+        private String getCategoryDisplayLabel(String categoryPath, String translatedCategory) {
+            int separatorIndex = categoryPath.indexOf('.');
+            String modId = separatorIndex > 0 ? categoryPath.substring(0, separatorIndex) : categoryPath;
+            return ModList.get().getModContainerById(modId)
+                    .map(mod -> mod.getModInfo().getDisplayName() + " / " + translatedCategory)
+                    .orElse(translatedCategory);
         }
     }
 
