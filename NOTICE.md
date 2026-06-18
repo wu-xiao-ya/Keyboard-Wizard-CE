@@ -3,7 +3,7 @@
 按键精灵社区版（Keyboard Wizard CE） is an unofficial Community Edition port of Modern KeyWizard.
 
 - Mod id: `keyboard_wizard_ce`
-- Current CE version: `1.0.0`.
+- Current CE version: `1.0.1`.
 - Current author / CE maintenance: WuXiaoYa, Community Edition maintainer for `ce/neoforge-26.1.2`
 - Original authors: MrNerdy42, Tapio.
 - Modification target: `Minecraft 26.1.2` + `NeoForge 26.1.2.x`

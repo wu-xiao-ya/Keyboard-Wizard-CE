@@ -4,7 +4,7 @@ Modern KeyWizard Community Edition / unofficial port, published as 按键精灵�
 
 - Branch: `ce/neoforge-26.1.2`
 - Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.0`
+- CE version: `1.0.1`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
 - Art assets: WI_8614_ice
