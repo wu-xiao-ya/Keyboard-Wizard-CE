@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -140,6 +141,8 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
+        private static final int CATEGORY_RIGHT_PADDING = 6;
+        private static final int CATEGORY_BOTTOM_PADDING = 3;
         private final KeyMapping keyMapping;
 
         public BindingEntry(KeyMapping keyMapping) {
@@ -148,8 +151,39 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
         @Override
         public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            graphics.text(minecraft.font, Component.translatable(this.keyMapping.getName()), this.getContentX(), this.getContentY(), 0xFFFFFFFF);
-            graphics.text(minecraft.font, this.keyMapping.getTranslatedKeyMessage(), this.getContentX(), this.getContentY() + minecraft.font.lineHeight + 5, 0xFF999999);
+            int contentX = this.getContentX();
+            int contentY = this.getContentY();
+            int contentRight = KeyBindingListWidget.this.getRowRight() - 6;
+            int maxTextWidth = Math.max(0, contentRight - contentX);
+
+            graphics.text(minecraft.font, trimToWidth(Component.translatable(this.keyMapping.getName()), maxTextWidth), contentX, contentY, 0xFFFFFFFF);
+            graphics.text(minecraft.font, trimToWidth(this.keyMapping.getTranslatedKeyMessage(), maxTextWidth), contentX, contentY + minecraft.font.lineHeight + 5, 0xFF999999);
+
+            String categoryLabel = getCategoryDisplayLabel(this.keyMapping);
+            if (!categoryLabel.isEmpty()) {
+                String trimmedCategory = minecraft.font.plainSubstrByWidth(categoryLabel, maxTextWidth);
+                int categoryWidth = minecraft.font.width(trimmedCategory);
+                int categoryX = Math.max(contentX, contentRight - CATEGORY_RIGHT_PADDING - categoryWidth);
+                int categoryY = this.getContentY() + this.getContentHeight() - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
+                graphics.text(minecraft.font, trimmedCategory, categoryX, categoryY, 0xFF808080);
+            }
+        }
+
+        private String getCategoryDisplayLabel(KeyMapping keyMapping) {
+            KeyMapping.Category category = keyMapping.getCategory();
+            String translatedCategory = category.label().getString();
+            String modId = category.id().getNamespace();
+            return ModList.get().getModContainerById(modId)
+                    .map(mod -> mod.getModInfo().getDisplayName() + " / " + translatedCategory)
+                    .orElse(translatedCategory);
+        }
+
+        private Component trimToWidth(Component component, int width) {
+            if (width <= 0) {
+                return Component.empty();
+            }
+            String text = component.getString();
+            return Component.literal(minecraft.font.plainSubstrByWidth(text, width));
         }
     }
 
