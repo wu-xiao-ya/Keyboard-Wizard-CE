@@ -19,9 +19,18 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
+
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
+    private static final List<Component> HELP_TOOLTIP = List.of(
+            Component.translatable("gui.keyboard_wizard_ce.help.title"),
+            Component.translatable("gui.keyboard_wizard_ce.help.select"),
+            Component.translatable("gui.keyboard_wizard_ce.help.middle_click"),
+            Component.translatable("gui.keyboard_wizard_ce.help.colors"),
+            Component.translatable("gui.keyboard_wizard_ce.help.search")
+    );
 
     private final int[] mouseCodes = {
             GLFW.GLFW_MOUSE_BUTTON_1,
@@ -97,6 +106,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
                 this.height - 22,
                 btn -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
         );
+        Button helpButton = new HelpButton(this.width - 47, this.height - 22);
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
 
@@ -148,6 +158,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.addRenderableWidget(this.mainLayoutButton);
         this.addRenderableWidget(this.numpadLayoutButton);
         this.addRenderableWidget(this.auxiliaryLayoutButton);
+        this.addRenderableWidget(helpButton);
         this.addRenderableWidget(screenToggleButton);
         this.addRenderableWidget(this.searchBar);
         this.addRenderableWidget(this.mouseButton);
@@ -237,6 +248,26 @@ public class KeyWizardScreen extends OptionsSubScreen {
         protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             int textureY = this.isHoveredOrFocused() ? 20 : 0;
             graphics.blit(RenderPipelines.GUI_TEXTURED, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0.0F, textureY, 20, 20, 40, 40);
+        }
+    }
+
+    private static class HelpButton extends Button {
+        private HelpButton(int x, int y) {
+            super(x, y, 20, 20, Component.literal("?"), button -> {}, DEFAULT_NARRATION);
+        }
+
+        @Override
+        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+            this.extractDefaultSprite(graphics);
+            this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
+            if (this.isHoveredOrFocused()) {
+                graphics.setTooltipForNextFrame(
+                        Minecraft.getInstance().font,
+                        HELP_TOOLTIP.stream().map(Component::getVisualOrderText).toList(),
+                        mouseX,
+                        mouseY
+                );
+            }
         }
     }
 }
