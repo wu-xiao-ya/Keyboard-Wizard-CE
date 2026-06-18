@@ -2,6 +2,7 @@ package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.util.KeyBindingUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -12,9 +13,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.KeyMapping;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.Component;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraftforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -44,6 +46,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private float keyboardAnchorY;
     private float keyboardWidth;
     private static final int KEYBOARD_HEIGHT = 180;
+    public static final String KEY_FILTER_PREFIX = "#key#";
 
     @SuppressWarnings("resource")
     public KeyWizardScreen(Screen parent) {
@@ -209,5 +212,15 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.searchBar.setValue(s);
     }
 
-}
+    public void setSearchTextForKey(InputConstants.Key key) {
+        Component keyName = key.getDisplayName();
+        String searchKey;
+        if (keyName.getContents() instanceof TranslatableContents contents) {
+            searchKey = I18n.get(contents.getKey());
+        } else {
+            searchKey = keyName.getString();
+        }
+        this.setSearchText(KEY_FILTER_PREFIX + "<" + searchKey + ">");
+    }
 
+}

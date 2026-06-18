@@ -155,6 +155,20 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         }
 
         @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (!this.active || !this.visible || !this.isHovered()) {
+                return false;
+            }
+
+            if (button == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
+                keyWizardScreen.setSearchTextForKey(this.key);
+                return true;
+            }
+
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        @Override
         public void onPress() {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             if (Screen.hasAltDown() && Screen.hasControlDown()) {
