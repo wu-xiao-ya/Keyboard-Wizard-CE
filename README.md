@@ -4,9 +4,10 @@ Modern KeyWizard Community Edition / unofficial port, published as 按键精灵�
 
 - Branch: `ce/neoforge-26.2`
 - Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.0`
+- CE version: `1.0.1`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
+- Art assets: WI_8614_ice
 - Java: `25`
 - Target: Minecraft `26.2` + NeoForge `26.2.0.0-beta`
 - Modification date: `2026-06-17`
@@ -25,31 +26,6 @@ This branch is maintained as a Community Edition port. It is not the upstream pr
 - The toggle button is rendered from the packaged GUI texture to avoid missing-texture atlas lookups.
 - The CE screen uses the packaged community background texture.
 - CE identity is published under `keyboard_wizard_ce`.
-
-## Build
-
-Use Java 25.
-
-```powershell
-.\gradlew.bat assemble
-```
-
-For offline local verification with a prepared NeoForge cache:
-
-```powershell
-$env:NEOFORGE_LOCAL_MAVEN='<path-to-local-neoforge-cache>'
-.\gradlew.bat assemble --offline
-```
-
-The release jar is written to `build/libs/keyboard-wizard-ce-neoforge-26.2-1.0.0.jar`; the matching source jar is `build/libs/keyboard-wizard-ce-neoforge-26.2-1.0.0-sources.jar`.
-
-Release tag: [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0).
-
-Latest verified branch build: [GitHub Actions run 27646882891](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646882891).
-
-See `CHANGELOG.md` for the CE port change summary.
-
-When distributing a release jar, provide the corresponding source for that jar together with the binary.
 
 
 

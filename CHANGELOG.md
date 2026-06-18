@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 CE - 2026-06-19
+
+- Published this branch under release tag neoforge-26.2-v1.0.1.
+- Added the left-side key binding mod/category label so similar bindings from different mods are easier to distinguish.
+
 ## Localization fix - 2026-06-17
 
 - Added the singular key category localization key key.category.keyboard_wizard_ce.bindings so the Controls screen shows the Keyboard Wizard CE category name instead of the raw translation key.
