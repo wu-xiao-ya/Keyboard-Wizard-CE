@@ -47,6 +47,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private Button mainLayoutButton;
     private Button numpadLayoutButton;
     private Button auxiliaryLayoutButton;
+    public static final String KEY_FILTER_PREFIX = "#key#";
 
     public KeyWizardScreen(Screen parent) {
         super(parent, Minecraft.getInstance().options, Component.translatable("screen.keyboard_wizard_ce.title"));
@@ -221,6 +222,10 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     public void setSearchText(String s) {
         this.searchBar.setValue(s);
+    }
+
+    public void setSearchTextForKey(InputConstants.Key key) {
+        this.setSearchText(KEY_FILTER_PREFIX + "<" + key.getDisplayName().getString() + ">");
     }
 
     private static class TextureButton extends Button {

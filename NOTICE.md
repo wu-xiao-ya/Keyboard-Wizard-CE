@@ -9,6 +9,7 @@
 - Modification target: `Minecraft 26.1.2` + `NeoForge 26.1.2.x`
 - Modification date: `2026-06-17`
 - Current branch builds include CE background assets, layout switching, the Controls screen toggle button, and key category localization.
+- Art assets: WI_8614_ice.
 
 License obligations:
 
