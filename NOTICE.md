@@ -13,6 +13,7 @@
 - Old `v2.1.0` tags are early transitional builds; current publishing should use `v1.x.x` tags.
 - Original authors: the upstream Modern KeyWizard / Keyboard Wizard authors.
 - CE maintenance: community-maintained updates and compatibility ports.
+- Art assets: WI_8614_ice.
 - Licensing: this distribution follows the upstream AGPL-3.0-only obligations for Modern KeyWizard content; Keyboard Wizard upstream is MIT.
 - Distribution duty: if you publish a jar, provide the matching source code for that exact build alongside it.
 

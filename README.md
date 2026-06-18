@@ -26,29 +26,6 @@ CE 项目从 `1.0.0` 重新开始版本线。旧 `v2.1.0` tag 属于早期过渡
 - CE 界面使用独立背景材质，按钮图标使用随模组打包的材质文件。
 - 已补充 key.category.keyboard_wizard_ce.bindings，按键控制界面不再显示原始翻译键。
 
-## 分支策略
-
-- `main` 只放仓库级文档。
-- 每个 `ce/*` 分支包含一个目标版本的完整源码。
-- 不在版本分支之间直接合并；跨版本改动按目标 API 手动移植。
-- 发布 jar 时必须同时提供该 jar 对应的源码。
-
-## 构建
-
-进入对应版本分支后执行：
-
-```powershell
-.\gradlew.bat assemble
-```
-
-Forge 1.20.1 分支也可以执行：
-
-```powershell
-.\gradlew.bat build --warning-mode all
-```
-
-26.1.2 构建压力较高，优先使用 GitHub Actions 生成产物。
-
 ## 授权与来源
 
 本社区版按 Modern KeyWizard 上游的 AGPL-3.0-only 义务分发。发布二进制 jar 时，需要提供对应源码。
@@ -58,5 +35,4 @@ Forge 1.20.1 分支也可以执行：
 - Modern KeyWizard 上游：https://github.com/VulpesStella/ModernKeyWizard
 - Keyboard Wizard 上游：https://github.com/Fuzss/keyboardwizard
 - Legacy reference：https://github.com/MrNerdy42/keywizard-legacy
-
-
+- Art assets: WI_8614_ice
