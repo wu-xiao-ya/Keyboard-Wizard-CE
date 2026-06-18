@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -149,6 +150,9 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
     public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
 
+        private static final String CATEGORY_PREFIX = "key.categories.";
+        private static final int CATEGORY_RIGHT_PADDING = 4;
+        private static final int CATEGORY_BOTTOM_PADDING = 3;
         private final KeyMapping keyBinding;
 
         public BindingEntry(KeyMapping keyBinding) {
@@ -160,8 +164,33 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             ctx.drawString(minecraft.font, Component.translatable(this.keyBinding.getName()), x, y, 0xFFFFFFFF);
             int color = 0xFF999999;
             ctx.drawString(minecraft.font, this.keyBinding.getTranslatedKeyMessage(), x, y + minecraft.font.lineHeight + 5, color);
+            String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
+            int maxCategoryWidth = entryWidth - CATEGORY_RIGHT_PADDING * 2;
+            if (maxCategoryWidth > 0 && !categoryLabel.isEmpty()) {
+                String clippedCategoryLabel = minecraft.font.plainSubstrByWidth(categoryLabel, maxCategoryWidth);
+                int categoryX = x + entryWidth - CATEGORY_RIGHT_PADDING - minecraft.font.width(clippedCategoryLabel);
+                int categoryY = y + entryHeight - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
+                ctx.drawString(minecraft.font, clippedCategoryLabel, categoryX, categoryY, 0xFF7F7F7F);
+            }
+        }
+
+        private String getCategoryDisplayLabel(KeyMapping keyBinding) {
+            String category = keyBinding.getCategory();
+            String translatedCategory = Component.translatable(category).getString();
+            if (!category.startsWith(CATEGORY_PREFIX)) {
+                return translatedCategory;
+            }
+
+            String categoryPath = category.substring(CATEGORY_PREFIX.length());
+            if (categoryPath.isEmpty()) {
+                return translatedCategory;
+            }
+
+            String modId = categoryPath.split("\\.")[0];
+            return ModList.get().getModContainerById(modId)
+                    .map(mod -> mod.getModInfo().getDisplayName() + " / " + translatedCategory)
+                    .orElse(translatedCategory);
         }
 
     }
 }
-
