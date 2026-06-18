@@ -8,7 +8,7 @@
   - `ce/neoforge-26.1.2`
   - `ce/neoforge-26.2`
 - Current CE mod id: `keyboard_wizard_ce`.
-- Current CE version line starts at `1.0.0`.
+- Current CE version line is `1.0.1`.
 - Current branch builds include key category localization for key.category.keyboard_wizard_ce.bindings.
 - Old `v2.1.0` tags are early transitional builds; current publishing should use `v1.x.x` tags.
 - Original authors: the upstream Modern KeyWizard / Keyboard Wizard authors.

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 CE - 2026-06-19
+
+- Published updated release tags for the maintained production branches:
+  - `forge-1.20.1-v1.0.1`
+  - `neoforge-1.21.1-v1.0.1`
+  - `neoforge-26.1.2-v1.0.1`
+- Added the left-side key binding mod/category label on those branches so similar bindings from different mods are easier to distinguish.
+
 ## NeoForge 26.2 release - 2026-06-17
 
 - Published `neoforge-26.2-v1.0.0` from Actions run 27647213392.
