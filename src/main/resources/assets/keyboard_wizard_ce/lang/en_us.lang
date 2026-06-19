@@ -14,6 +14,10 @@ gui.activeModifier=Active Modifier
 gui.bindingCategories=Binding Categories
 gui.page=Page
 gui.mouse=Mouse
+gui.help.tooltip.1=Select a key binding on the left, then left-click a keyboard key to bind it.
+gui.help.tooltip.2=Middle-click a keyboard key to show all key bindings assigned to that key.
+gui.help.tooltip.3=Use category and search to narrow the binding list.
+gui.help.tooltip.4=Key colors indicate unbound, single, or conflicting bindings.
 
 keywizard.keybind.openKeyboardWizard=Open Key Wizard
 key.keyboard_wizard_ce.openKeyWizard=Open Keyboard Wizard CE
