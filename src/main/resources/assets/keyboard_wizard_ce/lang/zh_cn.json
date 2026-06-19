@@ -1,0 +1,18 @@
+{
+  "key.categories.keyboard_wizard_ce.all": "\u6240\u6709\u6309\u952e\u7ed1\u5b9a",
+  "key.categories.keyboard_wizard_ce.conflicts": "\u51b2\u7a81\u6309\u952e\u7ed1\u5b9a",
+  "key.categories.keyboard_wizard_ce.unbound": "\u672a\u7ed1\u5b9a",
+  "key.categories.keyboard_wizard_ce.bindings": "\u6309\u952e\u7cbe\u7075\u793e\u533a\u7248",
+  "key.categories.keyboard_wizard_ce.ctrl": "\u4fee\u9970\u952e\uff1aCTRL",
+  "key.categories.keyboard_wizard_ce.alt": "\u4fee\u9970\u952e\uff1aALT",
+  "key.categories.keyboard_wizard_ce.shift": "\u4fee\u9970\u952e\uff1aSHIFT",
+  "key.categories.keyboard_wizard_ce.no_modifier": "\u4fee\u9970\u952e\uff1aNONE",
+  "gui.clear": "\u6e05\u9664",
+  "gui.confirm.resetAll": "\u786e\u8ba4\u91cd\u7f6e\u6240\u6709\u6309\u952e\u7ed1\u5b9a\uff1f",
+  "key.keyboard_wizard_ce.openKeyWizard": "\u6253\u5f00\u6309\u952e\u7cbe\u7075 CE",
+  "key.mouse.4": "Mouse4",
+  "key.mouse.5": "Mouse5",
+  "key.mouse.6": "Mouse6",
+  "key.mouse.7": "Mouse7",
+  "key.mouse.8": "Mouse8"
+}
