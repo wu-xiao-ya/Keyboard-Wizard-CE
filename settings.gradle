@@ -9,4 +9,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'ModernKeyWizard-forge-1.20.1'
+rootProject.name = 'ModernKeyWizard-forge-1.16.5'

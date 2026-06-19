@@ -4,12 +4,14 @@ import committee.nova.mkw.gui.KeyWizardScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.controls.ControlsScreen;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraft.client.gui.screen.ControlsScreen;
+import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = new ResourceLocation(MODID, "textures/gui/screen_toggle_widgets.png");
 
     private static KeyMapping keyOpenKeyWizard;
 
@@ -32,9 +34,9 @@ public class ModernKeyWizard {
     @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ModClientEvents {
         @SubscribeEvent
-        public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-            keyOpenKeyWizard = new KeyMapping("key." + MODID + ".openKeyWizard", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings");
-            event.register(keyOpenKeyWizard);
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            keyOpenKeyWizard = new KeyMapping("key." + MODID + ".openKeyWizard", GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings");
+            ClientRegistry.registerKeyBinding(keyOpenKeyWizard);
         }
     }
 
@@ -51,7 +53,8 @@ public class ModernKeyWizard {
 
         @SubscribeEvent
         public static void onScreenInit(ScreenEvent.Init.Post event) {
-            if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
+            if (!(event.getScreen() instanceof ControlsScreen)) return;
+            ControlsScreen controlsScreen = (ControlsScreen) event.getScreen();
             ImageButton screenToggleButton = new ImageButton(
                     controlsScreen.width - 22,
                     controlsScreen.height - 22,
@@ -60,14 +63,12 @@ public class ModernKeyWizard {
                     0,
                     0,
                     20,
-                    ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
+                    SCREEN_TOGGLE_WIDGETS,
                     40,
                     40,
                     btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))
             );
-            event.addListener(screenToggleButton);
+            event.addWidget(screenToggleButton);
         }
     }
-
 }
-

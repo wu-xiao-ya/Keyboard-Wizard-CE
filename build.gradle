@@ -1,19 +1,28 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:4.1.+'
+    }
+}
+
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'maven-publish'
 }
+
+apply plugin: 'net.minecraftforge.gradle'
 
 group = project.maven_group
 version = project.mod_version
 
-base {
-    archivesName = project.archives_base_name
-}
+archivesBaseName = project.archives_base_name
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
     withSourcesJar()
 }
 
@@ -35,6 +44,8 @@ minecraft {
 }
 
 repositories {
+    maven { url = 'https://maven.minecraftforge.net/' }
+    mavenCentral()
 }
 
 dependencies {
@@ -44,7 +55,7 @@ dependencies {
 tasks.named('processResources', ProcessResources).configure {
     filteringCharset = 'UTF-8'
 
-    var replaceProperties = [
+    def replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             forge_version          : forge_version,

@@ -3,10 +3,10 @@ name: Build CE
 on:
   push:
     branches:
-      - ce/forge-1.20.1
+      - ce/forge-1.16.5
   pull_request:
     branches:
-      - ce/forge-1.20.1
+      - ce/forge-1.16.5
   workflow_dispatch:
 
 env:
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '8'
           cache: gradle
 
       - name: Make Gradle wrapper executable
@@ -36,7 +36,7 @@ jobs:
       - name: Upload jars
         uses: actions/upload-artifact@v4
         with:
-          name: keyboard-wizard-ce-forge-1.20.1
+          name: keyboard-wizard-ce-forge-1.16.5
           path: |
             build/libs/*.jar
             build/release/*.zip
