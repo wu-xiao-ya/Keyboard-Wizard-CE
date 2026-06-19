@@ -1,9 +1,9 @@
 package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 
 import java.util.Objects;
@@ -36,33 +36,33 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    public void renderBackground(GuiGraphics ctx) {
-        ctx.fillGradient(this.x0, this.y0, this.x1, this.y1, -1072689136, -804253680);
+    public void renderBackground(PoseStack poseStack) {
+        fillGradient(poseStack, this.x0, this.y0, this.x1, this.y1, -1072689136, -804253680);
     }
 
     @Override
-    protected void renderList(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+    protected void renderList(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         double scaleH = this.minecraft.getWindow().getHeight() / (double) this.minecraft.getWindow().getGuiScaledHeight();
         double scaleW = this.minecraft.getWindow().getWidth() / (double) this.minecraft.getWindow().getGuiScaledWidth();
         RenderSystem.enableScissor((int) (this.x0 * scaleW), (int) (this.minecraft.getWindow().getHeight() - (this.y1 * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
 
         for (int i = 0; i < this.getItemCount(); ++i) {
             if (this.isSelectedItem(i)) {
-                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight() - 8, this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
+                DrawingUtil.drawNoFillRect(poseStack, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight() - 8, this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
             }
 
             Entry entry = getEntry(i);
             //this.itemHeight - 4??
-            entry.render(ctx, i, this.getRowTop(i), this.getRowLeft(), this.getRowWidth(), this.itemHeight - 4, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPosition(mouseX, mouseY), entry), delta);
+            entry.render(poseStack, i, this.getRowTop(i), this.getRowLeft(), this.getRowWidth(), this.itemHeight - 4, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPosition(mouseX, mouseY), entry), delta);
         }
         RenderSystem.disableScissor();
     }
 
     @Override
-    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            this.renderBackground(ctx);
-            super.render(ctx, mouseX, mouseY, delta);
+            this.renderBackground(poseStack);
+            super.render(poseStack, mouseX, mouseY, delta);
         }
     }
 
@@ -115,7 +115,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     public abstract class Entry extends AbstractSelectionList.Entry<FreeFormListWidget<E>.Entry> {
         @Override
-        public abstract void render(GuiGraphics ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta);
+        public abstract void render(PoseStack poseStack, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta);
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -136,4 +136,3 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     public void updateNarration(net.minecraft.client.gui.narration.NarrationElementOutput output) {
     }
 }
-

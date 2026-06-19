@@ -1,8 +1,8 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.KeyBindingUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.resources.language.I18n;
@@ -160,17 +160,17 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
 
         @Override
-        public void render(GuiGraphics ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            ctx.drawString(minecraft.font, Component.translatable(this.keyBinding.getName()), x, y, 0xFFFFFFFF);
+        public void render(PoseStack poseStack, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            minecraft.font.draw(poseStack, Component.translatable(this.keyBinding.getName()), x, y, 0xFFFFFFFF);
             int color = 0xFF999999;
-            ctx.drawString(minecraft.font, this.keyBinding.getTranslatedKeyMessage(), x, y + minecraft.font.lineHeight + 5, color);
+            minecraft.font.draw(poseStack, this.keyBinding.getTranslatedKeyMessage(), x, y + minecraft.font.lineHeight + 5, color);
             String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
             int maxCategoryWidth = entryWidth - CATEGORY_RIGHT_PADDING * 2;
             if (maxCategoryWidth > 0 && !categoryLabel.isEmpty()) {
                 String clippedCategoryLabel = minecraft.font.plainSubstrByWidth(categoryLabel, maxCategoryWidth);
                 int categoryX = x + entryWidth - CATEGORY_RIGHT_PADDING - minecraft.font.width(clippedCategoryLabel);
                 int categoryY = y + entryHeight - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
-                ctx.drawString(minecraft.font, clippedCategoryLabel, categoryX, categoryY, 0xFF7F7F7F);
+                minecraft.font.draw(poseStack, clippedCategoryLabel, categoryX, categoryY, 0xFF7F7F7F);
             }
         }
 

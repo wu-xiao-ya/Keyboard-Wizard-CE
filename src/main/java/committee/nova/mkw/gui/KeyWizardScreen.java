@@ -3,8 +3,8 @@ package committee.nova.mkw.gui;
 import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.util.KeyBindingUtil;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.controls.ControlsScreen;
@@ -24,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 
 public class KeyWizardScreen extends OptionsSubScreen {
-    private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final List<Component> HELP_TOOLTIP = List.of(
             Component.translatable("gui.keyboard_wizard_ce.help.title"),
             Component.translatable("gui.keyboard_wizard_ce.help.select"),
@@ -168,13 +168,14 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     @Override
-    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
-        ctx.blit(BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 512, 512);
-        ctx.fill(0, 0, this.width, this.height, 0x77000000);
-        super.render(ctx, mouseX, mouseY, delta);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+        this.renderBackground(poseStack);
+        this.minecraft.getTextureManager().bind(BACKGROUND_TEXTURE);
+        blit(poseStack, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 512, 512);
+        fill(poseStack, 0, 0, this.width, this.height, 0x77000000);
+        super.render(poseStack, mouseX, mouseY, delta);
         if (this.helpButton != null && this.helpButton.isHoveredOrFocused()) {
-            ctx.renderComponentTooltip(this.font, HELP_TOOLTIP, mouseX, mouseY);
+            this.renderComponentTooltip(poseStack, HELP_TOOLTIP, mouseX, mouseY);
         }
     }
 

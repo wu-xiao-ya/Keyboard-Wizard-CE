@@ -7,8 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.controls.ControlsScreen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = new ResourceLocation(MODID, "textures/gui/screen_toggle_widgets.png");
 
     private static KeyMapping keyOpenKeyWizard;
 
@@ -52,19 +52,7 @@ public class ModernKeyWizard {
         @SubscribeEvent
         public static void onScreenInit(ScreenEvent.Init.Post event) {
             if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
-            ImageButton screenToggleButton = new ImageButton(
-                    controlsScreen.width - 22,
-                    controlsScreen.height - 22,
-                    20,
-                    20,
-                    0,
-                    0,
-                    20,
-                    ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
-                    40,
-                    40,
-                    btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))
-            );
+            ImageButton screenToggleButton = new ImageButton(controlsScreen.width - 22, controlsScreen.height - 22, 20, 20, 0, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen)));
             event.addListener(screenToggleButton);
         }
     }

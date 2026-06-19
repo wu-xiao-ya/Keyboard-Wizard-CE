@@ -1,8 +1,8 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.KeyBindingUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.network.chat.Component;
@@ -50,9 +50,9 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
     }
 
     @Override
-    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
-        super.render(ctx, mouseX, mouseY, delta);
-        this.categoryList.render(ctx, mouseX, mouseY, delta);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+        super.render(poseStack, mouseX, mouseY, delta);
+        this.categoryList.render(poseStack, mouseX, mouseY, delta);
     }
 
     @Override
@@ -91,12 +91,11 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             }
 
             @Override
-            public void render(GuiGraphics ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawString(minecraft.font, Component.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
+            public void render(PoseStack poseStack, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+                minecraft.font.draw(poseStack, Component.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
             }
 
         }
     }
 
 }
-

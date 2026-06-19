@@ -1,10 +1,10 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.DrawingUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.TabOrderedElement;
 import net.minecraft.client.gui.screens.Screen;
@@ -50,16 +50,16 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
     @Override
-    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         List<? extends KeyboardKeyWidget> keys = this.children();
         for (KeyboardKeyWidget k : keys) {
-            k.render(ctx, mouseX, mouseY, delta);
+            k.render(poseStack, mouseX, mouseY, delta);
         }
 
         if (!keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget k : keys) {
-                if (k.active && k.isHovered()) {
-                    ctx.renderComponentTooltip(Minecraft.getInstance().font, k.tooltipText, mouseX, mouseY);
+                if (k.active && k.isHovered() && Minecraft.getInstance().screen != null) {
+                    Minecraft.getInstance().screen.renderTooltip(poseStack, k.tooltipText, mouseX, mouseY);
                 }
             }
         }
@@ -118,7 +118,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         }
 
         @Override
-        protected void renderWidget(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
             int color;
             if (this.active) {
@@ -140,13 +140,13 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             } else {
                 color = 0xFF555555;
             }
-            DrawingUtil.drawNoFillRect(ctx, this.x, this.y, this.x + this.width, this.y + this.height, color);
+            DrawingUtil.drawNoFillRect(poseStack, this.x, this.y, this.x + this.width, this.y + this.height, color);
             @SuppressWarnings("resource")
             Font textRenderer = Minecraft.getInstance().font;
             //textRenderer.drawWithShadow(ctx, this.getMessage(),
             //        (this.x + (this.width) / 2 - textRenderer.getWidth(this.getMessage()) / 2.0F),
             //        this.y + (this.height - 6) / 2, color);
-            ctx.drawString(textRenderer, getMessage(), (int) (this.x + (this.width) / 2 - textRenderer.width(this.getMessage()) / 2.0F), (int) (this.y + (this.height - 6) / 2), color);
+            textRenderer.draw(poseStack, getMessage(), (int) (this.x + (this.width) / 2 - textRenderer.width(this.getMessage()) / 2.0F), (int) (this.y + (this.height - 6) / 2), color);
         }
 
         @Override
@@ -226,4 +226,3 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
 }
-
