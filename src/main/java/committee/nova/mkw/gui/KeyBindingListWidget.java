@@ -112,7 +112,8 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private KeyMapping[] filterBindingsByKey(KeyMapping[] bindings, String keyName) {
         return Arrays.stream(bindings).filter(b -> {
             Component t = b.getKey().getDisplayName();
-            if (t.getContents() instanceof TranslatableContents contents) {
+            if (t.getContents() instanceof TranslatableContents) {
+                TranslatableContents contents = (TranslatableContents) t.getContents();
                 return I18n.get(contents.getKey()).equalsIgnoreCase(keyName);
             } else {
                 return t.getString().equalsIgnoreCase(keyName);

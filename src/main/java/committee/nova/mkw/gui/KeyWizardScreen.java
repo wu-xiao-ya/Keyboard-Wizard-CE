@@ -232,7 +232,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
     public void setSearchTextForKey(InputConstants.Key key) {
         Component keyName = key.getDisplayName();
         String searchKey;
-        if (keyName.getContents() instanceof TranslatableContents contents) {
+        if (keyName.getContents() instanceof TranslatableContents) {
+            TranslatableContents contents = (TranslatableContents) keyName.getContents();
             searchKey = I18n.get(contents.getKey());
         } else {
             searchKey = keyName.getString();
