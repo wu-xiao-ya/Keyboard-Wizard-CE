@@ -59,7 +59,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Wid
         if (!keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget k : keys) {
                 if (k.active && k.isMouseOver(mouseX, mouseY) && Minecraft.getInstance().screen != null) {
-                    Minecraft.getInstance().screen.renderTooltip(poseStack, k.tooltipText, mouseX, mouseY);
+                    Minecraft.getInstance().screen.renderTooltip(poseStack, k.tooltipText.stream().map(Component::getVisualOrderText).collect(Collectors.toList()), mouseX, mouseY);
                 }
             }
         }
