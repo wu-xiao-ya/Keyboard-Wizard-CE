@@ -174,7 +174,8 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             if (Screen.hasAltDown() && Screen.hasControlDown()) {
                 Component t = this.getMessage();
                 String keyName;
-                if (t.getContents() instanceof TranslatableContents contents) {
+                if (t.getContents() instanceof TranslatableContents) {
+                    TranslatableContents contents = (TranslatableContents) t.getContents();
                     keyName = I18n.get(contents.getKey());
                 } else {
                     keyName = t.getString();
@@ -226,4 +227,3 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
 }
-
