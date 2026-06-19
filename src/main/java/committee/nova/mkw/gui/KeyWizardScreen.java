@@ -3,6 +3,7 @@ package committee.nova.mkw.gui;
 import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.util.KeyBindingUtil;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -16,7 +17,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -26,11 +28,11 @@ import java.util.List;
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final List<Component> HELP_TOOLTIP = List.of(
-            Component.translatable("gui.keyboard_wizard_ce.help.title"),
-            Component.translatable("gui.keyboard_wizard_ce.help.select"),
-            Component.translatable("gui.keyboard_wizard_ce.help.middle_click"),
-            Component.translatable("gui.keyboard_wizard_ce.help.colors"),
-            Component.translatable("gui.keyboard_wizard_ce.help.search")
+            new TranslatableComponent("gui.keyboard_wizard_ce.help.title"),
+            new TranslatableComponent("gui.keyboard_wizard_ce.help.select"),
+            new TranslatableComponent("gui.keyboard_wizard_ce.help.middle_click"),
+            new TranslatableComponent("gui.keyboard_wizard_ce.help.colors"),
+            new TranslatableComponent("gui.keyboard_wizard_ce.help.search")
     );
 
     private final int[] mouseCodes = {GLFW.GLFW_MOUSE_BUTTON_1, GLFW.GLFW_MOUSE_BUTTON_2, GLFW.GLFW_MOUSE_BUTTON_3, GLFW.GLFW_MOUSE_BUTTON_4, GLFW.GLFW_MOUSE_BUTTON_5, GLFW.GLFW_MOUSE_BUTTON_6, GLFW.GLFW_MOUSE_BUTTON_7, GLFW.GLFW_MOUSE_BUTTON_8};
@@ -60,7 +62,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     @SuppressWarnings("resource")
     public KeyWizardScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.translatable("screen.keyboard_wizard_ce.title"));
+        super(parent, Minecraft.getInstance().options, new TranslatableComponent("screen.keyboard_wizard_ce.title"));
     }
 
     @Override
@@ -73,14 +75,14 @@ public class KeyWizardScreen extends OptionsSubScreen {
         int maxBindingNameWidth = 0;
         if (this.minecraft == null) return;
         for (KeyMapping k : this.minecraft.options.keyMappings) {
-            int w = this.font.width(Component.translatable(k.getName()));
+            int w = this.font.width(new TranslatableComponent(k.getName()));
             if (w > maxBindingNameWidth)
                 maxBindingNameWidth = w;
         }
 
         int maxCategoryWidth = 0;
         for (String s : KeyBindingUtil.getCategories()) {
-            int w = this.font.width(Component.translatable(s));
+            int w = this.font.width(new TranslatableComponent(s));
             if (w > maxCategoryWidth)
                 maxCategoryWidth = w;
         }
@@ -104,12 +106,10 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY);
         updateLayoutButtons();
         this.screenToggleButton = new ImageButton(this.width - 22, this.height - 22, 20, 20, 20, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, (btn) -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options)));
-        this.helpButton = Button.builder(Component.literal("?"), b -> {})
-                .bounds(this.width - 47, this.height - 22, 20, 20)
-                .build();
-        this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.literal(""));
+        this.helpButton = new Button(this.width - 47, this.height - 22, 20, 20, new TextComponent("?"), b -> {});
+        this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, TextComponent.EMPTY);
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
-        this.mousePlus = Button.builder(Component.literal("+"), b -> {
+        this.mousePlus = new Button((int) this.mouseButton.getAnchorX() + 83, (int) this.mouseButton.getAnchorY(), 25, 20, new TextComponent("+"), b -> {
             this.mouseCodeIndex++;
             if (this.mouseCodeIndex >= this.mouseCodes.length) {
                 this.mouseCodeIndex = 0;
@@ -117,8 +117,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
             this.removeWidget(this.mouseButton);
             this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
             this.addRenderableWidget(this.mouseButton);
-        }).bounds((int) this.mouseButton.getAnchorX() + 83, (int) this.mouseButton.getAnchorY(), 25, 20).build();
-        this.mouseMinus = Button.builder(Component.literal("-"), b -> {
+        });
+        this.mouseMinus = new Button((int) this.mouseButton.getAnchorX() - 26, (int) this.mouseButton.getAnchorY(), 25, 20, new TextComponent("-"), b -> {
             this.mouseCodeIndex--;
             if (this.mouseCodeIndex < 0) {
                 this.mouseCodeIndex = this.mouseCodes.length - 1;
@@ -126,20 +126,20 @@ public class KeyWizardScreen extends OptionsSubScreen {
             this.removeWidget(this.mouseButton);
             this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
             this.addRenderableWidget(this.mouseButton);
-        }).bounds((int) this.mouseButton.getAnchorX() - 26, (int) this.mouseButton.getAnchorY(), 25, 20).build();
-        this.resetBinding = Button.builder(Component.translatable("controls.reset"), b -> {
+        });
+        this.resetBinding = new Button(bindingListWidth + 15, this.height - 23, 50, 20, new TranslatableComponent("controls.reset"), b -> {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
             selectedBinding.setToDefault();
             KeyMapping.resetMapping();
-        }).bounds(bindingListWidth + 15, this.height - 23, 50, 20).build();
-        this.clearBinding = Button.builder(Component.translatable("gui.clear"), b -> {
+        });
+        this.clearBinding = new Button(bindingListWidth + 66, this.height - 23, 50, 20, new TranslatableComponent("gui.clear"), b -> {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
             selectedBinding.setKeyModifierAndCode(KeyModifier.NONE, InputConstants.UNKNOWN);
             KeyMapping.resetMapping();
-        }).bounds(bindingListWidth + 66, this.height - 23, 50, 20).build();
-        this.resetAll = Button.builder(Component.translatable("controls.resetAll"), b -> {
+        });
+        this.resetAll = new Button(bindingListWidth + 117, this.height - 23, 70, 20, new TranslatableComponent("controls.resetAll"), b -> {
             final Screen current = minecraft.screen;
             minecraft.setScreen(new ResetAllConfirmScreen(y -> {
                 if (y) {
@@ -148,7 +148,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
                 }
                 minecraft.setScreen(current);
             }));
-        }).bounds(bindingListWidth + 117, this.height - 23, 70, 20).build();
+        });
         this.addRenderableWidget(this.bindingList);
         this.addRenderableWidget(this.keyboard);
         this.addRenderableWidget(this.categorySelector);
@@ -170,7 +170,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         this.renderBackground(poseStack);
-        this.minecraft.getTextureManager().bind(BACKGROUND_TEXTURE);
+        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
         blit(poseStack, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 512, 512);
         fill(poseStack, 0, 0, this.width, this.height, 0x77000000);
         super.render(poseStack, mouseX, mouseY, delta);
@@ -189,9 +189,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     private Button createLayoutButton(KeyboardLayout layout, int x, int y) {
-        return Button.builder(layout.getDisplayName(), b -> setKeyboardLayout(layout))
-                .bounds(x, y, 74, 20)
-                .build();
+        return new Button(x, y, 74, 20, layout.getDisplayName(), b -> setKeyboardLayout(layout));
     }
 
     private void setKeyboardLayout(KeyboardLayout layout) {
@@ -233,8 +231,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
     public void setSearchTextForKey(InputConstants.Key key) {
         Component keyName = key.getDisplayName();
         String searchKey;
-        if (keyName.getContents() instanceof TranslatableContents contents) {
-            searchKey = I18n.get(contents.getKey());
+        if (keyName instanceof TranslatableComponent translatable) {
+            searchKey = I18n.get(translatable.getKey());
         } else {
             searchKey = keyName.getString();
         }

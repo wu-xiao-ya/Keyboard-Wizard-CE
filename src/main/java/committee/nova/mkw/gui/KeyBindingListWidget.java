@@ -8,7 +8,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.resources.language.I18n;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
@@ -112,8 +112,8 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private KeyMapping[] filterBindingsByKey(KeyMapping[] bindings, String keyName) {
         return Arrays.stream(bindings).filter(b -> {
             Component t = b.getKey().getDisplayName();
-            if (t.getContents() instanceof TranslatableContents contents) {
-                return I18n.get(contents.getKey()).equalsIgnoreCase(keyName);
+            if (t instanceof TranslatableComponent translatable) {
+                return I18n.get(translatable.getKey()).equalsIgnoreCase(keyName);
             } else {
                 return t.getString().equalsIgnoreCase(keyName);
             }
@@ -161,7 +161,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
         @Override
         public void render(PoseStack poseStack, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            minecraft.font.draw(poseStack, Component.translatable(this.keyBinding.getName()), x, y, 0xFFFFFFFF);
+            minecraft.font.draw(poseStack, new TranslatableComponent(this.keyBinding.getName()), x, y, 0xFFFFFFFF);
             int color = 0xFF999999;
             minecraft.font.draw(poseStack, this.keyBinding.getTranslatedKeyMessage(), x, y + minecraft.font.lineHeight + 5, color);
             String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
@@ -176,7 +176,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
         private String getCategoryDisplayLabel(KeyMapping keyBinding) {
             String category = keyBinding.getCategory();
-            String translatedCategory = Component.translatable(category).getString();
+            String translatedCategory = new TranslatableComponent(category).getString();
             if (!category.startsWith(CATEGORY_PREFIX)) {
                 return translatedCategory;
             }

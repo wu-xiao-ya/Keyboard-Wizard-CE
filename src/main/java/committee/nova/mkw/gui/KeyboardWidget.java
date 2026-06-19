@@ -5,8 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
-import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.TabOrderedElement;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -15,7 +14,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.resources.language.I18n;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.settings.KeyModifier;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeyboardWidget extends AbstractContainerEventHandler implements Renderable, TickableElement, TabOrderedElement, NarratableEntry {
+public class KeyboardWidget extends AbstractContainerEventHandler implements Widget, TickableElement, NarratableEntry {
     public KeyWizardScreen keyWizardScreen;
 
     private final HashMap<Integer, KeyboardKeyWidget> keys = new HashMap<>();
@@ -58,7 +58,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
         if (!keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget k : keys) {
-                if (k.active && k.isHovered() && Minecraft.getInstance().screen != null) {
+                if (k.active && k.isMouseOver(mouseX, mouseY) && Minecraft.getInstance().screen != null) {
                     Minecraft.getInstance().screen.renderTooltip(poseStack, k.tooltipText, mouseX, mouseY);
                 }
             }
@@ -108,7 +108,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         private List<Component> tooltipText = new ArrayList<>();
 
         protected KeyboardKeyWidget(int keyCode, float x, float y, float width, float height, InputConstants.Type keyType) {
-            super((int) x, (int) y, (int) width, (int) height, Component.literal(""));
+            super((int) x, (int) y, (int) width, (int) height, TextComponent.EMPTY);
             this.x = x;
             this.y = y;
             this.width = width;
@@ -118,11 +118,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         }
 
         @Override
-        protected void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
             int color;
             if (this.active) {
-                if (this.isHovered() && !keyWizardScreen.getCategorySelectorExtended()) {
+                if (this.isMouseOver(mouseX, mouseY) && !keyWizardScreen.getCategorySelectorExtended()) {
                     color = 0xFFAAAAAA;
                     if (bindingCount == 1) {
                         color = 0xFF00AA00;
@@ -150,13 +150,13 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput builder) {
+        public void updateNarration(NarrationElementOutput builder) {
 
         }
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (!this.active || !this.visible || !this.isHovered()) {
+            if (!this.active || !this.visible || !this.isMouseOver(mouseX, mouseY)) {
                 return false;
             }
 
@@ -174,8 +174,8 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             if (Screen.hasAltDown() && Screen.hasControlDown()) {
                 Component t = this.getMessage();
                 String keyName;
-                if (t.getContents() instanceof TranslatableContents contents) {
-                    keyName = I18n.get(contents.getKey());
+                if (t instanceof TranslatableComponent translatable) {
+                    keyName = I18n.get(translatable.getKey());
                 } else {
                     keyName = t.getString();
                 }
@@ -197,7 +197,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
                     tooltipText.add(I18n.get(b.getName()));
                 }
             }
-            this.tooltipText = tooltipText.stream().sorted().map(Component::literal).collect(Collectors.toCollection(ArrayList<Component>::new));
+            this.tooltipText = tooltipText.stream().sorted().map(TextComponent::new).collect(Collectors.toCollection(ArrayList<Component>::new));
         }
 
         @Override
@@ -209,11 +209,6 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         private KeyModifier getActiveModifier() {
             return KeyModifier.getActiveModifier();
         }
-    }
-
-    @Override
-    public int getTabOrderGroup() {
-        return 0;
     }
 
     @Override

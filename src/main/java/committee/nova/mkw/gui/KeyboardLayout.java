@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public enum KeyboardLayout {
     MAIN("gui.keyboard_wizard_ce.layout.main"),
@@ -14,7 +15,7 @@ public enum KeyboardLayout {
     }
 
     public Component getDisplayName() {
-        return Component.translatable(this.translationKey);
+        return new TranslatableComponent(this.translationKey);
     }
 
     public KeyboardLayout next() {
