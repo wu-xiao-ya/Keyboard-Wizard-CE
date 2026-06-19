@@ -38,7 +38,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     public KeyBinding getSelectedKeyMapping() {
-        return this.getSelected() == null ? null : this.getSelected().keyBinding;
+        return this.getSelected() == null ? null : ((BindingEntry) this.getSelected()).keyBinding;
     }
 
     @Override

@@ -92,9 +92,9 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     private void enableScissor() {
-        double scale = this.minecraft.getWindow().getGuiScaleFactor();
+        double scale = this.minecraft.getWindow().getGuiScale();
         int x = (int) (this.x0 * scale);
-        int y = (int) ((this.minecraft.getWindow().getScaledHeight() - this.y1) * scale);
+        int y = (int) ((this.minecraft.getWindow().getGuiScaledHeight() - this.y1) * scale);
         int width = (int) ((this.x1 - this.x0) * scale);
         int height = (int) ((this.y1 - this.y0) * scale);
         RenderSystem.enableScissor(x, y, width, height);
