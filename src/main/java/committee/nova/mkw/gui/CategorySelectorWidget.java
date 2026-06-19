@@ -1,31 +1,36 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.KeyBindingUtil;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
-public class CategorySelectorWidget extends AbstractButton implements TickableElement {
-    public KeyWizardScreen keyWizardScreen;
+public class CategorySelectorWidget extends Button implements TickableElement {
     public boolean extended = false;
 
-    public BindingCategoryListWidget categoryList;
+    private final KeyWizardScreen keyWizardScreen;
+    private final BindingCategoryListWidget categoryList;
 
     public CategorySelectorWidget(KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
-        super(x, y, width, height, Component.literal(""));
+        super(x, y, width, height, StringTextComponent.EMPTY, button -> { });
         this.keyWizardScreen = keyWizardScreen;
-        Minecraft c = Minecraft.getInstance();
-        int listItemHeight = c.font.lineHeight + 7;
+        Minecraft client = Minecraft.getInstance();
+        int listItemHeight = client.font.lineHeight + 7;
         int listHeight = KeyBindingUtil.getCategoriesWithDynamics().size() * listItemHeight + 10;
-        int listBottom = this.getY() + this.height + listHeight;
+        int listBottom = this.y + this.getHeight() + listHeight;
         if (listBottom > this.keyWizardScreen.height) {
-            listHeight = this.keyWizardScreen.height - this.getY() - this.height - 10;
+            listHeight = this.keyWizardScreen.height - this.y - this.getHeight() - 10;
         }
-        this.categoryList = new BindingCategoryListWidget(c, this.getY() + this.height, this.getX(), this.width, listHeight, listItemHeight);
+        this.categoryList = new BindingCategoryListWidget(client, this.y + this.getHeight(), this.x, this.width, listHeight, listItemHeight);
         this.categoryList.visible = false;
-        this.setMessage(Component.translatable(this.getSelectedCategory()));
+        this.setMessage(new TranslationTextComponent(this.getSelectedCategory()));
+    }
+
+    @Override
+    public void onPress() {
+        this.extended = !this.extended;
     }
 
     @Override
@@ -39,25 +44,14 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput builder) {
-
-    }
-
-    @Override
-    public void onPress() {
-        this.playDownSound(Minecraft.getInstance().getSoundManager());
-        this.extended = !this.extended;
-    }
-
-    @Override
-    public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
-        super.render(ctx, mouseX, mouseY, delta);
-        this.categoryList.render(ctx, mouseX, mouseY, delta);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.categoryList.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void tick() {
-        this.setMessage(Component.translatable(this.getSelectedCategory()));
+        this.setMessage(new TranslationTextComponent(this.getSelectedCategory()));
         this.categoryList.visible = this.extended;
     }
 
@@ -65,20 +59,18 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
         if (this.categoryList.getSelected() == null) {
             return KeyBindingUtil.DYNAMIC_CATEGORY_ALL;
         }
-        return ((BindingCategoryListWidget.CategoryEntry) this.categoryList.getSelected()).category;
+        return this.categoryList.getSelected().category;
     }
 
     public BindingCategoryListWidget getCategoryList() {
         return this.categoryList;
     }
 
-    private static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
-
+    public static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
         public BindingCategoryListWidget(Minecraft client, int top, int left, int width, int height, int itemHeight) {
             super(client, top, left, width, height, itemHeight);
-
-            for (String c : KeyBindingUtil.getCategoriesWithDynamics()) {
-                this.addEntry(new CategoryEntry(c));
+            for (String category : KeyBindingUtil.getCategoriesWithDynamics()) {
+                this.addEntry(new CategoryEntry(category));
             }
             this.setSelected(this.children().get(0));
         }
@@ -91,12 +83,9 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             }
 
             @Override
-            public void render(GuiGraphics ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawString(minecraft.font, Component.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
+            public void render(MatrixStack matrixStack, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+                minecraft.font.draw(matrixStack, new TranslationTextComponent(this.category), x + 3, y + 2, 0xFFFFFFFF);
             }
-
         }
     }
-
 }
-

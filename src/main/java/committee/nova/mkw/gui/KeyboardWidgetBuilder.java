@@ -1,6 +1,6 @@
 package committee.nova.mkw.gui;
 
-import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.util.InputMappings;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyboardWidgetBuilder {
@@ -116,7 +116,7 @@ public class KeyboardWidgetBuilder {
         return kb;
     }
 
-    public static KeyboardWidget singleKeyKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height, int keyCode, InputConstants.Type keyType) {
+    public static KeyboardWidget singleKeyKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height, int keyCode, InputMappings.Type keyType) {
         KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
         kb.addKey(0, 0, width, height, 0, keyCode, keyType);
         return kb;
@@ -136,5 +136,4 @@ public class KeyboardWidgetBuilder {
     }
 
 }
-
 
