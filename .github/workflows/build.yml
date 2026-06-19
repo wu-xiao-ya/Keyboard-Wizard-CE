@@ -24,3 +24,9 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew build --stacktrace
+
+      - name: Upload jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: keyboard-wizard-ce-forge-1.12.2
+          path: build/libs/*.jar
