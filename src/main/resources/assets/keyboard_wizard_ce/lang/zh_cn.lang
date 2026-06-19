@@ -14,6 +14,10 @@ gui.activeModifier=Active Modifier
 gui.bindingCategories=Binding Categories
 gui.page=Page
 gui.mouse=Mouse
+gui.help.tooltip.1=先在左侧选择热键，再左键点击右侧按键进行绑定。
+gui.help.tooltip.2=鼠标中键点击右侧按键，左侧会显示所有绑定到该按键的热键。
+gui.help.tooltip.3=可通过分类和搜索缩小热键列表。
+gui.help.tooltip.4=按键颜色用于提示未绑定、单个绑定或冲突绑定。
 
 keywizard.keybind.openKeyboardWizard=Open Key Wizard
 key.keyboard_wizard_ce.openKeyWizard=Open Keyboard Wizard CE

@@ -5,6 +5,7 @@ import static org.lwjgl.input.Mouse.getButtonName;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 
 import org.lwjgl.input.Mouse;
@@ -22,6 +23,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiKeyWizard extends GuiScreen {
 	
@@ -62,6 +64,7 @@ public class GuiKeyWizard extends GuiScreen {
 	private GuiButton buttonMouse;
 	private GuiButton buttonMousePlus;
 	private GuiButton buttonMouseMinus;
+	private GuiButton buttonHelp;
 	private GuiButton buttonSortBy;
 
 	
@@ -113,6 +116,7 @@ public class GuiKeyWizard extends GuiScreen {
 		this.buttonReset = new GuiButton(0, this.guiStartX, this.height - 40, 75, 20, I18n.format("gui.resetBinding"));
 		this.buttonClear = new GuiButton(0, this.guiStartX + 76, this.height - 40, 75, 20, I18n.format("gui.clearBinding"));
 		this.buttonDone = new GuiButton(0, this.width - 90, this.height - 40, 87, 20, I18n.format("gui.done"));
+		this.buttonHelp = new GuiButton(2, this.width - 112, this.height - 40, 20, 20, "?");
 		this.buttonActiveModifier = new GuiButton(1, this.guiStartX, this.height - 63, 150, 20,
 				I18n.format("gui.activeModifier")+ ": " + activeModifier.toString());
 		this.buttonMouse = new GuiButton(0, this.guiStartX + 25, this.height - 85, 100, 20, I18n.format("gui.mouse") + ": " + getButtonName(this.mouse) );
@@ -126,6 +130,7 @@ public class GuiKeyWizard extends GuiScreen {
 		this.buttonList.add(this.buttonReset);
 		this.buttonList.add(this.buttonClear);
 		this.buttonList.add(this.buttonDone);
+		this.buttonList.add(this.buttonHelp);
 		this.buttonList.add(this.buttonActiveModifier);
 		this.buttonList.add(this.buttonMouse);
 		this.buttonList.add(this.buttonMousePlus);
@@ -143,6 +148,16 @@ public class GuiKeyWizard extends GuiScreen {
 		
 		this.keyboard.draw(this.mc, mouseX, mouseY, partialTicks);
 		this.categoryList.drawButton(this.mc, mouseX, mouseY, partialTicks);
+
+		if (this.buttonHelp != null && mouseX >= this.buttonHelp.x && mouseX < this.buttonHelp.x + this.buttonHelp.width
+				&& mouseY >= this.buttonHelp.y && mouseY < this.buttonHelp.y + this.buttonHelp.height) {
+			List<String> tooltip = new ArrayList<String>();
+			tooltip.add(I18n.format("gui.help.tooltip.1"));
+			tooltip.add(I18n.format("gui.help.tooltip.2"));
+			tooltip.add(I18n.format("gui.help.tooltip.3"));
+			tooltip.add(I18n.format("gui.help.tooltip.4"));
+			GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+		}
 	}
 
 	@Override

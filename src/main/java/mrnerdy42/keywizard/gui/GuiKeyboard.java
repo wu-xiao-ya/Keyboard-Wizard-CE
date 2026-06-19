@@ -156,7 +156,9 @@ public class GuiKeyboard extends FloatGui{
 		}
 		
 		public void mouseClicked(Minecraft mc, int mouseX, int mouseY, int button) {
-			if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 0) {
+			if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 2) {
+				parent.setSearchText("@" + getKeyName(this.keyCode));
+			} else if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 0) {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				if (GuiScreen.isShiftKeyDown()) {
 					parent.setSearchText("@"+getKeyName(this.keyCode));
