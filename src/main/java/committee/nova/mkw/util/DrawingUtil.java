@@ -5,11 +5,11 @@ import net.minecraft.client.gui.AbstractGui;
 
 public class DrawingUtil {
     public static void drawHorizontalLine(MatrixStack matrices, int x1, int x2, int y, int color) {
-        AbstractGui.hLine(matrices, x1, x2, y, color);
+        AbstractGui.fill(matrices, Math.min(x1, x2), y, Math.max(x1, x2) + 1, y + 1, color);
     }
 
     public static void drawVerticalLine(MatrixStack matrices, int x, int y1, int y2, int color) {
-        AbstractGui.vLine(matrices, x, y1, y2, color);
+        AbstractGui.fill(matrices, x, Math.min(y1, y2), x + 1, Math.max(y1, y2) + 1, color);
     }
 
     public static void drawNoFillRect(MatrixStack matrices, int left, int top, int right, int bottom, int color) {
