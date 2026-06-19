@@ -10,7 +10,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.ModList;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         super(Minecraft.getInstance(), top, left, width, height, itemHeight);
         this.keyWizardScreen = keyWizardScreen;
 
-        for (KeyBinding binding : this.minecraft.options.keyBindings) {
+        for (KeyBinding binding : this.minecraft.options.keyMappings) {
             this.addEntry(new BindingEntry(binding));
         }
         if (!this.children().isEmpty()) {
@@ -38,7 +37,6 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
-    @Nullable
     public KeyBinding getSelectedKeyMapping() {
         return this.getSelected() == null ? null : this.getSelected().keyBinding;
     }
@@ -102,7 +100,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         String[] words = bindingName.split("\\s+");
         return Arrays.stream(bindings).filter(binding -> {
             for (String word : words) {
-                if (!I18n.format(binding.getName()).toLowerCase().contains(word.toLowerCase())) {
+                if (!I18n.get(binding.getName()).toLowerCase().contains(word.toLowerCase())) {
                     return false;
                 }
             }
@@ -115,17 +113,17 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     private KeyBinding[] getBindingsByCategory(String category) {
-        KeyBinding[] bindings = Arrays.copyOf(this.minecraft.options.keyBindings, this.minecraft.options.keyBindings.length);
+        KeyBinding[] bindings = Arrays.copyOf(this.minecraft.options.keyMappings, this.minecraft.options.keyMappings.length);
         switch (category) {
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALL:
                 return bindings;
             case KeyBindingUtil.DYNAMIC_CATEGORY_CONFLICTS:
                 Map<InputMappings.Input, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
                 return Arrays.stream(bindings)
-                        .filter(binding -> bindingCounts.getOrDefault(binding.getKey(), 0) > 1 && binding.getKey() != InputMappings.INPUT_INVALID)
+                        .filter(binding -> bindingCounts.getOrDefault(binding.getKey(), 0) > 1 && binding.getKey() != InputMappings.UNKNOWN)
                         .toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
-                return Arrays.stream(bindings).filter(binding -> binding.getKey() == InputMappings.INPUT_INVALID).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(binding -> binding.getKey() == InputMappings.UNKNOWN).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
                 return Arrays.stream(bindings).filter(binding -> KeyBindingUtil.isModifierActive(KeyModifier.CONTROL, binding)).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALT:

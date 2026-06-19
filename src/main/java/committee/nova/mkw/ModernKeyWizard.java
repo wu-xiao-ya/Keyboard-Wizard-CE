@@ -8,8 +8,8 @@ import net.minecraft.client.gui.screen.ControlsScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,7 +51,7 @@ public class ModernKeyWizard {
         }
 
         @SubscribeEvent
-        public static void onScreenInit(ScreenEvent.Init.Post event) {
+        public static void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event) {
             if (!(event.getScreen() instanceof ControlsScreen)) return;
             ControlsScreen controlsScreen = (ControlsScreen) event.getScreen();
             ImageButton screenToggleButton = new ImageButton(

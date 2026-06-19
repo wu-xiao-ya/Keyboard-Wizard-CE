@@ -52,7 +52,7 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
         if (!this.keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget key : this.children()) {
                 if (key.active && key.isHovered()) {
-                    this.keyWizardScreen.renderTooltip(matrixStack, key.tooltipText, mouseX, mouseY);
+                    this.keyWizardScreen.renderComponentTooltip(matrixStack, key.tooltipText, mouseX, mouseY);
                 }
             }
         }
@@ -85,7 +85,7 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
     }
 
     @Override
-    public TickableElement getFocused() {
+    public net.minecraft.client.gui.IGuiEventListener getFocused() {
         return null;
     }
 
@@ -123,8 +123,8 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
             this.y = y;
             this.width = width;
             this.height = height;
-            this.key = keyType.getOrMakeInput(keyCode);
-            this.setMessage(this.key.getTextComponent());
+            this.key = keyType.getOrCreate(keyCode);
+            this.setMessage(this.key.getDisplayName());
         }
 
         @Override
@@ -180,7 +180,7 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
             KeyBinding selectedKeyBinding = keyWizardScreen.getSelectedKeyMapping();
             if (selectedKeyBinding != null) {
                 selectedKeyBinding.setKeyModifierAndCode(getActiveModifier(), this.key);
-                KeyBinding.resetKeyBindingArrayAndHash();
+                KeyBinding.resetMapping();
             }
         }
 
@@ -192,9 +192,9 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
         @SuppressWarnings("resource")
         private void updateTooltip() {
             ArrayList<String> tooltip = new ArrayList<>();
-            for (KeyBinding binding : Minecraft.getInstance().options.keyBindings) {
+            for (KeyBinding binding : Minecraft.getInstance().options.keyMappings) {
                 if (binding.getKey().equals(this.key)) {
-                    tooltip.add(I18n.format(binding.getName()));
+                    tooltip.add(I18n.get(binding.getName()));
                 }
             }
             this.tooltipText = tooltip.stream().sorted().map(StringTextComponent::new).collect(Collectors.toCollection(ArrayList::new));

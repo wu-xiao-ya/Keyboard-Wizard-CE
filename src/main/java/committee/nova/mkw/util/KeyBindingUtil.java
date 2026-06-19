@@ -27,7 +27,7 @@ public final class KeyBindingUtil {
     @SuppressWarnings("resource")
     public static ArrayList<String> getCategories() {
         LinkedHashSet<String> categories = new LinkedHashSet<>();
-        for (KeyBinding keyBinding : Minecraft.getInstance().options.keyBindings) {
+        for (KeyBinding keyBinding : Minecraft.getInstance().options.keyMappings) {
             categories.add(keyBinding.getCategory());
         }
         return categories.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
@@ -48,7 +48,7 @@ public final class KeyBindingUtil {
     @SuppressWarnings("resource")
     public static Map<InputMappings.Input, Integer> getBindingCountsByKey() {
         HashMap<InputMappings.Input, Integer> map = new HashMap<>();
-        for (KeyBinding binding : Minecraft.getInstance().options.keyBindings) {
+        for (KeyBinding binding : Minecraft.getInstance().options.keyMappings) {
             map.merge(getKey(binding), 1, Integer::sum);
         }
         return Collections.unmodifiableMap(map);
