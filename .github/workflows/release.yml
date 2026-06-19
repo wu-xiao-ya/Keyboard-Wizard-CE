@@ -42,4 +42,5 @@ jobs:
             build/libs/*.jar
             build/release/*.zip
             build/release/SHA256SUMS.txt
-          body_path: CHANGELOG.md
+          body_path: RELEASE_NOTES.md
+          overwrite_files: true
