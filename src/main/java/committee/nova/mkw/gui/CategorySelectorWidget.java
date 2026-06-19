@@ -59,7 +59,7 @@ public class CategorySelectorWidget extends Button implements TickableElement {
         if (this.categoryList.getSelected() == null) {
             return KeyBindingUtil.DYNAMIC_CATEGORY_ALL;
         }
-        return this.categoryList.getSelected().category;
+        return ((BindingCategoryListWidget.CategoryEntry) this.categoryList.getSelected()).category;
     }
 
     public BindingCategoryListWidget getCategoryList() {

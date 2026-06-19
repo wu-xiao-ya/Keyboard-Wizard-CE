@@ -52,8 +52,8 @@ public class ModernKeyWizard {
 
         @SubscribeEvent
         public static void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event) {
-            if (!(event.getScreen() instanceof ControlsScreen)) return;
-            ControlsScreen controlsScreen = (ControlsScreen) event.getScreen();
+            if (!(event.getGui() instanceof ControlsScreen)) return;
+            ControlsScreen controlsScreen = (ControlsScreen) event.getGui();
             ImageButton screenToggleButton = new ImageButton(
                     controlsScreen.width - 22,
                     controlsScreen.height - 22,
