@@ -1,19 +1,7 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:4.1.+'
-    }
-}
-
 plugins {
+    id 'net.minecraftforge.gradle' version '[5.1,5.2)'
     id 'maven-publish'
 }
-
-apply plugin: 'net.minecraftforge.gradle'
 
 group = project.maven_group
 version = project.mod_version
@@ -27,13 +15,13 @@ java {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'official', version: project.minecraft_version
 
     runs {
         client {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.markers', 'REGISTRIES'
             mods {
                 mkw {
                     source sourceSets.main
