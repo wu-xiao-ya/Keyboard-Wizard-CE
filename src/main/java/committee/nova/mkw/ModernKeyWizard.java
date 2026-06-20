@@ -14,7 +14,7 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard implements ClientModInitializer {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final Identifier SCREEN_TOGGLE_WIDGETS = new Identifier(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.of(MODID, "textures/gui/screen_toggle_widgets.png");
 
     private static KeyBinding keyOpenKeyWizard;
 

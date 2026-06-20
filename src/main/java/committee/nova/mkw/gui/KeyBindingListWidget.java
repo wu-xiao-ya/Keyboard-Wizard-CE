@@ -198,6 +198,6 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
     }
 }

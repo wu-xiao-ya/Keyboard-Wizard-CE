@@ -120,7 +120,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         }
 
         @Override
-        protected void renderButton(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
             int color;
             if (this.active) {

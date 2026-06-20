@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screen.option.ControlsOptionsScreen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
@@ -25,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 
 public class KeyWizardScreen extends GameOptionsScreen {
-    private static final Identifier BACKGROUND_TEXTURE = new Identifier(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.of(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final List<Text> HELP_TOOLTIP = List.of(
             Text.translatable("gui.keyboard_wizard_ce.help.title"),
             Text.translatable("gui.keyboard_wizard_ce.help.select"),
@@ -50,7 +49,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
     private KeyboardWidget mouseButton;
     private KeyBindingListWidget bindingList;
     private CategorySelectorWidget categorySelector;
-    private TexturedButtonWidget screenToggleButton;
+    private ButtonWidget screenToggleButton;
     private ButtonWidget helpButton;
     private TextFieldWidget searchBar;
     private ButtonWidget resetBinding;
@@ -116,7 +115,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
         this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY);
         updateLayoutButtons();
 
-        this.screenToggleButton = new TexturedButtonWidget(this.width - 22, this.height - 22, 20, 20, 20, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, button -> this.client.setScreen(new ControlsOptionsScreen(this.parent, this.gameOptions)));
+        this.screenToggleButton = createScreenToggleButton(this.width - 22, this.height - 22, button -> this.client.setScreen(new ControlsOptionsScreen(this.parent, this.gameOptions)));
         this.helpButton = ButtonWidget.builder(Text.literal("?"), button -> {
         }).dimensions(this.width - 47, this.height - 22, 20, 20).build();
         this.helpButton.active = false;
@@ -190,13 +189,17 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx);
+        this.renderBackground(ctx, mouseX, mouseY, delta);
         ctx.drawTexture(BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
         ctx.fill(0, 0, this.width, this.height, 0x77000000);
         super.render(ctx, mouseX, mouseY, delta);
         if (this.helpButton != null && this.helpButton.isHovered()) {
             ctx.drawTooltip(this.textRenderer, HELP_TOOLTIP, mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected void addOptions() {
     }
 
     @Override
@@ -210,6 +213,10 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
     private ButtonWidget createLayoutButton(KeyboardLayout layout, int x, int y) {
         return ButtonWidget.builder(layout.getDisplayName(), button -> setKeyboardLayout(layout)).dimensions(x, y, 74, 20).build();
+    }
+
+    public static ButtonWidget createScreenToggleButton(int x, int y, ButtonWidget.PressAction onPress) {
+        return new TextureButton(x, y, onPress);
     }
 
     private void setKeyboardLayout(KeyboardLayout layout) {
@@ -261,5 +268,17 @@ public class KeyWizardScreen extends GameOptionsScreen {
             searchKey = keyName.getString();
         }
         this.setSearchText(KEY_FILTER_PREFIX + "<" + searchKey + ">");
+    }
+
+    private static class TextureButton extends ButtonWidget {
+        protected TextureButton(int x, int y, PressAction onPress) {
+            super(x, y, 20, 20, Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
+        }
+
+        @Override
+        protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+            int textureY = this.isHovered() ? 20 : 0;
+            ctx.drawTexture(ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0, textureY, 20, 20, 40, 40);
+        }
     }
 }
