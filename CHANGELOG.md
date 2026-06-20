@@ -1,5 +1,27 @@
 # Changelog
 
+## Fabric 1.20.1+ support - 2026-06-20
+
+- Added Fabric CE support branches:
+  - `ce/fabric-1.20.1`
+  - `ce/fabric-1.21.1`
+  - `ce/fabric-26.1.2`
+  - `ce/fabric-26.2`
+- Verified GitHub Actions builds:
+  - Fabric 1.20.1: `27875789463`
+  - Fabric 1.21.1: `27876181334`
+  - Fabric 26.1.2: `27876944618`
+  - Fabric 26.2: `27876944805`
+- Dropped planned support for old Fabric 1.16.5 and 1.18.2 branches.
+
+## Forge compatibility expansion - 2026-06-20
+
+- Added and verified Forge 1.12.2 CE support, including the modern texture toggle icon.
+- Verified additional Forge branch builds:
+  - Forge 1.12.2: `27872807776`
+  - Forge 1.16.5: `27818845763`
+  - Forge 1.18.2: `27818850228`
+
 ## 1.0.1 CE - 2026-06-19
 
 - Published updated release tags for the maintained production branches:
@@ -10,15 +32,13 @@
 
 ## NeoForge 26.2 release - 2026-06-17
 
-- Published `neoforge-26.2-v1.0.0` from Actions run 27647213392.
+- Published `neoforge-26.2-v1.0.0` from Actions run `27647213392`.
 - Release includes the key category localization fix and matching source/checksum artifacts.
-
 
 ## Localization fix - 2026-06-17
 
-- Added key.category.keyboard_wizard_ce.bindings on all maintained branches so the Keyboard Wizard CE category name renders correctly in Controls screens.
-- Latest verified Actions builds: Forge 1.20.1 27646830595, NeoForge 1.21.1 27646836029, NeoForge 26.1.2 27646857844, NeoForge 26.2 27647213392.
-
+- Added `key.category.keyboard_wizard_ce.bindings` on all maintained branches so the Keyboard Wizard CE category name renders correctly in Controls screens.
+- Latest verified Actions builds at that time: Forge 1.20.1 `27646830595`, NeoForge 1.21.1 `27646836029`, NeoForge 26.1.2 `27646857844`, NeoForge 26.2 `27647213392`.
 
 ## 26.2 preview branch - 2026-06-17
 
@@ -56,6 +76,3 @@
 - Added GitHub Actions build and release workflows for each version branch.
 - Added AGPL license files, CE notices, release documentation, and SHA-256 release checksums.
 - Bundled README, NOTICE, COPYING, and LICENSE files into published jars.
-
-
-
