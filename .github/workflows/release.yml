@@ -1,0 +1,49 @@
+name: Release CE
+
+on:
+  push:
+    tags:
+      - fabric-26.1.2-v*
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build release bundle
+        run: ./gradlew build releaseBundle --no-daemon --stacktrace --warning-mode all
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Keyboard Wizard CE Fabric 26.1.2 ${{ github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          files: |
+            build/libs/*.jar
+            build/release/*.zip
+            build/release/SHA256SUMS.txt
+          body: |
+            Keyboard Wizard CE for Minecraft 26.1.2 + Fabric.
