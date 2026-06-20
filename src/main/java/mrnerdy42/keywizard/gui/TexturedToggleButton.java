@@ -3,16 +3,19 @@ package mrnerdy42.keywizard.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 /**
- * A 20x20 code-drawn icon button used for returning to the parent controls screen.
- * The icon is intentionally texture-free so the 1.12.2 branch does not depend on the
- * modern toggle sheet or any external PNG layout assumptions.
+ * Small textured icon button shared by legacy screens.
+ * If the sheet cannot be loaded in an older runtime, it falls back to a code-drawn icon.
  */
 public class TexturedToggleButton extends GuiButton {
+    private static final ResourceLocation TEXTURE = new ResourceLocation("keyboard_wizard_ce", "textures/gui/screen_toggle_widgets.png");
+    private final int texU;
 
     public TexturedToggleButton(int buttonId, int x, int y, int texU) {
         super(buttonId, x, y, 20, 20, "");
+        this.texU = texU;
     }
 
     @Override
@@ -21,6 +24,26 @@ public class TexturedToggleButton extends GuiButton {
             return;
         }
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        if (this.drawTexture(mc)) {
+            return;
+        }
+
+        this.drawFallbackIcon();
+    }
+
+    private boolean drawTexture(Minecraft mc) {
+        try {
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.enableBlend();
+            mc.getTextureManager().bindTexture(TEXTURE);
+            this.drawModalRectWithCustomSizedTexture(this.x, this.y, this.texU, this.hovered ? 20 : 0, this.width, this.height, 40.0F, 40.0F);
+            return true;
+        } catch (RuntimeException ignored) {
+            return false;
+        }
+    }
+
+    private void drawFallbackIcon() {
         int baseColor = this.hovered ? 0xFF4A4A4A : 0xFF2F2F2F;
         int borderColor = this.hovered ? 0xFFB5B5B5 : 0xFF808080;
         int glyphColor = this.hovered ? 0xFFFFFFFF : 0xFFE0E0E0;

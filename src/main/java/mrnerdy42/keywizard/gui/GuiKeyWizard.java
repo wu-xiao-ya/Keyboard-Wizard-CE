@@ -6,7 +6,6 @@ import static org.lwjgl.input.Mouse.getButtonName;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Comparator;
 
 import org.lwjgl.input.Mouse;
 
@@ -34,17 +33,9 @@ public class GuiKeyWizard extends GuiScreen {
 	public static final String KEY_FILTER_PREFIX = "#key#";
 	private static final int RESET_ALL_DIALOG_ID = 0;
 
-	private enum SortType implements Comparator<KeyBinding> {
-		NAME { @Override public int compare(KeyBinding arg0, KeyBinding arg1){ return I18n.format(arg0.getKeyDescription()).compareTo(I18n.format(arg1.getKeyDescription())); }},
-		CATEGORY { @Override public int compare(KeyBinding arg0, KeyBinding arg1){ return I18n.format(arg0.getKeyCategory()).compareTo(I18n.format(arg1.getKeyCategory())); }},
-		KEY { @Override public int compare(KeyBinding arg0, KeyBinding arg1){ return I18n.format(arg0.getDisplayName()).compareTo(I18n.format(arg1.getDisplayName())); }};
-
-	}
-
 	public KeyboardLayout layout = KeyWizardConfig.layout;
 
 	protected GuiKeyboard keyboard;
-	protected SortType sortType = SortType.NAME;
 
 	private final GuiScreen parentScreen;
 
@@ -133,14 +124,14 @@ public class GuiKeyWizard extends GuiScreen {
 		this.buttonLayoutNumpad = new GuiButton(0, layoutButtonX + 54, 5, 50, 20, I18n.format("gui.layout.numpad"));
 		this.buttonLayoutAux = new GuiButton(0, layoutButtonX + 108, 5, 50, 20, I18n.format("gui.layout.auxiliary"));
 
-		this.buttonReset = new GuiButton(0, this.guiStartX, this.height - 40, 75, 20, I18n.format("gui.resetBinding"));
-		this.buttonClear = new GuiButton(0, this.guiStartX + 76, this.height - 40, 75, 20, I18n.format("gui.clearBinding"));
-		this.buttonResetAll = new GuiButton(0, this.guiStartX + 152, this.height - 40, 75, 20, I18n.format("gui.resetAll"));
+		this.buttonReset = new GuiButton(0, this.guiStartX, this.height - 23, 75, 20, I18n.format("gui.resetBinding"));
+		this.buttonClear = new GuiButton(0, this.guiStartX + 76, this.height - 23, 75, 20, I18n.format("gui.clearBinding"));
+		this.buttonResetAll = new GuiButton(0, this.guiStartX + 152, this.height - 23, 75, 20, I18n.format("gui.resetAll"));
 
 		this.buttonHelp = new GuiButton(2, this.width - 47, this.height - 22, 20, 20, "?");
 		this.buttonToggle = new TexturedToggleButton(3, this.width - 22, this.height - 22, 20);
 
-		this.buttonActiveModifier = new GuiButton(1, this.guiStartX, this.height - 63, 150, 20,
+		this.buttonActiveModifier = new GuiButton(1, this.guiStartX, this.height - 47, 150, 20,
 				I18n.format("gui.activeModifier")+ ": " + activeModifier.toString());
 
 		int mouseRowY = this.height / 2 - 115;
