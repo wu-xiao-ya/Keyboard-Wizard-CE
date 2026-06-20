@@ -1,0 +1,111 @@
+plugins {
+    id 'fabric-loom' version '1.10.5'
+    id 'maven-publish'
+}
+
+base {
+    archivesName = project.archives_base_name
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    maven {
+        url = uri("https://maven.nova-committee.cn/releases")
+    }
+}
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+}
+
+tasks.withType(net.fabricmc.loom.task.RunGameTask).configureEach {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withSourcesJar()
+}
+
+tasks.named('jar', Jar).configure {
+    from(['LICENSE.md', 'COPYING.md', 'NOTICE.md', 'README.md'].findAll { file(it).exists() }) {
+        into 'META-INF'
+    }
+}
+
+def releaseFiles = [
+        tasks.named('remapJar'),
+        tasks.named('sourcesJar')
+]
+
+tasks.register('generateReleaseChecksums') {
+    group = 'distribution'
+    description = 'Generates SHA-256 checksums for release jars.'
+    dependsOn releaseFiles
+
+    outputs.file(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+
+    doLast {
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        def outputFile = layout.buildDirectory.file('release/SHA256SUMS.txt').get().asFile
+        outputFile.parentFile.mkdirs()
+        outputFile.text = releaseFiles.collect { provider ->
+            def file = provider.get().archiveFile.get().asFile
+            digest.reset()
+            file.withInputStream { input ->
+                byte[] buffer = new byte[8192]
+                int read
+                while ((read = input.read(buffer)) != -1) {
+                    digest.update(buffer, 0, read)
+                }
+            }
+            "${digest.digest().encodeHex()}  mods/${file.name}"
+        }.join(System.lineSeparator()) + System.lineSeparator()
+    }
+}
+
+tasks.register('releaseBundle', Zip) {
+    group = 'distribution'
+    description = 'Packages release jars, checksums, and legal notices.'
+    dependsOn releaseFiles
+    dependsOn tasks.named('generateReleaseChecksums')
+    archiveFileName = "${archives_base_name}-${mod_version}-release.zip"
+    destinationDirectory = layout.buildDirectory.dir('release')
+
+    from(releaseFiles.collect { it.get().archiveFile }) {
+        into 'mods'
+    }
+    from(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+    from(['README.md', 'NOTICE.md', 'LICENSE.md', 'COPYING.md', 'CHANGELOG.md', 'RELEASE.md'].findAll { file(it).exists() })
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
