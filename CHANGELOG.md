@@ -68,7 +68,7 @@
 
 ## 2.1.0 CE - 2026-06-15
 
-- Published 按键精灵社区版（Keyboard Wizard CE） as a community-maintained CE distribution.
+- Published Keyboard Wizard CE as a community-maintained CE distribution.
 - Added version branches for:
   - Minecraft 1.20.1 + Forge
   - Minecraft 1.21.1 + NeoForge

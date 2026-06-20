@@ -1,12 +1,12 @@
-# 按键精灵社区版（Keyboard Wizard CE）
+# Keyboard Wizard CE
 
-按键精灵社区版（Keyboard Wizard CE）是 Modern KeyWizard / Keyboard Wizard 的社区维护分支，用于补充多个 Minecraft 与 Forge / NeoForge / Fabric 目标的可用构建。
+Keyboard Wizard CE is a community-maintained distribution of Modern KeyWizard / Keyboard Wizard for multiple Minecraft loader targets.
 
-`main` 分支只作为仓库入口和文档页使用；各版本源码按分支独立维护。
+The `main` branch is the repository landing page and documentation branch. Version-specific source code is maintained on separate branches.
 
-## 支持版本
+## Supported Targets
 
-| 目标 | 源码分支 | Java | 最新分支构建 | 基线 Release |
+| Target | Source branch | Java | Latest branch build | Baseline release |
 | --- | --- | --- | --- | --- |
 | Minecraft 1.12.2 + Forge / Cleanroom | `ce/forge-1.12.2` | 8 | [Actions run 27872807776](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27872807776) | - |
 | Minecraft 1.16.5 + Forge | `ce/forge-1.16.5` | 8 | [Actions run 27818845763](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27818845763) | - |
@@ -20,27 +20,26 @@
 | Minecraft 26.2 + Fabric | `ce/fabric-26.2` | 25 | [Actions run 27876944805](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27876944805) | - |
 | Minecraft 26.2 + NeoForge | `ce/neoforge-26.2` | 25 | [Actions run 27647213392](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27647213392) | [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0) |
 
-旧 Fabric 1.16.5 / 1.18.2 分支未发布且不再维护；Fabric 支持从 1.20.1 起。
+Old Fabric 1.16.5 and 1.18.2 branches were never released and are no longer maintained. Fabric support starts at Minecraft 1.20.1.
 
-## 当前功能
+## Current Features
 
-- 模组名：按键精灵社区版（Keyboard Wizard CE）。
-- Mod id：`keyboard_wizard_ce`。
-- 当前 CE 版本线：`1.0.x`。
-- 支持 F7 在游戏内直接打开 Keyboard Wizard CE。
-- 支持主键区、小键盘、辅助键三套键位布局切换。
-- 支持按模组分类、按功能键名称搜索、按按键反查绑定。
-- 左侧热键列表显示热键名称、绑定按键和所属模组/分类。
-- 控制设置界面提供原版 Controls 与 Keyboard Wizard CE 的切换按钮。
-- CE 界面使用独立背景材质，按钮图标使用随模组打包的材质文件。
+- Mod id: `keyboard_wizard_ce`.
+- Current CE version line: `1.0.x`.
+- F7 opens Keyboard Wizard CE in game.
+- Main keyboard, numpad, and auxiliary key layouts.
+- Filtering by mod/category, key binding name search, and reverse lookup by physical key.
+- Left-side key binding rows show binding name, assigned key, and owning mod/category.
+- Controls screen toggle button for switching between vanilla Controls and Keyboard Wizard CE.
+- CE background texture and bundled texture button icons.
 
-## 授权与来源
+## License And Credits
 
-本社区版按 Modern KeyWizard 上游的 AGPL-3.0-only 义务分发。发布二进制 jar 时，需要提供对应源码。
+This community edition follows the upstream Modern KeyWizard AGPL-3.0-only obligations. If you publish a binary jar, provide the matching source code for that exact build.
 
-详见 [LICENSE.md](LICENSE.md)、[COPYING.md](COPYING.md)、[NOTICE.md](NOTICE.md)。
+See [LICENSE.md](LICENSE.md), [COPYING.md](COPYING.md), and [NOTICE.md](NOTICE.md).
 
-- Modern KeyWizard 上游：https://github.com/VulpesStella/ModernKeyWizard
-- Keyboard Wizard 上游：https://github.com/Fuzss/keyboardwizard
-- Legacy reference：https://github.com/MrNerdy42/keywizard-legacy
-- 美术资源：WI_8614_ice
+- Modern KeyWizard upstream: https://github.com/VulpesStella/ModernKeyWizard
+- Keyboard Wizard upstream: https://github.com/Fuzss/keyboardwizard
+- Legacy reference: https://github.com/MrNerdy42/keywizard-legacy
+- Art assets: WI_8614_ice

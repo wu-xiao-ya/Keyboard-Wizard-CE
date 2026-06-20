@@ -1,6 +1,6 @@
 # Notice
 
-- Distribution name: 按键精灵社区版（Keyboard Wizard CE）.
+- Distribution name: Keyboard Wizard CE.
 - Repository purpose: community-maintained CE builds for multiple Minecraft / loader targets.
 - Version branches:
   - `ce/forge-1.12.2`
@@ -16,7 +16,7 @@
   - `ce/neoforge-26.2`
 - Unsupported old Fabric branches: `ce/fabric-1.16.5`, `ce/fabric-1.18.2`.
 - Current CE mod id: `keyboard_wizard_ce`.
-- Current CE version line is `1.0.x`.
+- Current CE version line: `1.0.x`.
 - Original authors: the upstream Modern KeyWizard / Keyboard Wizard authors.
 - CE maintenance: community-maintained updates and compatibility ports.
 - Art assets: WI_8614_ice.
