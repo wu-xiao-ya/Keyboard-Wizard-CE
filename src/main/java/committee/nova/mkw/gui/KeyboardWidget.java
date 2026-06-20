@@ -1,13 +1,14 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkb.ModernKeyBinding;
-import committee.nova.mkb.api.IKeyBinding;
-import committee.nova.mkb.keybinding.KeyModifier;
+import committee.nova.mkw.ModernKeyBinding;
+import committee.nova.mkw.api.IKeyBinding;
+import committee.nova.mkw.keybinding.KeyModifier;
 import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
@@ -16,9 +17,8 @@ import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,16 +52,16 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
         List<? extends KeyboardKeyWidget> keys = this.children();
-        for (KeyboardKeyWidget k : keys) {
-            k.render(matrices, mouseX, mouseY, delta);
+        for (KeyboardKeyWidget key : keys) {
+            key.render(ctx, mouseX, mouseY, delta);
         }
 
         if (!keyWizardScreen.getCategorySelectorExtended()) {
-            for (KeyboardKeyWidget k : keys) {
-                if (k.active && k.isHovered()) {
-                    keyWizardScreen.renderTooltip(matrices, k.tooltipText, mouseX, mouseY);
+            for (KeyboardKeyWidget key : keys) {
+                if (key.active && key.isHovered()) {
+                    ctx.drawTooltip(MinecraftClient.getInstance().textRenderer, key.tooltipText, mouseX, mouseY);
                 }
             }
         }
@@ -70,8 +70,8 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!keyWizardScreen.getCategorySelectorExtended()) {
-            for (KeyboardKeyWidget k : this.children()) {
-                if (k.mouseClicked(mouseX, mouseY, button)) {
+            for (KeyboardKeyWidget key : this.children()) {
+                if (key.mouseClicked(mouseX, mouseY, button)) {
                     return true;
                 }
             }
@@ -86,8 +86,8 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
 
     @Override
     public void tick() {
-        for (KeyboardKeyWidget k : this.children()) {
-            k.tick();
+        for (KeyboardKeyWidget key : this.children()) {
+            key.tick();
         }
     }
 
@@ -110,7 +110,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         private List<Text> tooltipText = new ArrayList<>();
 
         protected KeyboardKeyWidget(int keyCode, float x, float y, float width, float height, InputUtil.Type keyType) {
-            super((int) x, (int) y, (int) width, (int) height, Text.of(""));
+            super((int) x, (int) y, (int) width, (int) height, Text.empty());
             this.x = x;
             this.y = y;
             this.width = width;
@@ -120,7 +120,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         }
 
         @Override
-        public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        protected void renderButton(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
             int color;
             if (this.active) {
@@ -146,28 +146,42 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
             } else {
                 color = 0xFF555555;
             }
-            DrawingUtil.drawNoFillRect(matrices, this.x, this.y, this.x + this.width, this.y + this.height, color);
+            DrawingUtil.drawNoFillRect(ctx, this.x, this.y, this.x + this.width, this.y + this.height, color);
             @SuppressWarnings("resource")
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            textRenderer.drawWithShadow(matrices, this.getMessage(),
-                    (this.x + (this.width) / 2 - textRenderer.getWidth(this.getMessage()) / 2.0F),
-                    this.y + (this.height - 6) / 2, color);
+            ctx.drawTextWithShadow(textRenderer, this.getMessage(),
+                    (int) (this.x + (this.width) / 2 - textRenderer.getWidth(this.getMessage()) / 2.0F),
+                    (int) (this.y + (this.height - 6) / 2), color);
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (!this.active || !this.visible || !this.isHovered()) {
+                return false;
+            }
+
+            if (button == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
+                keyWizardScreen.setSearchTextForKey(this.key);
+                return true;
+            }
+
+            return super.mouseClicked(mouseX, mouseY, button);
         }
 
         @Override
         public void onPress() {
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
             if (Screen.hasAltDown() && Screen.hasControlDown()) {
-                Text t = this.getMessage();
+                Text text = this.getMessage();
                 String keyName;
-                if (t instanceof TranslatableText) {
-                    keyName = I18n.translate(((TranslatableText) t).getKey());
+                if (text.getContent() instanceof TranslatableTextContent contents) {
+                    keyName = I18n.translate(contents.getKey());
                 } else {
-                    keyName = t.asString();
+                    keyName = text.getString();
                 }
                 keyWizardScreen.setSearchText("<" + keyName + ">");
             } else {
-                KeyBinding selectedKeyBinding = keyWizardScreen.getSelectedKeyBinding();
+                KeyBinding selectedKeyBinding = keyWizardScreen.getSelectedKeyMapping();
                 if (selectedKeyBinding != null) {
                     ((IKeyBinding) selectedKeyBinding).setKeyModifierAndCode(KeyModifier.getActiveModifier(), this.key);
                     KeyBinding.updateKeysByCode();
@@ -178,13 +192,12 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         @SuppressWarnings("resource")
         private void updateTooltip() {
             ArrayList<String> tooltipText = new ArrayList<>();
-            for (KeyBinding b : MinecraftClient.getInstance().options.allKeys) {
-                if (((AccessorKeyBinding) b).getBoundKey().equals(this.key)) {
-                    tooltipText.add(I18n.translate(b.getTranslationKey()));
+            for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
+                if (((AccessorKeyBinding) binding).getBoundKey().equals(this.key)) {
+                    tooltipText.add(I18n.translate(binding.getTranslationKey()));
                 }
             }
-            this.tooltipText = tooltipText.stream().sorted().map(TranslatableText::new)
-                    .collect(Collectors.toCollection(ArrayList<Text>::new));
+            this.tooltipText = tooltipText.stream().sorted().map(Text::literal).collect(Collectors.toCollection(ArrayList<Text>::new));
         }
 
         @Override
@@ -193,22 +206,16 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         }
 
         @Override
-        public void appendNarrations(NarrationMessageBuilder var1) {
-            // TODO Auto-generated method stub
-
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {
         }
-
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder var1) {
-        // TODO Auto-generated method stub
-
+    public void appendNarrations(NarrationMessageBuilder builder) {
     }
 
     @Override
     public SelectionType getType() {
         return SelectionType.NONE;
     }
-
 }

@@ -1,19 +1,19 @@
-name: Build CE
+name: Release CE
 
 on:
   push:
-    branches:
-      - ce/fabric-1.21.1
-  pull_request:
-    branches:
-      - ce/fabric-1.21.1
+    tags:
+      - fabric-1.21.1-v*
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,14 +33,17 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Build
+      - name: Build release bundle
         run: ./gradlew build releaseBundle --no-daemon --stacktrace --warning-mode all
 
-      - name: Upload jars
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: keyboard-wizard-ce-fabric-1.21.1
-          path: |
+          name: Keyboard Wizard CE Fabric 1.21.1 ${{ github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          files: |
             build/libs/*.jar
             build/release/*.zip
             build/release/SHA256SUMS.txt
+          body: |
+            Keyboard Wizard CE for Minecraft 1.21.1 + Fabric.

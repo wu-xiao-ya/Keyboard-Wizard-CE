@@ -5,6 +5,17 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyboardWidgetBuilder {
 
+    public static KeyboardWidget keyboard(KeyWizardScreen keyWizardScreen, KeyboardLayout layout, float anchorX, float anchorY, float width, float height) {
+        switch (layout) {
+            case NUMPAD:
+                return numpadKeyboard(keyWizardScreen, anchorX, anchorY, width, height);
+            case AUXILIARY:
+                return auxiliaryKeyboard(keyWizardScreen, anchorX, anchorY, width, height);
+            case MAIN:
+            default:
+                return standardKeyboard(keyWizardScreen, anchorX, anchorY, width, height);
+        }
+    }
 
     public static KeyboardWidget standardKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height) {
         KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
@@ -45,6 +56,66 @@ public class KeyboardWidgetBuilder {
         return kb;
     }
 
+    public static KeyboardWidget numpadKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height) {
+        KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
+
+        float keySpacing = 5;
+        float keyWidth = Math.max(34, Math.min((width - keySpacing * 3) / 4, 75));
+        float keyHeight = Math.max(24, (height - keySpacing * 4) / 5);
+        float layoutWidth = keyWidth * 4 + keySpacing * 3;
+        float xOffset = Math.max(0, (width - layoutWidth) / 2);
+        float currentX;
+        float currentY = 0;
+
+        addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_NUM_LOCK, GLFW.GLFW_KEY_KP_DIVIDE, GLFW.GLFW_KEY_KP_MULTIPLY, GLFW.GLFW_KEY_KP_SUBTRACT}, xOffset, currentY, keyWidth, keyHeight, keySpacing);
+
+        currentY += keyHeight + keySpacing;
+        currentX = addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_KP_7, GLFW.GLFW_KEY_KP_8, GLFW.GLFW_KEY_KP_9}, xOffset, currentY, keyWidth, keyHeight, keySpacing);
+        kb.addKey(currentX, currentY, keyWidth, keyHeight * 2 + keySpacing, keySpacing, GLFW.GLFW_KEY_KP_ADD);
+
+        currentY += keyHeight + keySpacing;
+        addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_KP_4, GLFW.GLFW_KEY_KP_5, GLFW.GLFW_KEY_KP_6}, xOffset, currentY, keyWidth, keyHeight, keySpacing);
+
+        currentY += keyHeight + keySpacing;
+        currentX = addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_KP_1, GLFW.GLFW_KEY_KP_2, GLFW.GLFW_KEY_KP_3}, xOffset, currentY, keyWidth, keyHeight, keySpacing);
+        kb.addKey(currentX, currentY, keyWidth, keyHeight * 2 + keySpacing, keySpacing, GLFW.GLFW_KEY_KP_ENTER);
+
+        currentY += keyHeight + keySpacing;
+        currentX = kb.addKey(xOffset, currentY, keyWidth * 2 + keySpacing, keyHeight, keySpacing, GLFW.GLFW_KEY_KP_0);
+        kb.addKey(currentX, currentY, keyWidth, keyHeight, keySpacing, GLFW.GLFW_KEY_KP_DECIMAL);
+
+        return kb;
+    }
+
+    public static KeyboardWidget auxiliaryKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height) {
+        KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
+
+        float keySpacing = 5;
+        float keyWidth = Math.max(42, Math.min((width - keySpacing * 6) / 6, 95));
+        float keyHeight = Math.max(24, (height - keySpacing * 3) / 4);
+        float clusterWidth = keyWidth * 3 + keySpacing * 2;
+        float clusterGap = keySpacing * 4;
+        float layoutWidth = clusterWidth * 2 + clusterGap;
+        float xOffset = Math.max(0, (width - layoutWidth) / 2);
+        float leftStart = xOffset;
+        float arrowStart = xOffset + clusterWidth + clusterGap;
+        float currentY = 0;
+
+        addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_PRINT_SCREEN, GLFW.GLFW_KEY_SCROLL_LOCK, GLFW.GLFW_KEY_PAUSE}, leftStart, currentY, keyWidth, keyHeight, keySpacing);
+
+        currentY += keyHeight + keySpacing;
+        addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_INSERT, GLFW.GLFW_KEY_HOME, GLFW.GLFW_KEY_PAGE_UP}, leftStart, currentY, keyWidth, keyHeight, keySpacing);
+
+        currentY += keyHeight + keySpacing;
+        addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_DELETE, GLFW.GLFW_KEY_END, GLFW.GLFW_KEY_PAGE_DOWN}, leftStart, currentY, keyWidth, keyHeight, keySpacing);
+        kb.addKey(arrowStart + keyWidth + keySpacing, currentY, keyWidth, keyHeight, keySpacing, GLFW.GLFW_KEY_UP);
+
+        currentY += keyHeight + keySpacing;
+        addHorizontalRow(kb, new int[]{GLFW.GLFW_KEY_LEFT, GLFW.GLFW_KEY_DOWN, GLFW.GLFW_KEY_RIGHT}, arrowStart, currentY, keyWidth, keyHeight, keySpacing);
+
+        return kb;
+    }
+
     public static KeyboardWidget singleKeyKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height, int keyCode, InputUtil.Type keyType) {
         KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
         kb.addKey(0, 0, width, height, 0, keyCode, keyType);
@@ -65,4 +136,5 @@ public class KeyboardWidgetBuilder {
     }
 
 }
+
 
