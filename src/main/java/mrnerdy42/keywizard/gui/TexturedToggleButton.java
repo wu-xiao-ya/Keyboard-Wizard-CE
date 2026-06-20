@@ -38,7 +38,7 @@ public class TexturedToggleButton extends GuiButton {
             GlStateManager.enableBlend();
             if (this.texU == 20) {
                 mc.getTextureManager().bindTexture(RETURN_TEXTURE);
-                this.drawModalRectWithCustomSizedTexture(this.x, this.y, 0.0F, 0.0F, this.width, this.height, 114.0F, 114.0F);
+                this.drawModalRectWithCustomSizedTexture(this.x, this.y, 0.0F, 0.0F, this.width, this.height, 20.0F, 20.0F);
             } else {
                 mc.getTextureManager().bindTexture(TEXTURE);
                 this.drawModalRectWithCustomSizedTexture(this.x, this.y, this.texU, this.hovered ? 20 : 0, this.width, this.height, 40.0F, 40.0F);
