@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import mrnerdy42.keywizard.util.KeybindUtils;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
@@ -12,6 +13,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.client.GuiScrollingList;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 public class GuiBindingList extends GuiScrollingList {
 	
@@ -24,6 +27,9 @@ public class GuiBindingList extends GuiScrollingList {
 	private KeyBinding selectedKeybind;
 	private int selectedKeybindId;
 	private static final String CATEGORY_PREFIX = "key.categories.";
+	private static final int BORDER = 4;
+	private float scrollDistance;
+	private boolean wasMouseDown;
 
 	public GuiBindingList(GuiKeyWizard parent, int left, int bottom, int width, int height, int entryHeight) {
 		     //Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight
@@ -57,6 +63,54 @@ public class GuiBindingList extends GuiScrollingList {
 
 	@Override
 	protected void drawBackground() {
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.mouseX = mouseX;
+		this.mouseY = mouseY;
+		this.handleClick(mouseX, mouseY);
+		this.applyScrollLimits();
+
+		Gui.drawRect(this.left, this.top, this.left + this.listWidth, this.bottom, 0xAA020606);
+		Gui.drawRect(this.left, this.top, this.left + this.listWidth, this.top + 1, 0x663E9F82);
+		Gui.drawRect(this.left, this.bottom - 1, this.left + this.listWidth, this.bottom, 0x663E9F82);
+
+		double scaleX = this.parent.getClient().displayWidth / (double) this.parent.width;
+		double scaleY = this.parent.getClient().displayHeight / (double) this.parent.height;
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		GL11.glScissor((int) (this.left * scaleX), (int) ((this.parent.height - this.bottom) * scaleY),
+				(int) (this.listWidth * scaleX), (int) ((this.bottom - this.top) * scaleY));
+
+		Tessellator tess = Tessellator.getInstance();
+		int entryRight = this.left + this.listWidth - 7;
+		int baseY = this.top + BORDER - (int) this.scrollDistance;
+		for (int slotIdx = 0; slotIdx < this.bindings.length; slotIdx++) {
+			int slotTop = baseY + slotIdx * this.slotHeight;
+			int slotBuffer = this.slotHeight - BORDER;
+			if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
+				if (this.isSelected(slotIdx)) {
+					Gui.drawRect(this.left, slotTop - 2, entryRight, slotTop + slotBuffer + 2, 0xFF808080);
+					Gui.drawRect(this.left + 1, slotTop - 1, entryRight - 1, slotTop + slotBuffer + 1, 0xFF000000);
+				}
+				this.drawSlot(slotIdx, entryRight, slotTop, slotBuffer, tess);
+			}
+		}
+
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		this.drawScrollBar();
+	}
+
+	@Override
+	public void handleMouseInput(int mouseX, int mouseY) {
+		if (mouseX < this.left || mouseX > this.left + this.listWidth || mouseY < this.top || mouseY > this.bottom) {
+			return;
+		}
+		int scroll = Mouse.getEventDWheel();
+		if (scroll != 0) {
+			this.scrollDistance += (float) ((-1 * scroll / 120.0F) * this.slotHeight / 2);
+			this.applyScrollLimits();
+		}
 	}
 
 	@Override
@@ -207,6 +261,59 @@ public class GuiBindingList extends GuiScrollingList {
 	
 	public KeyBinding getSelectedKeybind(){
 		return this.selectedKeybind;
+	}
+
+	private void handleClick(int mouseX, int mouseY) {
+		boolean mouseDown = Mouse.isButtonDown(0);
+		if (mouseDown && !this.wasMouseDown && mouseX >= this.left && mouseX <= this.left + this.listWidth - 7
+				&& mouseY >= this.top && mouseY <= this.bottom) {
+			int mouseListY = mouseY - this.top + (int) this.scrollDistance - BORDER;
+			int slotIndex = mouseListY / this.slotHeight;
+			if (slotIndex >= 0 && mouseListY >= 0 && slotIndex < this.bindings.length) {
+				this.elementClicked(slotIndex, false);
+			}
+		}
+		this.wasMouseDown = mouseDown;
+	}
+
+	private void applyScrollLimits() {
+		int maxScroll = this.getSize() * this.slotHeight - (this.bottom - this.top - BORDER);
+		if (maxScroll < 0) {
+			maxScroll = 0;
+		}
+		if (this.scrollDistance < 0.0F) {
+			this.scrollDistance = 0.0F;
+		}
+		if (this.scrollDistance > maxScroll) {
+			this.scrollDistance = maxScroll;
+		}
+	}
+
+	private void drawScrollBar() {
+		int viewHeight = this.bottom - this.top;
+		int contentHeight = this.getSize() * this.slotHeight;
+		int extraHeight = contentHeight + BORDER - viewHeight;
+		if (extraHeight <= 0) {
+			return;
+		}
+
+		int scrollBarRight = this.left + this.listWidth;
+		int scrollBarLeft = scrollBarRight - 6;
+		int barHeight = viewHeight * viewHeight / contentHeight;
+		if (barHeight < 32) {
+			barHeight = 32;
+		}
+		if (barHeight > viewHeight - BORDER * 2) {
+			barHeight = viewHeight - BORDER * 2;
+		}
+
+		int barTop = (int) this.scrollDistance * (viewHeight - barHeight) / extraHeight + this.top;
+		if (barTop < this.top) {
+			barTop = this.top;
+		}
+		Gui.drawRect(scrollBarLeft, this.top, scrollBarRight, this.bottom, 0xFF000000);
+		Gui.drawRect(scrollBarLeft, barTop, scrollBarRight, barTop + barHeight, 0xFF808080);
+		Gui.drawRect(scrollBarLeft, barTop, scrollBarRight - 1, barTop + barHeight - 1, 0xFFC0C0C0);
 	}
 
 }
