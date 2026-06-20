@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.keybinding.KeyModifier;
 import committee.nova.mkw.util.KeyBindingUtil;
+import committee.nova.mkw.util.MinecraftCompat;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -104,7 +105,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         Button screenToggleButton = createScreenToggleButton(
                 this.width - 22,
                 this.height - 22,
-                btn -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
+                btn -> MinecraftCompat.setScreen(this.minecraft, new ControlsScreen(this.lastScreen, this.options))
         );
         Button helpButton = new HelpButton(this.width - 47, this.height - 22);
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
@@ -141,13 +142,13 @@ public class KeyWizardScreen extends OptionsSubScreen {
         }).bounds(bindingListWidth + 66, this.height - 23, 50, 20).build();
 
         Button resetAll = Button.builder(Component.translatable("controls.resetAll"), b -> {
-            final Screen current = this.minecraft.screen;
-            this.minecraft.setScreen(new ResetAllConfirmScreen(confirm -> {
+            final Screen current = MinecraftCompat.getScreen(this.minecraft);
+            MinecraftCompat.setScreen(this.minecraft, new ResetAllConfirmScreen(confirm -> {
                 if (confirm) {
                     for (KeyMapping k : this.options.keyMappings) KeyBindingUtil.resetToDefault(k);
                     KeyMapping.resetMapping();
                 }
-                this.minecraft.setScreen(current);
+                MinecraftCompat.setScreen(this.minecraft, current);
             }));
         }).bounds(bindingListWidth + 117, this.height - 23, 70, 20).build();
 

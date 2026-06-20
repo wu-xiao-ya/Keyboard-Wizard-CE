@@ -2,10 +2,9 @@ package committee.nova.mkw;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import committee.nova.mkw.gui.KeyWizardScreen;
+import committee.nova.mkw.util.MinecraftCompat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -17,24 +16,20 @@ public class ModernKeyWizard implements ClientModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
 
-    private static KeyMapping keyOpenKeyWizard;
-    private static final KeyMapping.Category MKW_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MODID, "bindings"));
+    private static boolean wasOpenKeyDown;
 
     @Override
     public void onInitializeClient() {
         LOGGER.debug("{} initialized!", MODID);
-        keyOpenKeyWizard = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-                "key." + MODID + ".openKeyWizard",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_F7,
-                MKW_CATEGORY
-        ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             Minecraft minecraft = Minecraft.getInstance();
-            while (keyOpenKeyWizard.consumeClick()) {
-                minecraft.setScreen(new KeyWizardScreen(minecraft.screen));
+            long window = minecraft.getWindow().getWindow();
+            boolean isOpenKeyDown = InputConstants.isKeyDown(window, GLFW.GLFW_KEY_F7);
+            if (isOpenKeyDown && !wasOpenKeyDown) {
+                MinecraftCompat.setScreen(minecraft, new KeyWizardScreen(MinecraftCompat.getScreen(minecraft)));
             }
+            wasOpenKeyDown = isOpenKeyDown;
         });
     }
 }
