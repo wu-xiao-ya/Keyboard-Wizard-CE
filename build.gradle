@@ -57,7 +57,7 @@ tasks.named('jar', Jar).configure {
 }
 
 def releaseFiles = [
-        tasks.named('remapJar'),
+        tasks.named('jar'),
         tasks.named('sourcesJar')
 ]
 
