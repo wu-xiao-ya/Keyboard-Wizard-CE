@@ -1,7 +1,5 @@
 package mrnerdy42.keywizard.gui;
 
-import static org.lwjgl.input.Keyboard.getKeyName;
-
 import java.util.HashMap;
 
 import mrnerdy42.keywizard.util.KeyHelper;
@@ -36,7 +34,7 @@ public class GuiKeyboard extends FloatGui{
 		}
 		for(GuiKeyboardKey k:this.keyList.values()) {
 			if(k.hovered && !parent.getCategoryListExtended()) {
-			    net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(KeybindUtils.getBindingNamesAndCategories(k.keyCode, this.parent.getActiveModifier()), mouseX, mouseY, this.parent.width, this.parent.height, -1, this.parent.getFontRenderer());
+			    net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(KeybindUtils.getBindingNames(k.keyCode, this.parent.getActiveModifier()), mouseX, mouseY, this.parent.width, this.parent.height, -1, this.parent.getFontRenderer());
 			    GlStateManager.disableLighting();
 	            GlStateManager.disableDepth();
 			}
@@ -157,12 +155,10 @@ public class GuiKeyboard extends FloatGui{
 		
 		public void mouseClicked(Minecraft mc, int mouseX, int mouseY, int button) {
 			if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 2) {
-				parent.setSearchText("@" + getKeyName(this.keyCode));
+				parent.setSearchTextForKey(this.keyCode);
 			} else if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 0) {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-				if (GuiScreen.isShiftKeyDown()) {
-					parent.setSearchText("@"+getKeyName(this.keyCode));
-				} else {
+				if (parent.getSelectedKeybind() != null) {
 					parent.getSelectedKeybind().setKeyModifierAndCode(parent.getActiveModifier(), this.keyCode);
 					mc.gameSettings.setOptionKeyBinding(parent.getSelectedKeybind(), this.keyCode);
 					KeyBinding.resetKeyBindingArrayAndHash();
