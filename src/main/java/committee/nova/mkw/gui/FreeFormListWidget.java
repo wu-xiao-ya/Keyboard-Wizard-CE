@@ -48,7 +48,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             this.renderPanelBackground(ctx);
             super.renderWidget(ctx, mouseX, mouseY, delta);
