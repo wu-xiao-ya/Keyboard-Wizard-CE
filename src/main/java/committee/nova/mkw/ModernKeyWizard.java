@@ -24,8 +24,7 @@ public class ModernKeyWizard implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             Minecraft minecraft = Minecraft.getInstance();
-            long window = minecraft.getWindow().getWindow();
-            boolean isOpenKeyDown = InputConstants.isKeyDown(window, GLFW.GLFW_KEY_F7);
+            boolean isOpenKeyDown = InputConstants.isKeyDown(minecraft.getWindow(), GLFW.GLFW_KEY_F7);
             if (isOpenKeyDown && !wasOpenKeyDown) {
                 MinecraftCompat.setScreen(minecraft, new KeyWizardScreen(MinecraftCompat.getScreen(minecraft)));
             }
