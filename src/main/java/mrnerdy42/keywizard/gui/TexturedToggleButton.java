@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class TexturedToggleButton extends GuiButton {
     private static final ResourceLocation TEXTURE = new ResourceLocation("keyboard_wizard_ce", "textures/gui/screen_toggle_widgets.png");
-    private static final ResourceLocation RETURN_TEXTURE = new ResourceLocation("keyboard_wizard_ce", "textures/gui/screen_toggle_return.png");
     private final int texU;
 
     public TexturedToggleButton(int buttonId, int x, int y, int texU) {
@@ -36,13 +35,8 @@ public class TexturedToggleButton extends GuiButton {
         try {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableBlend();
-            if (this.texU == 20) {
-                mc.getTextureManager().bindTexture(RETURN_TEXTURE);
-                this.drawModalRectWithCustomSizedTexture(this.x, this.y, 0.0F, 0.0F, this.width, this.height, 20.0F, 20.0F);
-            } else {
-                mc.getTextureManager().bindTexture(TEXTURE);
-                this.drawModalRectWithCustomSizedTexture(this.x, this.y, this.texU, this.hovered ? 20 : 0, this.width, this.height, 40.0F, 40.0F);
-            }
+            mc.getTextureManager().bindTexture(TEXTURE);
+            this.drawModalRectWithCustomSizedTexture(this.x, this.y, this.texU, this.hovered ? 20 : 0, this.width, this.height, 40.0F, 40.0F);
             return true;
         } catch (RuntimeException ignored) {
             return false;
