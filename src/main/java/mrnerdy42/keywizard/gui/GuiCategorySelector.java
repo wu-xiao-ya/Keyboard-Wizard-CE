@@ -111,7 +111,6 @@ public class GuiCategorySelector extends GuiButton{
             else if (this.hovered || this.extended){
                 j = 0xFFFFA0;
             }
-            
 
             this.drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, j);
             
@@ -144,12 +143,13 @@ public class GuiCategorySelector extends GuiButton{
     }
     
     public void mouseClicked(Minecraft mc, int mouseX, int mouseY, int button) {
-    	if (mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height && button == 0) {
+        if (mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height && button == 0) {
             this.playPressSound(mc.getSoundHandler());
-    		this.setState(!this.extended);
-    	} else if (!(mouseX >= list.getLeft() && mouseX < list.getLeft() + list.getListWidth() && mouseY >= list.getTop() && mouseY < list.getTop() + list.getListHeight()) && button == 0) {
+			this.setState(!this.extended);
+			this.parent.setSearchText(this.parent.getSearchText());
+        } else if (!(mouseX >= list.getLeft() && mouseX < list.getLeft() + list.getListWidth() && mouseY >= list.getTop() && mouseY < list.getTop() + list.getListHeight()) && button == 0) {
     		this.setState(false);
-    	}
+        }
     }
     
     public void setState(boolean extended){
