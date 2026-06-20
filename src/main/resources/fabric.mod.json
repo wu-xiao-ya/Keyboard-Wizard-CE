@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "keyboard_wizard_ce",
+  "version": "${version}",
+  "name": "\u6309\u952e\u7cbe\u7075\u793e\u533a\u7248 (Keyboard Wizard CE)",
+  "description": "Keyboard Wizard CE makes finding and fixing key bind conflicts easier.",
+  "authors": [
+    "WuXiaoYa",
+    "MrNerdy42",
+    "Tapio"
+  ],
+  "contributors": [
+    {
+      "name": "WI_8614_ice"
+    }
+  ],
+  "contact": {
+    "sources": "https://github.com/wu-xiao-ya/Keyboard-Wizard-CE"
+  },
+  "license": "AGPL-3.0-only",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "committee.nova.mkw.ModernKeyWizard"
+    ]
+  },
+  "mixins": [
+    "keyboard_wizard_ce.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "fabric-key-binding-api-v1": "*"
+  }
+}
