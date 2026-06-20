@@ -95,23 +95,30 @@ public class KeyboardFactory {
 	
 	private static GuiKeyboard makeAuxiliary(GuiKeyWizard parent, double x, double y, double width, double height) {
 		GuiKeyboard kb = new GuiKeyboard(parent, x, y);
-        double currentX = 0;
 		double currentY = 0;
-		
+
 		double keySpacing = 5;
-		double keyWidth = width/5-keySpacing;
+		double keyWidth = width/7-keySpacing;
 		double keyHeight = height/14;
-		
-		currentX = addHorizontalRow(kb, new int[] {KEY_SYSRQ, KEY_SCROLL, KEY_PAUSE, KEY_F13, KEY_F14}, currentX, currentY, keyWidth, keyHeight, keySpacing);
-		currentX = 0;
+		double clusterWidth = keyWidth*3 + keySpacing*2;
+		double clusterGap = keySpacing*4;
+		double layoutWidth = clusterWidth*2 + clusterGap;
+		double xOffset = Math.max(0, (width - layoutWidth)/2);
+		double leftStart = xOffset;
+		double arrowStart = xOffset + clusterWidth + clusterGap;
+
+		// Left navigation cluster (3x3)
+		addHorizontalRow(kb, new int[] {KEY_SYSRQ, KEY_SCROLL, KEY_PAUSE}, leftStart, currentY, keyWidth, keyHeight, keySpacing);
 		currentY += keyHeight + keySpacing;
-		currentX = addHorizontalRow(kb, new int[] {KEY_INSERT, KEY_HOME, KEY_PRIOR, KEY_F15, KEY_F16}, currentX, currentY, keyWidth, keyHeight, keySpacing);
-		currentX = 0;
+		addHorizontalRow(kb, new int[] {KEY_INSERT, KEY_HOME, KEY_PRIOR}, leftStart, currentY, keyWidth, keyHeight, keySpacing);
 		currentY += keyHeight + keySpacing;
-		currentX = addHorizontalRow(kb, new int[] {KEY_DELETE, KEY_END, KEY_NEXT, KEY_F17, KEY_F18}, currentX, currentY, keyWidth, keyHeight, keySpacing);
-		currentX = 0;
+		addHorizontalRow(kb, new int[] {KEY_DELETE, KEY_END, KEY_NEXT}, leftStart, currentY, keyWidth, keyHeight, keySpacing);
+
+		// Inverted-T arrow cluster: UP centered above LEFT/DOWN/RIGHT
+		kb.addKey(arrowStart + keyWidth + keySpacing, currentY, keyWidth, keyHeight, KEY_UP);
 		currentY += keyHeight + keySpacing;
-		currentX = addHorizontalRow(kb, new int[] {KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_F19}, currentX, currentY, keyWidth, keyHeight, keySpacing);
+		addHorizontalRow(kb, new int[] {KEY_LEFT, KEY_DOWN, KEY_RIGHT}, arrowStart, currentY, keyWidth, keyHeight, keySpacing);
+
 		return kb;
 	}
 	
