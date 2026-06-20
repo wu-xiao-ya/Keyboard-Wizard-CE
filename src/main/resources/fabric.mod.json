@@ -30,7 +30,6 @@
   "depends": {
     "fabricloader": ">=0.19.3",
     "fabric": "*",
-    "minecraft": "${minecraft_version}",
-    "fabric-key-binding-api-v1": "*"
+    "minecraft": "${minecraft_version}"
   }
 }

@@ -2,6 +2,7 @@ package committee.nova.mkw.mixin;
 
 import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.gui.KeyWizardScreen;
+import committee.nova.mkw.util.MinecraftCompat;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -27,7 +28,7 @@ public abstract class MixinControlsOptionsScreen extends OptionsSubScreen {
                 this.height - 22,
                 btn -> {
                     if (minecraft == null) return;
-                    minecraft.setScreen(new KeyWizardScreen(this.lastScreen));
+                    MinecraftCompat.setScreen(minecraft, new KeyWizardScreen(this.lastScreen));
                 }
         );
         this.addRenderableWidget(screenToggleButton);
