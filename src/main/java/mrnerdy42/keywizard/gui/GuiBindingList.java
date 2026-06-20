@@ -106,7 +106,6 @@ public class GuiBindingList extends GuiScrollingList {
 				this.clearSelection();
 			}
 		}
-		Arrays.sort(this.bindings, this.parent.sortType);
 	}
 
 	private void clearSelection() {
