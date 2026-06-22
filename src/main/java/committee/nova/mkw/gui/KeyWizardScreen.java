@@ -91,8 +91,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
         int categorySelectorX = bindingListWidth + 15;
         int categorySelectorY = 5;
-        int categorySelectorWidth = maxCategoryWidth + 20;
         int layoutButtonWidth = 74;
+        int categorySelectorWidth = Math.max(maxCategoryWidth + 20, layoutButtonWidth);
         int layoutButtonGap = 4;
         int layoutButtonX = categorySelectorX + categorySelectorWidth + 8;
 
