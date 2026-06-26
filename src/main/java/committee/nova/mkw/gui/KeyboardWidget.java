@@ -185,6 +185,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
                 if (selectedKeyBinding != null) {
                     ((IKeyBinding) selectedKeyBinding).setKeyModifierAndCode(KeyModifier.getActiveModifier(), this.key);
                     KeyBinding.updateKeysByCode();
+                    keyWizardScreen.refreshBindingList();
                 }
             }
         }

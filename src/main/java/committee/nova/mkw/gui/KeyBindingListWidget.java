@@ -148,6 +148,19 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
+    public void refreshSelectedBinding() {
+        KeyBinding selected = getSelectedKeyMapping();
+        this.currentFilterText = "\u0000";
+        updateList();
+        if (selected != null) {
+            for (FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry rawEntry : this.children()) {
+                if (rawEntry instanceof BindingEntry entry && entry.keyBinding == selected) {
+                    this.setSelected(entry);
+                    break;
+                }
+            }
+        }
+    }
     @Override
     public void tick() {
         updateList();
