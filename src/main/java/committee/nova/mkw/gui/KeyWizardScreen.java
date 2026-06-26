@@ -33,7 +33,6 @@ public class KeyWizardScreen extends GameOptionsScreen {
             Text.translatable("gui.keyboard_wizard_ce.help.colors"),
             Text.translatable("gui.keyboard_wizard_ce.help.search")
     );
-    private static final Text SEARCH_HINT = Text.translatable("gui.keyboard_wizard_ce.search.hint");
     public static final String KEY_FILTER_PREFIX = "#key#";
     private static final int[] MOUSE_CODES = {
             GLFW.GLFW_MOUSE_BUTTON_1,
@@ -122,7 +121,6 @@ public class KeyWizardScreen extends GameOptionsScreen {
         this.helpButton.active = false;
 
         this.searchBar = new TextFieldWidget(this.textRenderer, 10, this.height - 20, bindingListWidth, 14, Text.empty());
-        this.searchBar.setPlaceholder(SEARCH_HINT);
         this.searchBar.setChangedListener(this::setSearchText);
 
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, MOUSE_CODES[this.mouseCodeIndex], InputUtil.Type.MOUSE);
