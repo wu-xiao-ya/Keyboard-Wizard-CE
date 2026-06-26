@@ -19,8 +19,8 @@ public abstract class MixinControlsOptionsScreen extends GameOptionsScreen {
         super(parent, gameOptions, title);
     }
 
-    @Inject(at = @At("TAIL"), method = "init()V")
-    private void init(CallbackInfo info) {
+    @Inject(at = @At("TAIL"), method = "addOptions")
+    private void addScreenToggleButton(CallbackInfo info) {
         ModernKeyWizard.LOGGER.debug("Controls screen injector mixin loaded!");
         ButtonWidget screenToggleButton = KeyWizardScreen.createScreenToggleButton(this.width - 22, this.height - 22, (btn) -> {
             if (client == null) return;
@@ -28,5 +28,4 @@ public abstract class MixinControlsOptionsScreen extends GameOptionsScreen {
         });
         this.addDrawableChild(screenToggleButton);
     }
-
 }

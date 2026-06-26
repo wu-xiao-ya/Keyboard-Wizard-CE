@@ -10,6 +10,11 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 import java.util.Objects;
 
 public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> extends EntryListWidget<FreeFormListWidget<E>.Entry> {
+    private static final int CONTENT_LEFT_PADDING = 4;
+    private static final int SCROLLBAR_WIDTH = 6;
+    private static final int SCROLLBAR_RIGHT_PADDING = 4;
+    private static final int CONTENT_SCROLLBAR_GAP = 4;
+
     public boolean visible = true;
 
     public FreeFormListWidget(MinecraftClient client, int top, int left, int width, int height, int itemHeight) {
@@ -23,7 +28,22 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     @Override
     public int getRowWidth() {
-        return this.width;
+        return Math.max(0, this.getRowRight() - this.getRowLeft());
+    }
+
+    @Override
+    public int getRowLeft() {
+        return this.getX() + CONTENT_LEFT_PADDING;
+    }
+
+    @Override
+    public int getRowRight() {
+        return this.getScrollbarX() - CONTENT_SCROLLBAR_GAP;
+    }
+
+    @Override
+    protected int getScrollbarX() {
+        return this.getX() + this.width - SCROLLBAR_WIDTH - SCROLLBAR_RIGHT_PADDING;
     }
 
     protected void renderPanelBackground(DrawContext ctx) {
@@ -38,7 +58,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
             if (this.isSelectedEntry(i)) {
-                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight() - 8, this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
+                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
             }
 
             Entry entry = getEntry(i);
