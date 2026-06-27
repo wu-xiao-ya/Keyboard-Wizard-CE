@@ -28,8 +28,12 @@ public class GuiBindingList extends GuiScrollingList {
 	private int selectedKeybindId;
 	private static final String CATEGORY_PREFIX = "key.categories.";
 	private static final int BORDER = 4;
+	private static final int SCROLLBAR_WIDTH = 6;
+	private static final int SCROLLBAR_GAP = 5;
+	private static final int CONTENT_PADDING = 3;
 	private float scrollDistance;
 	private boolean wasMouseDown;
+	private boolean scrolling;
 
 	public GuiBindingList(GuiKeyWizard parent, int left, int bottom, int width, int height, int entryHeight) {
 		     //Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight
@@ -83,7 +87,7 @@ public class GuiBindingList extends GuiScrollingList {
 				(int) (this.listWidth * scaleX), (int) ((this.bottom - this.top) * scaleY));
 
 		Tessellator tess = Tessellator.getInstance();
-		int entryRight = this.left + this.listWidth - 7;
+		int entryRight = this.getContentRight();
 		int baseY = this.top + BORDER - (int) this.scrollDistance;
 		for (int slotIdx = 0; slotIdx < this.bindings.length; slotIdx++) {
 			int slotTop = baseY + slotIdx * this.slotHeight;
@@ -124,11 +128,12 @@ public class GuiBindingList extends GuiScrollingList {
 		fontRender.drawStringWithShadow(currentBinding.getDisplayName(), this.left + 3, slotTop + fontRender.FONT_HEIGHT + 2, keyColor);
 
 		String categoryLabel = getCategoryDisplayLabel(currentBinding);
-		int maxLabelWidth = this.listWidth - 6;
+		int contentRight = entryRight - CONTENT_PADDING;
+		int maxLabelWidth = contentRight - (this.left + CONTENT_PADDING);
 		if (!categoryLabel.isEmpty() && maxLabelWidth > 0) {
 			String clipped = fontRender.trimStringToWidth(categoryLabel, maxLabelWidth);
 			int labelWidth = fontRender.getStringWidth(clipped);
-			int labelX = this.left + this.listWidth - 3 - labelWidth;
+			int labelX = contentRight - labelWidth;
 			int labelY = slotTop + fontRender.FONT_HEIGHT * 2 + 3;
 			fontRender.drawStringWithShadow(clipped, labelX, labelY, 0xFF7F7F7F);
 		}
@@ -265,7 +270,16 @@ public class GuiBindingList extends GuiScrollingList {
 
 	private void handleClick(int mouseX, int mouseY) {
 		boolean mouseDown = Mouse.isButtonDown(0);
-		if (mouseDown && !this.wasMouseDown && mouseX >= this.left && mouseX <= this.left + this.listWidth - 7
+		if (!mouseDown) {
+			this.scrolling = false;
+		} else if (!this.wasMouseDown && mouseX >= this.getScrollBarLeft() && mouseX <= this.getScrollBarRight()
+				&& mouseY >= this.top && mouseY <= this.bottom && this.hasScrollbar()) {
+			this.scrolling = true;
+		}
+
+		if (this.scrolling) {
+			this.scrollToMouse(mouseY);
+		} else if (mouseDown && !this.wasMouseDown && mouseX >= this.left && mouseX <= this.getContentRight()
 				&& mouseY >= this.top && mouseY <= this.bottom) {
 			int mouseListY = mouseY - this.top + (int) this.scrollDistance - BORDER;
 			int slotIndex = mouseListY / this.slotHeight;
@@ -289,6 +303,47 @@ public class GuiBindingList extends GuiScrollingList {
 		}
 	}
 
+	private int getContentRight() {
+		return this.left + this.listWidth - SCROLLBAR_WIDTH - SCROLLBAR_GAP;
+	}
+
+	private int getScrollBarLeft() {
+		return this.left + this.listWidth - SCROLLBAR_WIDTH;
+	}
+
+	private int getScrollBarRight() {
+		return this.left + this.listWidth;
+	}
+
+	private boolean hasScrollbar() {
+		return this.getSize() * this.slotHeight + BORDER > this.bottom - this.top;
+	}
+
+	private void scrollToMouse(int mouseY) {
+		int viewHeight = this.bottom - this.top;
+		int contentHeight = this.getSize() * this.slotHeight;
+		int extraHeight = contentHeight + BORDER - viewHeight;
+		if (extraHeight <= 0) {
+			this.scrollDistance = 0.0F;
+			return;
+		}
+
+		int barHeight = viewHeight * viewHeight / contentHeight;
+		if (barHeight < 32) {
+			barHeight = 32;
+		}
+		if (barHeight > viewHeight - BORDER * 2) {
+			barHeight = viewHeight - BORDER * 2;
+		}
+
+		float scrollRange = viewHeight - barHeight;
+		if (scrollRange <= 0.0F) {
+			this.scrollDistance = 0.0F;
+		} else {
+			this.scrollDistance = (mouseY - this.top - barHeight / 2.0F) * extraHeight / scrollRange;
+		}
+		this.applyScrollLimits();
+	}
 	private void drawScrollBar() {
 		int viewHeight = this.bottom - this.top;
 		int contentHeight = this.getSize() * this.slotHeight;
@@ -297,8 +352,8 @@ public class GuiBindingList extends GuiScrollingList {
 			return;
 		}
 
-		int scrollBarRight = this.left + this.listWidth;
-		int scrollBarLeft = scrollBarRight - 6;
+		int scrollBarRight = this.getScrollBarRight();
+		int scrollBarLeft = this.getScrollBarLeft();
 		int barHeight = viewHeight * viewHeight / contentHeight;
 		if (barHeight < 32) {
 			barHeight = 32;
