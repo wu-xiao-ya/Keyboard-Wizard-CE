@@ -9,7 +9,7 @@
     "updateUrl": "",
     "authorList": ${authorList},
     "credits": "${credits}",
-    "logoFile": "",
+    "logoFile": "keyboard_wizard_ce_icon.png",
     "screenshots": [],
     "dependencies": []
   }
