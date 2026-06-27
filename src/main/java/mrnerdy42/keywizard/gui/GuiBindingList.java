@@ -107,14 +107,15 @@ public class GuiBindingList extends GuiScrollingList {
 
 	@Override
 	public void handleMouseInput(int mouseX, int mouseY) {
-		if (mouseX < this.left || mouseX > this.left + this.listWidth || mouseY < this.top || mouseY > this.bottom) {
+		this.handleMouseInput(mouseX, mouseY, Mouse.getEventDWheel());
+	}
+
+	public void handleMouseInput(int mouseX, int mouseY, int scroll) {
+		if (scroll == 0 || mouseX < this.left || mouseX > this.left + this.listWidth || mouseY < this.top || mouseY > this.bottom) {
 			return;
 		}
-		int scroll = Mouse.getEventDWheel();
-		if (scroll != 0) {
-			this.scrollDistance += (float) ((-1 * scroll / 120.0F) * this.slotHeight / 2);
-			this.applyScrollLimits();
-		}
+		this.scrollDistance += (float) ((-1 * scroll / 120.0F) * this.slotHeight / 2);
+		this.applyScrollLimits();
 	}
 
 	@Override

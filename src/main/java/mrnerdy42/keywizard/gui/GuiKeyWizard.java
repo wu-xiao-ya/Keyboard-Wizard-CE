@@ -374,13 +374,20 @@ public class GuiKeyWizard extends GuiScreen {
 
     @Override
 	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-
 		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
 		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+		int scroll = Mouse.getEventDWheel();
 
-		this.bindingList.handleMouseInput(mouseX, mouseY);
-		this.categoryList.handleMouseInput(mouseX, mouseY);
+		if (scroll != 0) {
+			if (this.categoryList.getExtended()) {
+				this.categoryList.handleMouseInput(mouseX, mouseY, scroll);
+			} else {
+				this.bindingList.handleMouseInput(mouseX, mouseY, scroll);
+			}
+			return;
+		}
+
+		super.handleMouseInput();
 	}
 
 	@Override

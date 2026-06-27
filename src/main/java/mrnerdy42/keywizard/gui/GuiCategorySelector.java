@@ -123,7 +123,12 @@ public class GuiCategorySelector extends GuiButton{
 	
 	public void handleMouseInput(int mouseX, int mouseY) throws IOException {
 		this.list.handleMouseInput(mouseX, mouseY);
-		
+	}
+
+	public void handleMouseInput(int mouseX, int mouseY, int scroll) throws IOException {
+		if (this.extended && scroll != 0) {
+			this.list.handleMouseInput(mouseX, mouseY);
+		}
 	}
 	
 	public boolean getExtended(){
