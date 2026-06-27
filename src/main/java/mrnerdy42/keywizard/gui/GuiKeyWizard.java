@@ -382,7 +382,7 @@ public class GuiKeyWizard extends GuiScreen {
 			if (this.categoryList.getExtended()) {
 				this.categoryList.handleMouseInput(mouseX, mouseY, scroll);
 			} else {
-				this.bindingList.handleMouseInput(mouseX, mouseY, scroll);
+				this.bindingList.handleMouseInput(scroll);
 			}
 			return;
 		}

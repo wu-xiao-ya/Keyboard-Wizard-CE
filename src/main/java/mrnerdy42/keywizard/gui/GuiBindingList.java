@@ -111,10 +111,23 @@ public class GuiBindingList extends GuiScrollingList {
 	}
 
 	public void handleMouseInput(int mouseX, int mouseY, int scroll) {
-		if (scroll == 0 || mouseX < this.left || mouseX > this.left + this.listWidth || mouseY < this.top || mouseY > this.bottom) {
+		if (scroll == 0 || mouseY < this.top || mouseY > this.bottom) {
 			return;
 		}
-		this.scrollDistance += (float) ((-1 * scroll / 120.0F) * this.slotHeight / 2);
+		this.scrollByWheel(scroll);
+	}
+
+	public void handleMouseInput(int scroll) {
+		if (scroll == 0) {
+			return;
+		}
+		this.scrollByWheel(scroll);
+	}
+
+	private void scrollByWheel(int scroll) {
+		int wheelSteps = Math.max(1, Math.abs(scroll) / 120);
+		float direction = scroll > 0 ? -1.0F : 1.0F;
+		this.scrollDistance += direction * wheelSteps * this.slotHeight * 3.0F;
 		this.applyScrollLimits();
 	}
 
