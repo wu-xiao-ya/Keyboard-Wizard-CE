@@ -130,21 +130,23 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.resetBinding = Button.builder(Component.translatable("controls.reset"), b -> {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
-            selectedBinding.setToDefault();
-            KeyMapping.resetMapping();
+            KeyBindingUtil.resetToDefault(selectedBinding);
+            KeyBindingUtil.refreshMappings();
         }).bounds(bindingListWidth + 15, this.height - 23, 50, 20).build();
         this.clearBinding = Button.builder(Component.translatable("gui.clear"), b -> {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
-            selectedBinding.setKeyModifierAndCode(KeyModifier.NONE, InputConstants.UNKNOWN);
-            KeyMapping.resetMapping();
+            KeyBindingUtil.setModifierAndKey(selectedBinding, KeyModifier.NONE, InputConstants.UNKNOWN);
+            KeyBindingUtil.refreshMappings();
         }).bounds(bindingListWidth + 66, this.height - 23, 50, 20).build();
         this.resetAll = Button.builder(Component.translatable("controls.resetAll"), b -> {
             final Screen current = minecraft.screen;
             minecraft.setScreen(new ResetAllConfirmScreen(y -> {
                 if (y) {
-                    for (KeyMapping k : this.options.keyMappings) k.setToDefault();
-                    KeyMapping.resetMapping();
+                    for (KeyMapping k : this.options.keyMappings) {
+                        KeyBindingUtil.resetToDefault(k);
+                    }
+                    KeyBindingUtil.refreshMappings();
                 }
                 minecraft.setScreen(current);
             }));

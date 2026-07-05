@@ -1,5 +1,7 @@
 package committee.nova.mkw.gui;
 
+import committee.nova.mkw.core.binding.BindingSearchParser;
+import committee.nova.mkw.core.binding.BindingSearchQuery;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -9,14 +11,11 @@ import net.minecraft.client.resources.language.I18n;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
     public KeyWizardScreen keyWizardScreen;
@@ -44,21 +43,22 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private void updateList() {
         boolean filterUpdate = !this.currentFilterText.equals(this.keyWizardScreen.getFilterText());
         boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
-        boolean keyFilter = this.keyWizardScreen.getFilterText().startsWith(KeyWizardScreen.KEY_FILTER_PREFIX);
+        BindingSearchQuery searchQuery = BindingSearchParser.parse(this.keyWizardScreen.getFilterText(), KeyWizardScreen.KEY_FILTER_PREFIX);
 
         if (categoryUpdate || filterUpdate) {
             if (categoryUpdate) {
                 this.currentCategory = this.keyWizardScreen.getSelectedCategory();
             }
 
-            KeyMapping[] bindings = getBindingsByCategory(keyFilter ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
+            KeyMapping[] bindings = getBindingsByCategory(searchQuery.keyFilter() ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
 
             if (filterUpdate) {
                 this.currentFilterText = this.keyWizardScreen.getFilterText();
+                searchQuery = BindingSearchParser.parse(this.currentFilterText, KeyWizardScreen.KEY_FILTER_PREFIX);
             }
 
             if (!this.currentFilterText.equals("")) {
-                bindings = filterBindings(bindings, this.currentFilterText, keyFilter);
+                bindings = filterBindings(bindings, searchQuery);
             }
 
             this.children().clear();
@@ -74,32 +74,21 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
-    private KeyMapping[] filterBindings(KeyMapping[] bindings, String filterText, boolean keyFilter) {
+    private KeyMapping[] filterBindings(KeyMapping[] bindings, BindingSearchQuery searchQuery) {
         KeyMapping[] bindingsFiltered = bindings;
-        if (keyFilter) {
-            filterText = filterText.substring(KeyWizardScreen.KEY_FILTER_PREFIX.length());
+
+        if (searchQuery.hasKeyNameFilter()) {
+            bindingsFiltered = filterBindingsByKey(bindingsFiltered, searchQuery.keyNameFilter());
         }
 
-        String keyNameRegex = "<.*>";
-        Matcher keyNameMatcher = Pattern.compile(keyNameRegex).matcher(filterText);
-
-
-        if (keyNameMatcher.find()) {
-            String keyNameWithBrackets = keyNameMatcher.group();
-            String keyName = keyNameWithBrackets.replace("<", "").replace(">", "");
-            filterText = filterText.replace(keyNameWithBrackets, "");
-            bindingsFiltered = filterBindingsByKey(bindingsFiltered, keyName);
-        }
-
-        if (!filterText.equals("")) {
-            bindingsFiltered = filterBindingsByName(bindingsFiltered, filterText);
+        if (searchQuery.hasTextTerms()) {
+            bindingsFiltered = filterBindingsByName(bindingsFiltered, searchQuery.textTerms().toArray(String[]::new));
         }
 
         return bindingsFiltered;
     }
 
-    private KeyMapping[] filterBindingsByName(KeyMapping[] bindings, String bindingName) {
-        String[] words = bindingName.split("\\s+");
+    private KeyMapping[] filterBindingsByName(KeyMapping[] bindings, String[] words) {
         return Arrays.stream(bindings).filter(binding -> {
             boolean flag = true;
             for (String w : words) {
@@ -127,17 +116,17 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 return bindings;
             case KeyBindingUtil.DYNAMIC_CATEGORY_CONFLICTS:
                 Map<InputConstants.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
-                return Arrays.stream(bindings).filter(b -> bindingCounts.get(b.getKey()) > 1 && b.getKey().getValue() != InputConstants.UNKNOWN.getValue()).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(b -> bindingCounts.get(KeyBindingUtil.getKey(b)) > 1 && KeyBindingUtil.getKey(b).getValue() != InputConstants.UNKNOWN.getValue()).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
-                return Arrays.stream(bindings).filter(KeyMapping::isUnbound).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(KeyBindingUtil::isUnbound).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
-                return Arrays.stream(bindings).filter(k -> k.getKeyModifier().equals(KeyModifier.CONTROL)).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.minecraftforge.client.settings.KeyModifier.CONTROL)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALT:
-                return Arrays.stream(bindings).filter(k -> k.getKeyModifier().equals(KeyModifier.ALT)).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.minecraftforge.client.settings.KeyModifier.ALT)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_SHIFT:
-                return Arrays.stream(bindings).filter(k -> k.getKeyModifier().equals(KeyModifier.SHIFT)).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.minecraftforge.client.settings.KeyModifier.SHIFT)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_NONE:
-                return Arrays.stream(bindings).filter(k -> k.getKeyModifier().equals(KeyModifier.NONE)).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.minecraftforge.client.settings.KeyModifier.NONE)).toArray(KeyMapping[]::new);
             default:
                 return Arrays.stream(bindings).filter(b -> b.getCategory().equals(category)).toArray(KeyMapping[]::new);
         }

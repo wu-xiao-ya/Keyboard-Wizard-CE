@@ -1,61 +1,58 @@
 package committee.nova.mkw.util;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.InputConstants.Key;
+import committee.nova.mkw.bridge.binding.PlatformBindingBridge;
+import committee.nova.mkw.core.binding.DynamicBindingCategories;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.settings.KeyModifier;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class KeyBindingUtil {
-    public static final String DYNAMIC_CATEGORY_ALL = "key.categories.keyboard_wizard_ce.all";
-    public static final String DYNAMIC_CATEGORY_CONFLICTS = "key.categories.keyboard_wizard_ce.conflicts";
-    public static final String DYNAMIC_CATEGORY_UNBOUND = "key.categories.keyboard_wizard_ce.unbound";
-    public static final String DYNAMIC_CATEGORY_CTRL = "key.categories.keyboard_wizard_ce.ctrl";
-    public static final String DYNAMIC_CATEGORY_ALT = "key.categories.keyboard_wizard_ce.alt";
-    public static final String DYNAMIC_CATEGORY_SHIFT = "key.categories.keyboard_wizard_ce.shift";
-    public static final String DYNAMIC_CATEGORY_NONE = "key.categories.keyboard_wizard_ce.no_modifier";
+    public static final String DYNAMIC_CATEGORY_ALL = DynamicBindingCategories.ALL;
+    public static final String DYNAMIC_CATEGORY_CONFLICTS = DynamicBindingCategories.CONFLICTS;
+    public static final String DYNAMIC_CATEGORY_UNBOUND = DynamicBindingCategories.UNBOUND;
+    public static final String DYNAMIC_CATEGORY_CTRL = DynamicBindingCategories.CTRL;
+    public static final String DYNAMIC_CATEGORY_ALT = DynamicBindingCategories.ALT;
+    public static final String DYNAMIC_CATEGORY_SHIFT = DynamicBindingCategories.SHIFT;
+    public static final String DYNAMIC_CATEGORY_NONE = DynamicBindingCategories.NONE;
+    private static final PlatformBindingBridge BRIDGE = new PlatformBindingBridge();
 
-    /**
-     * Get a list of all binding categories
-     */
-    @SuppressWarnings("resource")
     public static ArrayList<String> getCategories() {
-        LinkedHashSet<String> categories = new LinkedHashSet<>();
-        for (KeyMapping keyMapping : Minecraft.getInstance().options.keyMappings) {
-            categories.add(keyMapping.getCategory());
-        }
-        return categories.stream().sorted().collect(Collectors.toCollection(ArrayList<String>::new));
+        return new ArrayList<>(BRIDGE.getCategories());
     }
 
     public static ArrayList<String> getCategoriesWithDynamics() {
-        ArrayList<String> categories = getCategories();
-        categories.add(0, DYNAMIC_CATEGORY_UNBOUND);
-        categories.add(0, DYNAMIC_CATEGORY_CONFLICTS);
-        categories.add(0, DYNAMIC_CATEGORY_ALL);
-        categories.add(DYNAMIC_CATEGORY_CTRL);
-        categories.add(DYNAMIC_CATEGORY_ALT);
-        categories.add(DYNAMIC_CATEGORY_SHIFT);
-        categories.add(DYNAMIC_CATEGORY_NONE);
-        return categories;
+        return DynamicBindingCategories.withDynamicCategories(getCategories(), true);
     }
 
-    @SuppressWarnings("resource")
-    public static Map<Key, Integer> getBindingCountsByKey() {
-        HashMap<InputConstants.Key, Integer> map = new HashMap<>();
-        for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
-            map.merge(getKey(b), 1, Integer::sum);
-        }
-        return Collections.unmodifiableMap(map);
+    public static Map<InputConstants.Key, Integer> getBindingCountsByKey() {
+        return BRIDGE.getBindingCountsByKey();
     }
 
     public static InputConstants.Key getKey(KeyMapping keyMapping) {
-        return keyMapping.getKey();
+        return BRIDGE.getKey(keyMapping);
+    }
+
+    public static KeyModifier getModifier(KeyMapping keyMapping) {
+        return BRIDGE.getModifier(keyMapping);
+    }
+
+    public static boolean isUnbound(KeyMapping keyMapping) {
+        return BRIDGE.isUnbound(keyMapping);
+    }
+
+    public static void setModifierAndKey(KeyMapping keyMapping, KeyModifier modifier, InputConstants.Key key) {
+        BRIDGE.setModifierAndKey(keyMapping, modifier, key);
+    }
+
+    public static void resetToDefault(KeyMapping keyMapping) {
+        BRIDGE.resetToDefault(keyMapping);
+    }
+
+    public static void refreshMappings() {
+        BRIDGE.refreshMappings();
     }
 }
 

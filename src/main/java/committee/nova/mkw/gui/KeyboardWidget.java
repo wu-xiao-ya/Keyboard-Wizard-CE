@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.DrawingUtil;
+import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
@@ -183,8 +184,8 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             } else {
                 KeyMapping selectedKeyMapping = keyWizardScreen.getSelectedKeyMapping();
                 if (selectedKeyMapping != null) {
-                    selectedKeyMapping.setKeyModifierAndCode(getActiveModifier(), this.key);
-                    KeyMapping.resetMapping();
+                    KeyBindingUtil.setModifierAndKey(selectedKeyMapping, getActiveModifier(), this.key);
+                    KeyBindingUtil.refreshMappings();
                 }
             }
         }
@@ -226,4 +227,3 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
 }
-
