@@ -1,11 +1,9 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyBinding;
-import committee.nova.mkw.api.IKeyBinding;
 import committee.nova.mkw.core.binding.BindingSearchParser;
 import committee.nova.mkw.core.binding.BindingSearchQuery;
 import committee.nova.mkw.keybinding.KeyModifier;
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Map;
+
 public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
     public KeyWizardScreen keyWizardScreen;
     private String currentFilterText = "";
@@ -103,7 +102,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
     private KeyBinding[] filterBindingsByKey(KeyBinding[] bindings, String keyName) {
         return Arrays.stream(bindings).filter(binding -> {
-            Text text = ((AccessorKeyBinding) binding).getBoundKey().getLocalizedText();
+            Text text = KeyBindingUtil.getKey(binding).getLocalizedText();
             if (text.getContent() instanceof TranslatableTextContent contents) {
                 return I18n.translate(contents.getKey()).equalsIgnoreCase(keyName);
             } else {
@@ -168,17 +167,26 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
         @Override
         public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            ctx.drawTextWithShadow(client.textRenderer, Text.translatable(this.keyBinding.getTranslationKey()), x, y, 0xFFFFFFFF);
+            int contentRight = x + entryWidth - CATEGORY_RIGHT_PADDING;
+            int maxTextWidth = Math.max(0, contentRight - x);
+
+            ctx.drawTextWithShadow(client.textRenderer, trimToWidth(Text.translatable(this.keyBinding.getTranslationKey()), maxTextWidth), x, y, 0xFFFFFFFF);
             int color = 0xFF999999;
-            ctx.drawTextWithShadow(client.textRenderer, this.keyBinding.getBoundKeyLocalizedText(), x, y + client.textRenderer.fontHeight + 5, color);
+            ctx.drawTextWithShadow(client.textRenderer, trimToWidth(this.keyBinding.getBoundKeyLocalizedText(), maxTextWidth), x, y + client.textRenderer.fontHeight + 5, color);
             String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
-            int maxCategoryWidth = entryWidth - CATEGORY_RIGHT_PADDING * 2;
-            if (maxCategoryWidth > 0 && !categoryLabel.isEmpty()) {
-                String clippedCategoryLabel = client.textRenderer.trimToWidth(categoryLabel, maxCategoryWidth);
-                int categoryX = x + entryWidth - CATEGORY_RIGHT_PADDING - client.textRenderer.getWidth(clippedCategoryLabel);
+            if (maxTextWidth > 0 && !categoryLabel.isEmpty()) {
+                String clippedCategoryLabel = client.textRenderer.trimToWidth(categoryLabel, maxTextWidth);
+                int categoryX = Math.max(x, contentRight - client.textRenderer.getWidth(clippedCategoryLabel));
                 int categoryY = y + entryHeight - client.textRenderer.fontHeight - CATEGORY_BOTTOM_PADDING;
                 ctx.drawTextWithShadow(client.textRenderer, clippedCategoryLabel, categoryX, categoryY, 0xFF7F7F7F);
             }
+        }
+
+        private Text trimToWidth(Text text, int width) {
+            if (width <= 0) {
+                return Text.empty();
+            }
+            return Text.literal(client.textRenderer.trimToWidth(text.getString(), width));
         }
 
         private String getCategoryDisplayLabel(KeyBinding keyBinding) {
@@ -201,6 +209,6 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
     }
 }
