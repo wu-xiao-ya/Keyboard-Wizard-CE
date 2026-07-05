@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "keyboard_wizard_ce",
   "version": "${version}",
-  "name": "\u6309\u952e\u7cbe\u7075\u793e\u533a\u7248 (Keyboard Wizard CE)",
+  "name": "按键精灵社区版 (Keyboard Wizard CE)",
   "description": "Keyboard Wizard CE makes finding and fixing key bind conflicts easier.",
   "authors": [
     "MrNerdy42",
@@ -29,7 +29,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric-api": "*",
-    "minecraft": "1.21.1",
+    "minecraft": "1.21.2",
     "fabric-key-binding-api-v1": "*"
   },
   "suggests": {
