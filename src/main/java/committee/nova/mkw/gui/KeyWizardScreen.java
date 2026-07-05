@@ -138,25 +138,28 @@ public class KeyWizardScreen extends GameOptionsScreen {
             if (selectedBinding == null) {
                 return;
             }
-            ((IKeyBinding) selectedBinding).setToDefault();
-            KeyBinding.updateKeysByCode();
+            KeyBindingUtil.resetToDefault(selectedBinding);
+            KeyBindingUtil.refreshMappings();
+            refreshBindingList();
         }).dimensions(bindingListWidth + 15, this.height - 23, 50, 20).build();
         this.clearBinding = ButtonWidget.builder(Text.translatable("gui.clear"), button -> {
             KeyBinding selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) {
                 return;
             }
-            ((IKeyBinding) selectedBinding).setKeyModifierAndCode(KeyModifier.NONE, InputUtil.UNKNOWN_KEY);
-            KeyBinding.updateKeysByCode();
+            KeyBindingUtil.setModifierAndKey(selectedBinding, KeyModifier.NONE, InputUtil.UNKNOWN_KEY);
+            KeyBindingUtil.refreshMappings();
+            refreshBindingList();
         }).dimensions(bindingListWidth + 66, this.height - 23, 50, 20).build();
         this.resetAll = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
             Screen current = this.client.currentScreen;
             this.client.setScreen(new ResetAllConfirmScreen(result -> {
                 if (result) {
                     for (KeyBinding keyBinding : this.gameOptions.allKeys) {
-                        ((IKeyBinding) keyBinding).setToDefault();
+                        KeyBindingUtil.resetToDefault(keyBinding);
                     }
-                    KeyBinding.updateKeysByCode();
+                    KeyBindingUtil.refreshMappings();
+                    refreshBindingList();
                 }
                 this.client.setScreen(current);
             }));
@@ -225,6 +228,10 @@ public class KeyWizardScreen extends GameOptionsScreen {
         if (this.mainLayoutButton != null) this.mainLayoutButton.active = this.keyboardLayout != KeyboardLayout.MAIN;
         if (this.numpadLayoutButton != null) this.numpadLayoutButton.active = this.keyboardLayout != KeyboardLayout.NUMPAD;
         if (this.auxiliaryLayoutButton != null) this.auxiliaryLayoutButton.active = this.keyboardLayout != KeyboardLayout.AUXILIARY;
+    }
+
+    public void refreshBindingList() {
+        this.bindingList.refreshSelectedBinding();
     }
 
     @Nullable
