@@ -131,7 +131,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
             KeyBindingUtil.resetToDefault(selectedBinding);
-            KeyMapping.resetMapping();
+            KeyBindingUtil.refreshMappings();
             refreshBindingList();
         }).bounds(bindingListWidth + 15, this.height - 23, 50, 20).build();
 
@@ -139,7 +139,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) return;
             KeyBindingUtil.setModifierAndKey(selectedBinding, KeyModifier.NONE, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_UNKNOWN));
-            KeyMapping.resetMapping();
+            KeyBindingUtil.refreshMappings();
             refreshBindingList();
         }).bounds(bindingListWidth + 66, this.height - 23, 50, 20).build();
 
@@ -148,7 +148,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
             MinecraftCompat.setScreen(this.minecraft, new ResetAllConfirmScreen(confirm -> {
                 if (confirm) {
                     for (KeyMapping k : this.options.keyMappings) KeyBindingUtil.resetToDefault(k);
-                    KeyMapping.resetMapping();
+                    KeyBindingUtil.refreshMappings();
                     refreshBindingList();
                 }
                 MinecraftCompat.setScreen(this.minecraft, current);
