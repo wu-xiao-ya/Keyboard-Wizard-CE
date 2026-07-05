@@ -1,7 +1,6 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyWizard;
-import committee.nova.mkw.api.IKeyBinding;
 import committee.nova.mkw.keybinding.KeyModifier;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.MinecraftClient;
@@ -137,8 +136,8 @@ public class KeyWizardScreen extends GameOptionsScreen {
             if (selectedBinding == null) {
                 return;
             }
-            ((IKeyBinding) selectedBinding).setToDefault();
-            KeyBinding.updateKeysByCode();
+            KeyBindingUtil.resetToDefault(selectedBinding);
+            KeyBindingUtil.refreshMappings();
             refreshBindingList();
         }).dimensions(bindingListWidth + 15, this.height - 23, 50, 20).build();
         this.clearBinding = ButtonWidget.builder(Text.translatable("gui.clear"), button -> {
@@ -146,8 +145,8 @@ public class KeyWizardScreen extends GameOptionsScreen {
             if (selectedBinding == null) {
                 return;
             }
-            ((IKeyBinding) selectedBinding).setKeyModifierAndCode(KeyModifier.NONE, InputUtil.UNKNOWN_KEY);
-            KeyBinding.updateKeysByCode();
+            KeyBindingUtil.setModifierAndKey(selectedBinding, KeyModifier.NONE, InputUtil.UNKNOWN_KEY);
+            KeyBindingUtil.refreshMappings();
             refreshBindingList();
         }).dimensions(bindingListWidth + 66, this.height - 23, 50, 20).build();
         this.resetAll = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
@@ -155,9 +154,9 @@ public class KeyWizardScreen extends GameOptionsScreen {
             this.client.setScreen(new ResetAllConfirmScreen(result -> {
                 if (result) {
                     for (KeyBinding keyBinding : this.gameOptions.allKeys) {
-                        ((IKeyBinding) keyBinding).setToDefault();
+                        KeyBindingUtil.resetToDefault(keyBinding);
                     }
-                    KeyBinding.updateKeysByCode();
+                    KeyBindingUtil.refreshMappings();
                     refreshBindingList();
                 }
                 this.client.setScreen(current);
