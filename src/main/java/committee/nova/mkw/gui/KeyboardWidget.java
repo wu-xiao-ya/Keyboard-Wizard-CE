@@ -162,7 +162,8 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             KeyMapping selectedKeyMapping = keyWizardScreen.getSelectedKeyMapping();
             if (selectedKeyMapping != null) {
                 KeyBindingUtil.setModifierAndKey(selectedKeyMapping, KeyModifier.getActiveModifier(input), this.key);
-                KeyMapping.resetMapping();
+                KeyBindingUtil.refreshMappings();
+                keyWizardScreen.refreshBindingList();
             }
         }
 
