@@ -1,6 +1,8 @@
 package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.core.binding.BindingSearchParser;
+import committee.nova.mkw.core.binding.BindingSearchQuery;
 import committee.nova.mkw.keybinding.KeyModifier;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
     public KeyWizardScreen keyWizardScreen;
@@ -45,19 +45,20 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private void updateList() {
         boolean filterUpdate = !this.currentFilterText.equals(this.keyWizardScreen.getFilterText());
         boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
-        boolean keyFilter = this.keyWizardScreen.getFilterText().startsWith(KeyWizardScreen.KEY_FILTER_PREFIX);
+        BindingSearchQuery searchQuery = BindingSearchParser.parse(this.keyWizardScreen.getFilterText(), KeyWizardScreen.KEY_FILTER_PREFIX);
 
         if (categoryUpdate || filterUpdate) {
             if (categoryUpdate) this.currentCategory = this.keyWizardScreen.getSelectedCategory();
 
-            KeyMapping[] bindings = getBindingsByCategory(keyFilter ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
+            KeyMapping[] bindings = getBindingsByCategory(searchQuery.keyFilter() ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
 
             if (filterUpdate) {
                 this.currentFilterText = this.keyWizardScreen.getFilterText();
+                searchQuery = BindingSearchParser.parse(this.currentFilterText, KeyWizardScreen.KEY_FILTER_PREFIX);
             }
 
             if (!this.currentFilterText.equals("")) {
-                bindings = filterBindings(bindings, this.currentFilterText, keyFilter);
+                bindings = filterBindings(bindings, searchQuery);
             }
 
             this.clearEntries();
@@ -71,30 +72,21 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
-    private KeyMapping[] filterBindings(KeyMapping[] bindings, String filterText, boolean keyFilter) {
+    private KeyMapping[] filterBindings(KeyMapping[] bindings, BindingSearchQuery searchQuery) {
         KeyMapping[] bindingsFiltered = bindings;
-        if (keyFilter) {
-            filterText = filterText.substring(KeyWizardScreen.KEY_FILTER_PREFIX.length());
+
+        if (searchQuery.hasKeyNameFilter()) {
+            bindingsFiltered = filterBindingsByKey(bindingsFiltered, searchQuery.keyNameFilter());
         }
 
-        Matcher keyNameMatcher = Pattern.compile("<.*>").matcher(filterText);
-
-        if (keyNameMatcher.find()) {
-            String keyNameWithBrackets = keyNameMatcher.group();
-            String keyName = keyNameWithBrackets.replace("<", "").replace(">", "");
-            filterText = filterText.replace(keyNameWithBrackets, "");
-            bindingsFiltered = filterBindingsByKey(bindingsFiltered, keyName);
-        }
-
-        if (!filterText.equals("")) {
-            bindingsFiltered = filterBindingsByName(bindingsFiltered, filterText);
+        if (searchQuery.hasTextTerms()) {
+            bindingsFiltered = filterBindingsByName(bindingsFiltered, searchQuery.textTerms().toArray(String[]::new));
         }
 
         return bindingsFiltered;
     }
 
-    private KeyMapping[] filterBindingsByName(KeyMapping[] bindings, String bindingName) {
-        String[] words = bindingName.split("\\s+");
+    private KeyMapping[] filterBindingsByName(KeyMapping[] bindings, String[] words) {
         return Arrays.stream(bindings).filter(binding -> {
             boolean flag = true;
             for (String w : words) {
@@ -121,7 +113,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                         .filter(b -> bindingCounts.getOrDefault(KeyBindingUtil.getKey(b), 0) > 1 && KeyBindingUtil.getKey(b).getValue() != InputConstants.UNKNOWN.getValue())
                         .toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
-                return Arrays.stream(bindings).filter(KeyMapping::isUnbound).toArray(KeyMapping[]::new);
+                return Arrays.stream(bindings).filter(KeyBindingUtil::isUnbound).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
                 return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(KeyModifier.CONTROL)).toArray(KeyMapping[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALT:
@@ -135,6 +127,19 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
+    public void refreshSelectedBinding() {
+        KeyMapping selected = getSelectedKeyMapping();
+        this.currentFilterText = "\u0000";
+        updateList();
+        if (selected != null) {
+            for (FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry rawEntry : this.children()) {
+                if (rawEntry instanceof BindingEntry entry && entry.keyMapping == selected) {
+                    this.setSelected(entry);
+                    break;
+                }
+            }
+        }
+    }
     @Override
     public void tick() {
         updateList();
