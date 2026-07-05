@@ -1,5 +1,29 @@
 # Changelog
 
+## Fabric stable gap rollout - 2026-07-06
+
+- Added stable Fabric support branches from Minecraft 1.20.2 through 1.21.11 plus 26.1 and 26.1.1.
+- Kept the existing Fabric 26.3 line as `ce/refactor/internal-api-fabric-26.3` snapshot-only support until a formal 26.3 release exists.
+- Verified GitHub Actions builds:
+  - Fabric 1.20.2: `28753530011`
+  - Fabric 1.20.3: `28753531007`
+  - Fabric 1.20.4: `28753532063`
+  - Fabric 1.20.5: `28753533337`
+  - Fabric 1.20.6: `28753534552`
+  - Fabric 1.21: `28753535644`
+  - Fabric 1.21.2: `28753536619`
+  - Fabric 1.21.3: `28753537824`
+  - Fabric 1.21.4: `28753538823`
+  - Fabric 1.21.5: `28753539839`
+  - Fabric 1.21.6: `28753540990`
+  - Fabric 1.21.7: `28753541920`
+  - Fabric 1.21.8: `28753542985`
+  - Fabric 1.21.9: `28753544101`
+  - Fabric 1.21.10: `28753545219`
+  - Fabric 1.21.11: `28753546477`
+  - Fabric 26.1: `28753547832`
+  - Fabric 26.1.1: `28753549370`
+
 ## Fabric 1.20.1+ support - 2026-06-20
 
 - Added Fabric CE support branches:

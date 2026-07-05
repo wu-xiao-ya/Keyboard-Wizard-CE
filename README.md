@@ -11,16 +11,35 @@ The `main` branch is the repository landing page and documentation branch. Versi
 | Minecraft 1.12.2 + Forge / Cleanroom | `ce/forge-1.12.2` | 8 | [Actions run 27872807776](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27872807776) | - |
 | Minecraft 1.16.5 + Forge | `ce/forge-1.16.5` | 8 | [Actions run 27818845763](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27818845763) | - |
 | Minecraft 1.18.2 + Forge | `ce/forge-1.18.2` | 17 | [Actions run 27818850228](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27818850228) | - |
-| Minecraft 1.20.1 + Fabric | `ce/fabric-1.20.1` | 17 | [Actions run 27875789463](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27875789463) | - |
+| Minecraft 1.20.1 + Fabric | `ce/fabric-1.20.1` | 17 | [Actions run 28750100076](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100076) | - |
+| Minecraft 1.20.2 + Fabric | `ce/fabric-1.20.2` | 17 | [Actions run 28753530011](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753530011) | - |
+| Minecraft 1.20.3 + Fabric | `ce/fabric-1.20.3` | 17 | [Actions run 28753531007](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753531007) | - |
+| Minecraft 1.20.4 + Fabric | `ce/fabric-1.20.4` | 17 | [Actions run 28753532063](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753532063) | - |
+| Minecraft 1.20.5 + Fabric | `ce/fabric-1.20.5` | 21 | [Actions run 28753533337](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753533337) | - |
+| Minecraft 1.20.6 + Fabric | `ce/fabric-1.20.6` | 21 | [Actions run 28753534552](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753534552) | - |
+| Minecraft 1.21 + Fabric | `ce/fabric-1.21` | 21 | [Actions run 28753535644](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753535644) | - |
+| Minecraft 1.21.1 + Fabric | `ce/fabric-1.21.1` | 21 | [Actions run 28750100053](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100053) | - |
+| Minecraft 1.21.2 + Fabric | `ce/fabric-1.21.2` | 21 | [Actions run 28753536619](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753536619) | - |
+| Minecraft 1.21.3 + Fabric | `ce/fabric-1.21.3` | 21 | [Actions run 28753537824](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753537824) | - |
+| Minecraft 1.21.4 + Fabric | `ce/fabric-1.21.4` | 21 | [Actions run 28753538823](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753538823) | - |
+| Minecraft 1.21.5 + Fabric | `ce/fabric-1.21.5` | 21 | [Actions run 28753539839](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753539839) | - |
+| Minecraft 1.21.6 + Fabric | `ce/fabric-1.21.6` | 21 | [Actions run 28753540990](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753540990) | - |
+| Minecraft 1.21.7 + Fabric | `ce/fabric-1.21.7` | 21 | [Actions run 28753541920](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753541920) | - |
+| Minecraft 1.21.8 + Fabric | `ce/fabric-1.21.8` | 21 | [Actions run 28753542985](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753542985) | - |
+| Minecraft 1.21.9 + Fabric | `ce/fabric-1.21.9` | 21 | [Actions run 28753544101](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753544101) | - |
+| Minecraft 1.21.10 + Fabric | `ce/fabric-1.21.10` | 21 | [Actions run 28753545219](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753545219) | - |
+| Minecraft 1.21.11 + Fabric | `ce/fabric-1.21.11` | 21 | [Actions run 28753546477](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753546477) | - |
+| Minecraft 26.1 + Fabric | `ce/fabric-26.1` | 25 | [Actions run 28753547832](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753547832) | - |
+| Minecraft 26.1.1 + Fabric | `ce/fabric-26.1.1` | 25 | [Actions run 28753549370](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28753549370) | - |
+| Minecraft 26.1.2 + Fabric | `ce/fabric-26.1.2` | 25 | [Actions run 28750100052](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100052) | - |
+| Minecraft 26.2 + Fabric | `ce/fabric-26.2` | 25 | [Actions run 28750100226](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100226) | - |
+| Minecraft 26.3 snapshot 2 + Fabric | `ce/refactor/internal-api-fabric-26.3` | 25 | [Actions run 28750100264](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100264) | snapshot-only |
 | Minecraft 1.20.1 + Forge | `ce/forge-1.20.1` | 17 | [Actions run 27646830595](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646830595) | [`forge-1.20.1-v1.0.1`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v1.0.1) |
-| Minecraft 1.21.1 + Fabric | `ce/fabric-1.21.1` | 21 | [Actions run 27876181334](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27876181334) | - |
 | Minecraft 1.21.1 + NeoForge | `ce/neoforge-1.21.1` | 21 | [Actions run 27646836029](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646836029) | [`neoforge-1.21.1-v1.0.1`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v1.0.1) |
-| Minecraft 26.1.2 + Fabric | `ce/fabric-26.1.2` | 25 | [Actions run 27876944618](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27876944618) | - |
 | Minecraft 26.1.2 + NeoForge | `ce/neoforge-26.1.2` | 25 | [Actions run 27646857844](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646857844) | [`neoforge-26.1.2-v1.0.1`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.1) |
-| Minecraft 26.2 + Fabric | `ce/fabric-26.2` | 25 | [Actions run 27876944805](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27876944805) | - |
 | Minecraft 26.2 + NeoForge | `ce/neoforge-26.2` | 25 | [Actions run 27647213392](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27647213392) | [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0) |
 
-Old Fabric 1.16.5 and 1.18.2 branches were never released and are no longer maintained. Fabric support starts at Minecraft 1.20.1.
+Old Fabric 1.16.5 and 1.18.2 branches were never released and are no longer maintained. Fabric support covers stable Minecraft 1.20.1 through 1.21.11, the 26.1/26.1.1/26.1.2/26.2 stable line, and the 26.3 snapshot test line. Historical snapshot, pre-release, and release-candidate versions are not maintained.
 
 ## Current Features
 
