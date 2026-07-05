@@ -1,10 +1,9 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyBinding;
-import committee.nova.mkw.api.IKeyBinding;
 import committee.nova.mkw.keybinding.KeyModifier;
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.DrawingUtil;
+import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
@@ -183,8 +182,9 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
             } else {
                 KeyBinding selectedKeyBinding = keyWizardScreen.getSelectedKeyMapping();
                 if (selectedKeyBinding != null) {
-                    ((IKeyBinding) selectedKeyBinding).setKeyModifierAndCode(KeyModifier.getActiveModifier(), this.key);
-                    KeyBinding.updateKeysByCode();
+                    KeyBindingUtil.setModifierAndKey(selectedKeyBinding, KeyModifier.getActiveModifier(), this.key);
+                    KeyBindingUtil.refreshMappings();
+                    keyWizardScreen.refreshBindingList();
                 }
             }
         }
@@ -193,7 +193,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         private void updateTooltip() {
             ArrayList<String> tooltipText = new ArrayList<>();
             for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
-                if (((AccessorKeyBinding) binding).getBoundKey().equals(this.key)) {
+                if (KeyBindingUtil.getKey(binding).equals(this.key)) {
                     tooltipText.add(I18n.translate(binding.getTranslationKey()));
                 }
             }
