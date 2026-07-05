@@ -46,9 +46,8 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
     }
 
     @Override
-    public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        super.render(ctx, mouseX, mouseY, delta);
-        this.categoryList.render(ctx, mouseX, mouseY, delta);
+    protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        super.renderWidget(ctx, mouseX, mouseY, delta);
     }
 
     @Override
@@ -92,9 +91,6 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
             }
         }
 
-        @Override
-        public void appendNarrations(NarrationMessageBuilder builder) {
-        }
     }
 
     @Override

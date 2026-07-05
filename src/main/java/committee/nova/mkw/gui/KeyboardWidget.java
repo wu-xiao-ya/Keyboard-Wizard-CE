@@ -1,9 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyBinding;
-import committee.nova.mkw.api.IKeyBinding;
 import committee.nova.mkw.keybinding.KeyModifier;
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.DrawingUtil;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.MinecraftClient;
@@ -121,7 +119,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         }
 
         @Override
-        protected void renderButton(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
             int color;
             if (this.active) {
@@ -195,7 +193,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         private void updateTooltip() {
             ArrayList<String> tooltipText = new ArrayList<>();
             for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
-                if (((AccessorKeyBinding) binding).getBoundKey().equals(this.key)) {
+                if (KeyBindingUtil.getKey(binding).equals(this.key)) {
                     tooltipText.add(I18n.translate(binding.getTranslationKey()));
                 }
             }
