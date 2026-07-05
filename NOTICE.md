@@ -8,4 +8,10 @@
 - Upstream reference: Modern KeyWizard / Keyboard Wizard
 - License: AGPL-3.0-only
 
-This branch is a CE Fabric 1.20.1 distribution of the modern Keyboard Wizard feature set. The mod jar should ship with matching source when redistributed.
+This branch is a CE Fabric 1.20.2 distribution of the modern Keyboard Wizard feature set. The mod jar should ship with matching source when redistributed.
+
+## Support matrix
+
+| Loader | Minecraft | Java | Branch |
+| --- | --- | --- | --- |
+| Fabric | 1.20.2 | 17 | `ce/fabric-1.20.2` |

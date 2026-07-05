@@ -5,7 +5,6 @@ import committee.nova.mkw.gui.KeyWizardScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.ControlsOptionsScreen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +21,7 @@ public abstract class MixinControlsOptionsScreen extends GameOptionsScreen {
     @Inject(at = @At("TAIL"), method = "init()V")
     private void init(CallbackInfo info) {
         ModernKeyWizard.LOGGER.debug("Controls screen injector mixin loaded!");
-        TexturedButtonWidget screenToggleButton = new TexturedButtonWidget(this.width - 22, this.height - 22, 20, 20, 0, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, (btn) -> {
+        var screenToggleButton = KeyWizardScreen.createScreenToggleButton(this.width - 22, this.height - 22, () -> {
             if (client == null) return;
             client.setScreen(new KeyWizardScreen(this.parent));
         });

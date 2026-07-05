@@ -20,7 +20,6 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
         this.bottom = top + height;
         this.right = left + width;
         this.setRenderBackground(false);
-        this.setRenderHorizontalShadows(false);
     }
 
     @Override
@@ -33,7 +32,6 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
         return this.width;
     }
 
-    @Override
     public void renderBackground(DrawContext ctx) {
         ctx.fillGradient(this.left, this.top, this.right, this.bottom, -1072689136, -804253680);
     }
@@ -84,8 +82,8 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        return this.visible && super.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        return this.visible && super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override

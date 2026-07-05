@@ -3,7 +3,7 @@ name: Release CE
 on:
   push:
     tags:
-      - fabric-1.20.1-v*
+      - fabric-1.20.2-v*
   workflow_dispatch:
 
 permissions:
@@ -39,11 +39,11 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Keyboard Wizard CE Fabric 1.20.1 ${{ github.ref_name }}
+          name: Keyboard Wizard CE Fabric 1.20.2 ${{ github.ref_name }}
           target_commitish: ${{ github.sha }}
           files: |
             build/libs/*.jar
             build/release/*.zip
             build/release/SHA256SUMS.txt
           body: |
-            Keyboard Wizard CE for Minecraft 1.20.1 + Fabric.
+            Keyboard Wizard CE for Minecraft 1.20.2 + Fabric.
