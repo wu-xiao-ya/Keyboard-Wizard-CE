@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -190,7 +191,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
         this.renderBackground(ctx, mouseX, mouseY, delta);
-        ctx.drawTexture(BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
+        ctx.drawTexture(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
         ctx.fill(0, 0, this.width, this.height, 0x77000000);
         super.render(ctx, mouseX, mouseY, delta);
         if (this.helpButton != null && this.helpButton.isHovered()) {
@@ -282,7 +283,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
         @Override
         protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int textureY = this.isHovered() ? 20 : 0;
-            ctx.drawTexture(ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0, textureY, 20, 20, 40, 40);
+            ctx.drawTexture(RenderPipelines.GUI_TEXTURED, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0, textureY, 20, 20, 40, 40);
         }
     }
 }
