@@ -2,9 +2,11 @@ package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.input.AbstractInput;
 import net.minecraft.text.Text;
 
 public class CategorySelectorWidget extends PressableWidget implements TickableElement {
@@ -26,13 +28,13 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
         }
         this.categoryList = new BindingCategoryListWidget(client, this.getY() + this.getHeight(), this.getX(), this.getWidth(), listHeight, listItemHeight);
         this.categoryList.visible = false;
-        this.setMessage(Text.translatable(this.getSelectedCategory()));
+        this.setMessage(categoryText(this.getSelectedCategory()));
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        boolean listClicked = this.categoryList.mouseClicked(mouseX, mouseY, button);
-        boolean thisClicked = super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(Click click, boolean doubleClick) {
+        boolean listClicked = this.categoryList.mouseClicked(click, doubleClick);
+        boolean thisClicked = super.mouseClicked(click, doubleClick);
         if (!(listClicked || thisClicked)) {
             this.extended = false;
         }
@@ -40,7 +42,7 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
     }
 
     @Override
-    public void onPress() {
+    public void onPress(AbstractInput input) {
         this.playDownSound(MinecraftClient.getInstance().getSoundManager());
         this.extended = !this.extended;
     }
@@ -52,7 +54,7 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
     @Override
     public void tick() {
-        this.setMessage(Text.translatable(this.getSelectedCategory()));
+        this.setMessage(categoryText(this.getSelectedCategory()));
         this.categoryList.visible = this.extended;
     }
 
@@ -65,6 +67,10 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
     public BindingCategoryListWidget getCategoryList() {
         return this.categoryList;
+    }
+
+    private static Text categoryText(String category) {
+        return category.startsWith("key.category.") ? Text.translatable(category) : Text.literal(category);
     }
 
     private static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
@@ -87,7 +93,7 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
             @Override
             public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawTextWithShadow(client.textRenderer, Text.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
+                ctx.drawTextWithShadow(client.textRenderer, categoryText(this.category), x + 3, y + 2, 0xFFFFFFFF);
             }
         }
 

@@ -22,7 +22,7 @@ public class ModernKeyWizard implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.debug("{} initialized!", MODID);
 
-        keyOpenKeyWizard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + MODID + ".openKeyWizard", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings"));
+        keyOpenKeyWizard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + MODID + ".openKeyWizard", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, KeyBinding.Category.create(Identifier.of(MODID, "bindings"))));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyOpenKeyWizard.wasPressed()) {
                 client.setScreen(new KeyWizardScreen(client.currentScreen));

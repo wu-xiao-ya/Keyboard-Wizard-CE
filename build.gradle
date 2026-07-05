@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10.5'
+    id 'fabric-loom' version '1.17.12'
     id 'maven-publish'
 }
 
@@ -11,6 +11,10 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+    maven {
+        url = 'https://maven.fabricmc.net/'
+    }
+    mavenCentral()
     maven {
         url = uri("https://maven.nova-committee.cn/releases")
     }
@@ -27,9 +31,10 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version, "minecraft_version": project.minecraft_version
     }
 }
 

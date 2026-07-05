@@ -1,11 +1,13 @@
 package committee.nova.mkw.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 
 import java.util.Objects;
 
@@ -54,17 +56,22 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     protected void renderList(DrawContext ctx, int mouseX, int mouseY, float delta) {
         double scaleH = this.client.getWindow().getHeight() / (double) this.client.getWindow().getScaledHeight();
         double scaleW = this.client.getWindow().getWidth() / (double) this.client.getWindow().getScaledWidth();
-        RenderSystem.enableScissor((int) (this.getX() * scaleW), (int) (this.client.getWindow().getHeight() - (this.getListBottom() * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
+        ctx.enableScissor((int) (this.getX() * scaleW), (int) (this.client.getWindow().getHeight() - (this.getListBottom() * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
-            if (this.isSelectedEntry(i)) {
-                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
+            Entry entry = this.children().get(i);
+            int rowTop = this.getRowTop(i);
+            entry.setX(this.getRowLeft());
+            entry.setY(rowTop);
+            entry.setWidth(this.getRowWidth());
+            entry.setHeight(this.itemHeight);
+            if (Objects.equals(this.getSelectedOrNull(), entry)) {
+                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, rowTop - 2, this.getRowRight(), rowTop + this.itemHeight - 4, 0xFFFFFFFF);
             }
-
-            Entry entry = getEntry(i);
-            entry.render(ctx, i, this.getRowTop(i), this.getRowLeft(), this.getRowWidth(), this.itemHeight - 4, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPosition(mouseX, mouseY), entry), delta);
+            entry.render(ctx, mouseX, mouseY, Objects.equals(this.getHoveredEntry(), entry), delta);
         }
-        RenderSystem.disableScissor();
+
+        ctx.disableScissor();
     }
 
     @Override
@@ -76,23 +83,18 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    public boolean isFocused() {
-        return true;
+    public boolean mouseClicked(Click click, boolean doubleClick) {
+        return this.visible && super.mouseClicked(click, doubleClick);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return this.visible && super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseReleased(Click click) {
+        return this.visible && super.mouseReleased(click);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return this.visible && super.mouseReleased(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        return this.visible && super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    public boolean mouseDragged(Click click, double deltaX, double deltaY) {
+        return this.visible && super.mouseDragged(click, deltaX, deltaY);
     }
 
     @Override
@@ -101,36 +103,36 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return this.visible && super.keyPressed(keyCode, scanCode, modifiers);
+    public boolean keyPressed(KeyInput input) {
+        return this.visible && super.keyPressed(input);
     }
 
     @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        return this.visible && super.keyReleased(keyCode, scanCode, modifiers);
+    public boolean keyReleased(KeyInput input) {
+        return this.visible && super.keyReleased(input);
     }
 
     @Override
-    public boolean charTyped(char chr, int modifiers) {
-        return this.visible && super.charTyped(chr, modifiers);
+    public boolean charTyped(CharInput input) {
+        return this.visible && super.charTyped(input);
     }
 
     @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        return this.visible && super.isMouseOver(mouseX, mouseY);
+    public void setSelected(FreeFormListWidget<E>.Entry entry) {
+        super.setSelected(entry);
     }
 
     public abstract class Entry extends EntryListWidget.Entry<FreeFormListWidget<E>.Entry> {
         @Override
+        public final void render(DrawContext ctx, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            render(ctx, 0, this.getY(), this.getX(), this.getWidth(), this.getHeight(), mouseX, mouseY, hovered, tickDelta);
+        }
+
         public abstract void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta);
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (button == 0) {
-                FreeFormListWidget.this.setSelected(this);
-                return true;
-            }
-
+        public boolean mouseClicked(Click click, boolean doubleClick) {
+            FreeFormListWidget.this.setSelected(this);
             return false;
         }
     }
