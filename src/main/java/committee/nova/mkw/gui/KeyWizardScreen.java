@@ -197,8 +197,6 @@ public class KeyWizardScreen extends GameOptionsScreen {
             ctx.drawTooltip(this.textRenderer, HELP_TOOLTIP, mouseX, mouseY);
         }
     }
-
-    @Override
     protected void addOptions() {
     }
 
