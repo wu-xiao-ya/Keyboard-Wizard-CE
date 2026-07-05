@@ -3,10 +3,10 @@ name: Build CE
 on:
   push:
     branches:
-      - ce/fabric-1.21.1
+      - ce/fabric-1.21.8
   pull_request:
     branches:
-      - ce/fabric-1.21.1
+      - ce/fabric-1.21.8
   workflow_dispatch:
 
 env:
@@ -39,7 +39,7 @@ jobs:
       - name: Upload jars
         uses: actions/upload-artifact@v4
         with:
-          name: keyboard-wizard-ce-fabric-1.21.1
+          name: keyboard-wizard-ce-fabric-1.21.8
           path: |
             build/libs/*.jar
             build/release/*.zip

@@ -72,7 +72,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             } else {
                 this.setSelected(null);
             }
-            this.setScrollAmount(0);
+            this.setScrollY(0);
         }
     }
 
