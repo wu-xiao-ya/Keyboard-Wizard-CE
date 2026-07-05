@@ -72,7 +72,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             } else {
                 this.setSelected(null);
             }
-            this.setScrollAmount(0);
+            this.setScrollY(0);
         }
     }
 
@@ -94,7 +94,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         return Arrays.stream(bindings).filter(binding -> {
             boolean flag = true;
             for (String word : words) {
-                flag = flag && I18n.translate(binding.getTranslationKey()).toLowerCase().contains(word.toLowerCase());
+                flag = flag && I18n.translate(binding.getId()).toLowerCase().contains(word.toLowerCase());
             }
             return flag;
         }).toArray(KeyBinding[]::new);
@@ -133,7 +133,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             case KeyBindingUtil.DYNAMIC_CATEGORY_NONE:
                 return Arrays.stream(bindings).filter(keyBinding -> KeyBindingUtil.getModifier(keyBinding).equals(KeyModifier.NONE)).toArray(KeyBinding[]::new);
             default:
-                return Arrays.stream(bindings).filter(binding -> binding.getCategory().equals(category)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(binding -> binding.getCategory().id().toString().equals(category)).toArray(KeyBinding[]::new);
         }
     }
 
@@ -170,7 +170,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             int contentRight = x + entryWidth - CATEGORY_RIGHT_PADDING;
             int maxTextWidth = Math.max(0, contentRight - x);
 
-            ctx.drawTextWithShadow(client.textRenderer, trimToWidth(Text.translatable(this.keyBinding.getTranslationKey()), maxTextWidth), x, y, 0xFFFFFFFF);
+            ctx.drawTextWithShadow(client.textRenderer, trimToWidth(Text.translatable(this.keyBinding.getId()), maxTextWidth), x, y, 0xFFFFFFFF);
             int color = 0xFF999999;
             ctx.drawTextWithShadow(client.textRenderer, trimToWidth(this.keyBinding.getBoundKeyLocalizedText(), maxTextWidth), x, y + client.textRenderer.fontHeight + 5, color);
             String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
@@ -190,18 +190,12 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
 
         private String getCategoryDisplayLabel(KeyBinding keyBinding) {
-            String category = keyBinding.getCategory();
-            String translatedCategory = Text.translatable(category).getString();
-            if (!category.startsWith(CATEGORY_PREFIX)) {
+            KeyBinding.Category category = keyBinding.getCategory();
+            String translatedCategory = category.getLabel().getString();
+            String modId = category.id().getNamespace();
+            if ("minecraft".equals(modId)) {
                 return translatedCategory;
             }
-
-            String categoryPath = category.substring(CATEGORY_PREFIX.length());
-            if (categoryPath.isEmpty()) {
-                return translatedCategory;
-            }
-
-            String modId = categoryPath.split("\\.")[0];
             return FabricLoader.getInstance().getModContainer(modId)
                     .map(mod -> mod.getMetadata().getName() + " / " + translatedCategory)
                     .orElse(translatedCategory);

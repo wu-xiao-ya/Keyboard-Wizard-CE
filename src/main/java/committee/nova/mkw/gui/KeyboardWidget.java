@@ -9,10 +9,11 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.input.AbstractInput;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
@@ -67,10 +68,10 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubleClick) {
         if (!keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget key : this.children()) {
-                if (key.mouseClicked(mouseX, mouseY, button)) {
+                if (key.mouseClicked(click, doubleClick)) {
                     return true;
                 }
             }
@@ -119,7 +120,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         }
 
         @Override
-        protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        protected void drawIcon(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
             int color;
             if (this.active) {
@@ -154,23 +155,23 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (!this.active || !this.visible || !this.isHovered()) {
+        public boolean mouseClicked(Click click, boolean doubleClick) {
+            if (!this.active || !this.visible || !this.isMouseOver(click.x(), click.y())) {
                 return false;
             }
 
-            if (button == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
+            if (click.button() == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
                 keyWizardScreen.setSearchTextForKey(this.key);
                 return true;
             }
 
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(click, doubleClick);
         }
 
         @Override
-        public void onPress() {
+        public void onPress(AbstractInput input) {
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            if (Screen.hasAltDown() && Screen.hasControlDown()) {
+            if (KeyModifier.ALT.isActive() && KeyModifier.CONTROL.isActive()) {
                 Text text = this.getMessage();
                 String keyName;
                 if (text.getContent() instanceof TranslatableTextContent contents) {
@@ -194,7 +195,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
             ArrayList<String> tooltipText = new ArrayList<>();
             for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
                 if (KeyBindingUtil.getKey(binding).equals(this.key)) {
-                    tooltipText.add(I18n.translate(binding.getTranslationKey()));
+                    tooltipText.add(I18n.translate(binding.getId()));
                 }
             }
             this.tooltipText = tooltipText.stream().sorted().map(Text::literal).collect(Collectors.toCollection(ArrayList<Text>::new));

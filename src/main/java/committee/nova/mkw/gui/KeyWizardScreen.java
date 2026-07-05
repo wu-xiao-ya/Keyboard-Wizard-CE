@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -83,7 +84,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
         int maxBindingNameWidth = 0;
         for (KeyBinding keyBinding : this.client.options.allKeys) {
-            int width = this.textRenderer.getWidth(Text.translatable(keyBinding.getTranslationKey()));
+            int width = this.textRenderer.getWidth(Text.translatable(keyBinding.getId()));
             maxBindingNameWidth = Math.max(maxBindingNameWidth, width);
         }
 
@@ -118,7 +119,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
         }).dimensions(this.width - 47, this.height - 22, 20, 20).build();
         this.helpButton.active = false;
 
-        this.searchBar = new TextFieldWidget(this.textRenderer, 10, this.height - 20, bindingListWidth, 14, Text.empty());
+        this.searchBar = new TextFieldWidget(this.textRenderer, 10, this.height - 20, bindingListWidth, 14, net.minecraft.text.Text.empty());
         this.searchBar.setChangedListener(this::setSearchText);
 
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, MOUSE_CODES[this.mouseCodeIndex], InputUtil.Type.MOUSE);
@@ -190,7 +191,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
         this.renderBackground(ctx, mouseX, mouseY, delta);
-        ctx.drawTexture(BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
+        ctx.drawTexture(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
         ctx.fill(0, 0, this.width, this.height, 0x77000000);
         super.render(ctx, mouseX, mouseY, delta);
         if (this.helpButton != null && this.helpButton.isHovered()) {
@@ -276,13 +277,13 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
     private static class TextureButton extends ButtonWidget {
         protected TextureButton(int x, int y, PressAction onPress) {
-            super(x, y, 20, 20, Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, 20, 20, net.minecraft.text.Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
         }
 
         @Override
-        protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        protected void drawIcon(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int textureY = this.isHovered() ? 20 : 0;
-            ctx.drawTexture(ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0, textureY, 20, 20, 40, 40);
+            ctx.drawTexture(RenderPipelines.GUI_TEXTURED, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0, textureY, 20, 20, 40, 40);
         }
     }
 }

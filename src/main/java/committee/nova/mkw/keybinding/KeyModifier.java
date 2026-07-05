@@ -1,6 +1,6 @@
 package committee.nova.mkw.keybinding;
 
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -19,13 +19,13 @@ public enum KeyModifier {
     }
 
     public static KeyModifier getActiveModifier() {
-        if (Screen.hasControlDown()) {
+        if (CONTROL.isActive()) {
             return CONTROL;
         }
-        if (Screen.hasShiftDown()) {
+        if (SHIFT.isActive()) {
             return SHIFT;
         }
-        if (Screen.hasAltDown()) {
+        if (ALT.isActive()) {
             return ALT;
         }
         return NONE;
@@ -59,16 +59,7 @@ public enum KeyModifier {
     }
 
     public boolean isActive() {
-        switch (this) {
-            case CONTROL:
-                return Screen.hasControlDown();
-            case SHIFT:
-                return Screen.hasShiftDown();
-            case ALT:
-                return Screen.hasAltDown();
-            default:
-                return true;
-        }
+        return this == NONE || isKeyPressed(this.leftKey) || isKeyPressed(this.rightKey);
     }
 
     public String getCombinedName(InputUtil.Key key) {
@@ -80,5 +71,10 @@ public enum KeyModifier {
 
     private boolean matchesCode(int code) {
         return this != NONE && (code == leftKey || code == rightKey);
+    }
+
+    private static boolean isKeyPressed(int code) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        return code >= 0 && client != null && client.getWindow() != null && InputUtil.isKeyPressed(client.getWindow(), code);
     }
 }

@@ -20,7 +20,7 @@ public final class PlatformBindingBridge implements BindingAccessBridge<KeyBindi
 
     @Override
     public List<String> getCategories() {
-        return AccessorKeyBinding.getKeyCategories().stream().sorted().toList();
+        return getAllBindings().stream().map(binding -> binding.getCategory().id().toString()).distinct().sorted().toList();
     }
 
     @Override
