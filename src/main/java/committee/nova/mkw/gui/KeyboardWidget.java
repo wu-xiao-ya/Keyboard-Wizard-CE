@@ -141,11 +141,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-            if (!this.active || !this.visible || !this.isHovered()) {
+            if (!this.active || !this.visible || !this.isMouseOver(event.x(), event.y())) {
                 return false;
             }
 
-            if (event.button() == 2) {
+            if (event.button() == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
                 keyWizardScreen.setSearchTextForKey(this.key);
                 return true;
             }
