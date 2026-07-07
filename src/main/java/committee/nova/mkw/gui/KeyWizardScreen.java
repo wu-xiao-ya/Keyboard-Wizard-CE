@@ -28,7 +28,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private static final int KEYBOARD_MIN_HEIGHT = 132;
     private static final int CATEGORY_SELECTOR_HORIZONTAL_PADDING = 32;
     private static final int CATEGORY_SELECTOR_MIN_WIDTH = 110;
-    private static final int CATEGORY_SELECTOR_MAX_WIDTH = 190;
+    private static final int CATEGORY_SELECTOR_MAX_WIDTH = 170;
+    private static final int BINDING_LIST_MIN_WIDTH = 120;
+    private static final float BINDING_LIST_MAX_WIDTH_RATIO = 0.24F;
     private static final int SCREEN_MARGIN = 10;
     private static final int TOP_CONTROL_Y = 5;
     private static final int TOP_CONTROL_HEIGHT = 20;
@@ -92,19 +94,26 @@ public class KeyWizardScreen extends OptionsSubScreen {
             if (w > maxCategoryWidth) maxCategoryWidth = w;
         }
 
-        int bindingListMaxWidth = Math.max(150, (int) (this.width * 0.30F));
-        int bindingListWidth = clamp(maxBindingNameWidth + 20, 150, bindingListMaxWidth);
-        this.bindingList = new KeyBindingListWidget(this, SCREEN_MARGIN, SCREEN_MARGIN, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
-
-        int categorySelectorX = bindingListWidth + 15;
         int categorySelectorY = TOP_CONTROL_Y;
         int categorySelectorWidth = clamp(maxCategoryWidth + CATEGORY_SELECTOR_HORIZONTAL_PADDING, CATEGORY_SELECTOR_MIN_WIDTH, Math.max(CATEGORY_SELECTOR_MIN_WIDTH, Math.min(CATEGORY_SELECTOR_MAX_WIDTH, this.width / 4)));
-        int layoutButtonWidth = Math.max(LAYOUT_BUTTON_MIN_WIDTH, Math.max(
+        int layoutButtonPreferredWidth = Math.max(LAYOUT_BUTTON_MIN_WIDTH, Math.max(
                 Math.max(this.font.width(KeyboardLayout.MAIN.getDisplayName()), this.font.width(KeyboardLayout.NUMPAD.getDisplayName())),
                 this.font.width(KeyboardLayout.AUXILIARY.getDisplayName())
         ) + 24);
         int layoutButtonGap = TOP_CONTROL_GAP;
+
+        int bindingListMaxWidth = Math.max(BINDING_LIST_MIN_WIDTH, (int) (this.width * BINDING_LIST_MAX_WIDTH_RATIO));
+        int bindingListWidth = clamp(maxBindingNameWidth + 20, BINDING_LIST_MIN_WIDTH, bindingListMaxWidth);
+        int topRowMinWidth = categorySelectorWidth + 8 + LAYOUT_BUTTON_MIN_WIDTH * 3 + layoutButtonGap * 2 + SCREEN_MARGIN;
+        int maxBindingListWidthForTopRow = this.width - 15 - topRowMinWidth;
+        if (maxBindingListWidthForTopRow < bindingListWidth) {
+            bindingListWidth = Math.max(BINDING_LIST_MIN_WIDTH, maxBindingListWidthForTopRow);
+        }
+        this.bindingList = new KeyBindingListWidget(this, SCREEN_MARGIN, SCREEN_MARGIN, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
+
+        int categorySelectorX = bindingListWidth + 15;
         int layoutButtonX = categorySelectorX + categorySelectorWidth + 8;
+        int layoutButtonWidth = Math.min(layoutButtonPreferredWidth, Math.max(LAYOUT_BUTTON_MIN_WIDTH, (this.width - SCREEN_MARGIN - layoutButtonX - layoutButtonGap * 2) / 3));
         int layoutButtonsRight = layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 3 - layoutButtonGap;
 
         int mouseGroupWidth = MOUSE_SIDE_BUTTON_WIDTH * 2 + MOUSE_BUTTON_WIDTH + TOP_CONTROL_GAP * 2;
