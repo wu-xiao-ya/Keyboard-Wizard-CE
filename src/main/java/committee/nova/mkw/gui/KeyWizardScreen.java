@@ -25,8 +25,19 @@ import java.util.List;
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
+    private static final int KEYBOARD_MIN_HEIGHT = 132;
     private static final int CATEGORY_SELECTOR_HORIZONTAL_PADDING = 32;
     private static final int CATEGORY_SELECTOR_MIN_WIDTH = 110;
+    private static final int CATEGORY_SELECTOR_MAX_WIDTH = 190;
+    private static final int SCREEN_MARGIN = 10;
+    private static final int TOP_CONTROL_Y = 5;
+    private static final int TOP_CONTROL_HEIGHT = 20;
+    private static final int TOP_CONTROL_GAP = 4;
+    private static final int TOP_ROW_GAP = 6;
+    private static final int LAYOUT_BUTTON_MIN_WIDTH = 74;
+    private static final int MOUSE_BUTTON_WIDTH = 80;
+    private static final int MOUSE_BUTTON_HEIGHT = 20;
+    private static final int MOUSE_SIDE_BUTTON_WIDTH = 25;
     private static final List<Component> HELP_TOOLTIP = List.of(
             Component.translatable("gui.keyboard_wizard_ce.help.title"),
             Component.translatable("gui.keyboard_wizard_ce.help.select"),
@@ -56,6 +67,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private float keyboardAnchorX;
     private float keyboardAnchorY;
     private float keyboardWidth;
+    private float keyboardHeight = KEYBOARD_HEIGHT;
     private Button mainLayoutButton;
     private Button numpadLayoutButton;
     private Button auxiliaryLayoutButton;
@@ -67,11 +79,6 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     @Override
     protected void init() {
-        int mouseButtonX = this.width - 105;
-        int mouseButtonY = this.height / 2 - 115;
-        int mouseButtonWidth = 80;
-        int mouseButtonHeight = 20;
-
         int maxBindingNameWidth = 0;
         if (this.minecraft == null) return;
         for (KeyMapping k : this.minecraft.options.keyMappings) {
@@ -85,23 +92,49 @@ public class KeyWizardScreen extends OptionsSubScreen {
             if (w > maxCategoryWidth) maxCategoryWidth = w;
         }
 
-        int bindingListWidth = maxBindingNameWidth + 20;
-        this.bindingList = new KeyBindingListWidget(this, 10, 10, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
-        this.keyboardAnchorX = bindingListWidth + 15;
-        this.keyboardAnchorY = this.height / 2.0F - KEYBOARD_HEIGHT / 2.0F;
-        this.keyboardWidth = this.width - this.keyboardAnchorX;
-        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
+        int bindingListMaxWidth = Math.max(150, (int) (this.width * 0.30F));
+        int bindingListWidth = clamp(maxBindingNameWidth + 20, 150, bindingListMaxWidth);
+        this.bindingList = new KeyBindingListWidget(this, SCREEN_MARGIN, SCREEN_MARGIN, bindingListWidth, this.height - 40, this.font.lineHeight * 3 + 10);
+
         int categorySelectorX = bindingListWidth + 15;
-        int categorySelectorY = 5;
-        int categorySelectorWidth = Math.max(maxCategoryWidth + CATEGORY_SELECTOR_HORIZONTAL_PADDING, CATEGORY_SELECTOR_MIN_WIDTH);
-        int layoutButtonWidth = 74;
-        int layoutButtonGap = 4;
+        int categorySelectorY = TOP_CONTROL_Y;
+        int categorySelectorWidth = clamp(maxCategoryWidth + CATEGORY_SELECTOR_HORIZONTAL_PADDING, CATEGORY_SELECTOR_MIN_WIDTH, Math.max(CATEGORY_SELECTOR_MIN_WIDTH, Math.min(CATEGORY_SELECTOR_MAX_WIDTH, this.width / 4)));
+        int layoutButtonWidth = Math.max(LAYOUT_BUTTON_MIN_WIDTH, Math.max(
+                Math.max(this.font.width(KeyboardLayout.MAIN.getDisplayName()), this.font.width(KeyboardLayout.NUMPAD.getDisplayName())),
+                this.font.width(KeyboardLayout.AUXILIARY.getDisplayName())
+        ) + 24);
+        int layoutButtonGap = TOP_CONTROL_GAP;
         int layoutButtonX = categorySelectorX + categorySelectorWidth + 8;
+        int layoutButtonsRight = layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 3 - layoutButtonGap;
+
+        int mouseGroupWidth = MOUSE_SIDE_BUTTON_WIDTH * 2 + MOUSE_BUTTON_WIDTH + TOP_CONTROL_GAP * 2;
+        int mouseGroupX = this.width - SCREEN_MARGIN - mouseGroupWidth;
+        int mouseButtonY = categorySelectorY;
+        if (mouseGroupX < layoutButtonsRight + 8) {
+            mouseButtonY = categorySelectorY + TOP_CONTROL_HEIGHT + TOP_ROW_GAP;
+        }
+        int mouseMinusX = Math.max(categorySelectorX, mouseGroupX);
+        int mouseButtonX = mouseMinusX + MOUSE_SIDE_BUTTON_WIDTH + TOP_CONTROL_GAP;
+        int mousePlusX = mouseButtonX + MOUSE_BUTTON_WIDTH + TOP_CONTROL_GAP;
+        final int finalMouseButtonX = mouseButtonX;
+        final int finalMouseButtonY = mouseButtonY;
+
+        int topControlsBottom = Math.max(categorySelectorY + TOP_CONTROL_HEIGHT, mouseButtonY + MOUSE_BUTTON_HEIGHT);
+        int bottomControlsTop = this.height - 23;
+        int keyboardTop = topControlsBottom + 8;
+        int keyboardBottom = bottomControlsTop - 8;
+        int availableKeyboardHeight = Math.max(KEYBOARD_MIN_HEIGHT, keyboardBottom - keyboardTop);
+
+        this.keyboardAnchorX = bindingListWidth + 15;
+        this.keyboardWidth = Math.max(120.0F, this.width - this.keyboardAnchorX - SCREEN_MARGIN);
+        this.keyboardHeight = Math.max(KEYBOARD_MIN_HEIGHT, Math.min(KEYBOARD_HEIGHT, availableKeyboardHeight));
+        this.keyboardAnchorY = keyboardTop + Math.max(0.0F, (availableKeyboardHeight - this.keyboardHeight) / 2.0F);
+        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, this.keyboardHeight);
 
         this.categorySelector = new CategorySelectorWidget(this, categorySelectorX, categorySelectorY, categorySelectorWidth, 20);
-        this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, layoutButtonX, categorySelectorY);
-        this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, layoutButtonX + layoutButtonWidth + layoutButtonGap, categorySelectorY);
-        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY);
+        this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, layoutButtonX, categorySelectorY, layoutButtonWidth);
+        this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, layoutButtonX + layoutButtonWidth + layoutButtonGap, categorySelectorY, layoutButtonWidth);
+        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY, layoutButtonWidth);
         updateLayoutButtons();
 
         Button screenToggleButton = createScreenToggleButton(
@@ -111,23 +144,23 @@ public class KeyWizardScreen extends OptionsSubScreen {
         );
         Button helpButton = new HelpButton(this.width - 47, this.height - 22);
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
-        this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+        this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, finalMouseButtonX, finalMouseButtonY, MOUSE_BUTTON_WIDTH, MOUSE_BUTTON_HEIGHT, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
 
         Button mousePlus = Button.builder(Component.literal("+"), b -> {
             this.mouseCodeIndex++;
             if (this.mouseCodeIndex >= this.mouseCodes.length) this.mouseCodeIndex = 0;
             this.removeWidget(this.mouseButton);
-            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, finalMouseButtonX, finalMouseButtonY, MOUSE_BUTTON_WIDTH, MOUSE_BUTTON_HEIGHT, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
             this.addRenderableWidget(this.mouseButton);
-        }).bounds((int) this.mouseButton.getAnchorX() + 83, (int) this.mouseButton.getAnchorY(), 25, 20).build();
+        }).bounds(mousePlusX, mouseButtonY, MOUSE_SIDE_BUTTON_WIDTH, MOUSE_BUTTON_HEIGHT).build();
 
         Button mouseMinus = Button.builder(Component.literal("-"), b -> {
             this.mouseCodeIndex--;
             if (this.mouseCodeIndex < 0) this.mouseCodeIndex = this.mouseCodes.length - 1;
             this.removeWidget(this.mouseButton);
-            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, finalMouseButtonX, finalMouseButtonY, MOUSE_BUTTON_WIDTH, MOUSE_BUTTON_HEIGHT, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
             this.addRenderableWidget(this.mouseButton);
-        }).bounds((int) this.mouseButton.getAnchorX() - 26, (int) this.mouseButton.getAnchorY(), 25, 20).build();
+        }).bounds(mouseMinusX, mouseButtonY, MOUSE_SIDE_BUTTON_WIDTH, MOUSE_BUTTON_HEIGHT).build();
 
         Button resetBinding = Button.builder(Component.translatable("controls.reset"), b -> {
             KeyMapping selectedBinding = this.getSelectedKeyMapping();
@@ -190,9 +223,9 @@ public class KeyWizardScreen extends OptionsSubScreen {
         return new TextureButton(x, y, onPress);
     }
 
-    private Button createLayoutButton(KeyboardLayout layout, int x, int y) {
+    private Button createLayoutButton(KeyboardLayout layout, int x, int y, int width) {
         return Button.builder(layout.getDisplayName(), b -> setKeyboardLayout(layout))
-                .bounds(x, y, 74, 20)
+                .bounds(x, y, width, TOP_CONTROL_HEIGHT)
                 .build();
     }
 
@@ -200,9 +233,13 @@ public class KeyWizardScreen extends OptionsSubScreen {
         if (this.keyboardLayout == layout) return;
         this.keyboardLayout = layout;
         this.removeWidget(this.keyboard);
-        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
+        this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, this.keyboardHeight);
         this.addRenderableWidget(this.keyboard);
         updateLayoutButtons();
+    }
+
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(value, max));
     }
 
     private void updateLayoutButtons() {
