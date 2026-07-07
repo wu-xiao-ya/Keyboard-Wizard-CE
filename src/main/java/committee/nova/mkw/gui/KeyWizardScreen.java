@@ -29,8 +29,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private static final int CATEGORY_SELECTOR_HORIZONTAL_PADDING = 32;
     private static final int CATEGORY_SELECTOR_MIN_WIDTH = 110;
     private static final int CATEGORY_SELECTOR_MAX_WIDTH = 170;
-    private static final int BINDING_LIST_MIN_WIDTH = 120;
-    private static final float BINDING_LIST_MAX_WIDTH_RATIO = 0.24F;
+    private static final int BINDING_LIST_MIN_WIDTH = 105;
+    private static final float BINDING_LIST_MAX_WIDTH_RATIO = 0.20F;
     private static final int SCREEN_MARGIN = 10;
     private static final int TOP_CONTROL_Y = 5;
     private static final int TOP_CONTROL_HEIGHT = 20;
@@ -104,7 +104,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
         int bindingListMaxWidth = Math.max(BINDING_LIST_MIN_WIDTH, (int) (this.width * BINDING_LIST_MAX_WIDTH_RATIO));
         int bindingListWidth = clamp(maxBindingNameWidth + 20, BINDING_LIST_MIN_WIDTH, bindingListMaxWidth);
-        int topRowMinWidth = categorySelectorWidth + 8 + LAYOUT_BUTTON_MIN_WIDTH * 3 + layoutButtonGap * 2 + SCREEN_MARGIN;
+        int topRowMinWidth = categorySelectorWidth + 8 + LAYOUT_BUTTON_MIN_WIDTH * 2 + layoutButtonGap + SCREEN_MARGIN;
         int maxBindingListWidthForTopRow = this.width - 15 - topRowMinWidth;
         if (maxBindingListWidthForTopRow < bindingListWidth) {
             bindingListWidth = Math.max(BINDING_LIST_MIN_WIDTH, maxBindingListWidthForTopRow);
@@ -113,14 +113,33 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
         int categorySelectorX = bindingListWidth + 15;
         int layoutButtonX = categorySelectorX + categorySelectorWidth + 8;
-        int layoutButtonWidth = Math.min(layoutButtonPreferredWidth, Math.max(LAYOUT_BUTTON_MIN_WIDTH, (this.width - SCREEN_MARGIN - layoutButtonX - layoutButtonGap * 2) / 3));
-        int layoutButtonsRight = layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 3 - layoutButtonGap;
+        int topLayoutAvailableWidth = Math.max(0, this.width - SCREEN_MARGIN - layoutButtonX);
+        boolean wrapAuxiliaryLayoutButton = topLayoutAvailableWidth < layoutButtonPreferredWidth * 3 + layoutButtonGap * 2;
+        int layoutButtonWidth;
+        int auxiliaryLayoutButtonX;
+        int auxiliaryLayoutButtonY;
+        int layoutButtonsRight;
+        if (wrapAuxiliaryLayoutButton) {
+            layoutButtonWidth = Math.min(layoutButtonPreferredWidth, Math.max(LAYOUT_BUTTON_MIN_WIDTH, (topLayoutAvailableWidth - layoutButtonGap) / 2));
+            auxiliaryLayoutButtonX = layoutButtonX;
+            auxiliaryLayoutButtonY = categorySelectorY + TOP_CONTROL_HEIGHT + TOP_ROW_GAP;
+            layoutButtonsRight = layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2 - layoutButtonGap;
+        } else {
+            layoutButtonWidth = layoutButtonPreferredWidth;
+            auxiliaryLayoutButtonX = layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2;
+            auxiliaryLayoutButtonY = categorySelectorY;
+            layoutButtonsRight = auxiliaryLayoutButtonX + layoutButtonWidth;
+        }
 
         int mouseGroupWidth = MOUSE_SIDE_BUTTON_WIDTH * 2 + MOUSE_BUTTON_WIDTH + TOP_CONTROL_GAP * 2;
         int mouseGroupX = this.width - SCREEN_MARGIN - mouseGroupWidth;
         int mouseButtonY = categorySelectorY;
-        if (mouseGroupX < layoutButtonsRight + 8) {
+        int wrappedLayoutButtonsRight = wrapAuxiliaryLayoutButton ? auxiliaryLayoutButtonX + layoutButtonWidth : layoutButtonsRight;
+        if (wrapAuxiliaryLayoutButton || mouseGroupX < layoutButtonsRight + 8) {
             mouseButtonY = categorySelectorY + TOP_CONTROL_HEIGHT + TOP_ROW_GAP;
+            if (mouseGroupX < wrappedLayoutButtonsRight + 8) {
+                mouseButtonY += TOP_CONTROL_HEIGHT + TOP_ROW_GAP;
+            }
         }
         int mouseMinusX = Math.max(categorySelectorX, mouseGroupX);
         int mouseButtonX = mouseMinusX + MOUSE_SIDE_BUTTON_WIDTH + TOP_CONTROL_GAP;
@@ -128,7 +147,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         final int finalMouseButtonX = mouseButtonX;
         final int finalMouseButtonY = mouseButtonY;
 
-        int topControlsBottom = Math.max(categorySelectorY + TOP_CONTROL_HEIGHT, mouseButtonY + MOUSE_BUTTON_HEIGHT);
+        int topControlsBottom = Math.max(Math.max(categorySelectorY + TOP_CONTROL_HEIGHT, auxiliaryLayoutButtonY + TOP_CONTROL_HEIGHT), mouseButtonY + MOUSE_BUTTON_HEIGHT);
         int bottomControlsTop = this.height - 23;
         int keyboardTop = topControlsBottom + 8;
         int keyboardBottom = bottomControlsTop - 8;
@@ -143,7 +162,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.categorySelector = new CategorySelectorWidget(this, categorySelectorX, categorySelectorY, categorySelectorWidth, 20);
         this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, layoutButtonX, categorySelectorY, layoutButtonWidth);
         this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, layoutButtonX + layoutButtonWidth + layoutButtonGap, categorySelectorY, layoutButtonWidth);
-        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY, layoutButtonWidth);
+        this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, auxiliaryLayoutButtonX, auxiliaryLayoutButtonY, layoutButtonWidth);
         updateLayoutButtons();
 
         Button screenToggleButton = createScreenToggleButton(
