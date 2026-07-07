@@ -25,6 +25,8 @@ import java.util.List;
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
+    private static final int CATEGORY_SELECTOR_HORIZONTAL_PADDING = 32;
+    private static final int CATEGORY_SELECTOR_MIN_WIDTH = 110;
     private static final List<Component> HELP_TOOLTIP = List.of(
             Component.translatable("gui.keyboard_wizard_ce.help.title"),
             Component.translatable("gui.keyboard_wizard_ce.help.select"),
@@ -91,7 +93,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, KEYBOARD_HEIGHT);
         int categorySelectorX = bindingListWidth + 15;
         int categorySelectorY = 5;
-        int categorySelectorWidth = maxCategoryWidth + 20;
+        int categorySelectorWidth = Math.max(maxCategoryWidth + CATEGORY_SELECTOR_HORIZONTAL_PADDING, CATEGORY_SELECTOR_MIN_WIDTH);
         int layoutButtonWidth = 74;
         int layoutButtonGap = 4;
         int layoutButtonX = categorySelectorX + categorySelectorWidth + 8;
