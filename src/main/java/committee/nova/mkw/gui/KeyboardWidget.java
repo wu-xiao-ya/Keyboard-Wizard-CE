@@ -76,6 +76,20 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
     @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if (keyWizardScreen.getCategorySelectorExtended()) {
+            return false;
+        }
+
+        for (KeyboardKeyWidget k : this.children()) {
+            if (k.isMouseOver(mouseX, mouseY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public List<? extends KeyboardKeyWidget> children() {
         return new ArrayList<>(this.keys.values());
     }
@@ -141,11 +155,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-            if (!this.active || !this.visible || !this.isHovered()) {
+            if (!this.active || !this.visible || !this.isMouseOver(event.x(), event.y())) {
                 return false;
             }
 
-            if (event.button() == 2) {
+            if (event.button() == 2 && !keyWizardScreen.getCategorySelectorExtended()) {
                 keyWizardScreen.setSearchTextForKey(this.key);
                 return true;
             }
