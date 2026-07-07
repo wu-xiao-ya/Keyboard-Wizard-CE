@@ -76,6 +76,20 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
     @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if (keyWizardScreen.getCategorySelectorExtended()) {
+            return false;
+        }
+
+        for (KeyboardKeyWidget k : this.children()) {
+            if (k.isMouseOver(mouseX, mouseY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public List<? extends KeyboardKeyWidget> children() {
         return new ArrayList<>(this.keys.values());
     }
