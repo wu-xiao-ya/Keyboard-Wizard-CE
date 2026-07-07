@@ -190,7 +190,6 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.renderBackground(ctx, mouseX, mouseY, delta);
         ctx.drawTexture(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
         ctx.fill(0, 0, this.width, this.height, 0x77000000);
         super.render(ctx, mouseX, mouseY, delta);
