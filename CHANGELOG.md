@@ -1,5 +1,28 @@
 # Changelog
 
+## Fabric texture asset restore - 2026-07-07
+
+- Restored binary PNG GUI assets on all newly added Fabric stable gap branches after detecting corrupted background, toggle, and icon resources in packaged jars.
+- Rebuilt and redeployed the local test jars from Fabric 1.21.2 through 26.1.1.
+- Verified GitHub Actions builds:
+  - Fabric 1.20.2: `28859633895`
+  - Fabric 1.20.3: `28859635803`
+  - Fabric 1.20.4: `28859638110`
+  - Fabric 1.20.5: `28859641369`
+  - Fabric 1.20.6: `28859644815`
+  - Fabric 1.21: `28859647798`
+  - Fabric 1.21.2: `28859650059`
+  - Fabric 1.21.3: `28859652487`
+  - Fabric 1.21.4: `28859654552`
+  - Fabric 1.21.5: `28859656790`
+  - Fabric 1.21.6: `28859658889`
+  - Fabric 1.21.7: `28859661079`
+  - Fabric 1.21.8: `28859663370`
+  - Fabric 1.21.9: `28859665359`
+  - Fabric 1.21.10: `28859667415`
+  - Fabric 1.21.11: `28859669528`
+  - Fabric 26.1: `28859672310`
+  - Fabric 26.1.1: `28859674268`
 ## Fabric stable gap rollout - 2026-07-06
 
 - Added stable Fabric support branches from Minecraft 1.20.2 through 1.21.11 plus 26.1 and 26.1.1.
