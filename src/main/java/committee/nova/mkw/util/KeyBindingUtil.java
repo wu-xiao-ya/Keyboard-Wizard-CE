@@ -4,8 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.InputConstants.Key;
+import committee.nova.mkw.compat.HideKeyBindingCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -21,13 +23,23 @@ public class KeyBindingUtil {
     public static final String DYNAMIC_CATEGORY_SHIFT = "key.categories.keyboard_wizard_ce.shift";
     public static final String DYNAMIC_CATEGORY_NONE = "key.categories.keyboard_wizard_ce.no_modifier";
 
+    @SuppressWarnings("resource")
+    public static KeyMapping[] getVisibleBindings() {
+        return Arrays.stream(Minecraft.getInstance().options.keyMappings)
+                .filter(KeyBindingUtil::isVisible)
+                .toArray(KeyMapping[]::new);
+    }
+
+    public static boolean isVisible(KeyMapping keyMapping) {
+        return keyMapping != null && !HideKeyBindingCompat.isHidden(keyMapping.getName());
+    }
+
     /**
      * Get a list of all binding categories
      */
-    @SuppressWarnings("resource")
     public static ArrayList<String> getCategories() {
         LinkedHashSet<String> categories = new LinkedHashSet<>();
-        for (KeyMapping keyMapping : Minecraft.getInstance().options.keyMappings) {
+        for (KeyMapping keyMapping : getVisibleBindings()) {
             categories.add(keyMapping.getCategory());
         }
         return categories.stream().sorted().collect(Collectors.toCollection(ArrayList<String>::new));
@@ -48,7 +60,7 @@ public class KeyBindingUtil {
     @SuppressWarnings("resource")
     public static Map<Key, Integer> getBindingCountsByKey() {
         HashMap<InputConstants.Key, Integer> map = new HashMap<>();
-        for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
+        for (KeyMapping b : getVisibleBindings()) {
             map.merge(getKey(b), 1, Integer::sum);
         }
         return Collections.unmodifiableMap(map);
