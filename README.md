@@ -4,7 +4,7 @@ Community Edition / unofficial port of Modern KeyWizard for Minecraft 1.18.2 on 
 
 - Branch: `ce/forge-1.18.2`
 - Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.1`
+- CE version: `1.0.2beta`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
 - Art assets: WI_8614_ice
@@ -20,3 +20,4 @@ Community Edition / unofficial port of Modern KeyWizard for Minecraft 1.18.2 on 
 - The left-side key binding list shows the owning mod/category for easier identification.
 - The vanilla Controls screen has a bottom-right toggle button for Keyboard Wizard CE.
 - The CE screen uses the packaged community background texture and icon.
+- Optional Hide Key Binding compatibility hides entries that Hide Key Binding has hidden and skips them for reset/clear operations.

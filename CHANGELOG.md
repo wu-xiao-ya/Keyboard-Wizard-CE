@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2beta CE - 2026-07-09
+
+- Published this branch under release tag `forge-1.18.2-v1.0.2beta`.
+- Added optional Hide Key Binding compatibility without making Hide Key Binding a required dependency.
+- Hidden key bindings are filtered from lists, categories, keyboard tooltips/search, conflict/unbound statistics, and reset/clear operations.
+- Kept normal Keyboard Wizard CE behavior unchanged when Hide Key Binding is not installed.
 ## 1.0.1 CE - 2026-06-19
 
 - Published this branch under release tag `forge-1.18.2-v1.0.1`.

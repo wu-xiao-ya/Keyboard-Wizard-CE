@@ -5,9 +5,9 @@
 - Java: `17`
 - Build command: `./gradlew build --warning-mode all`
 - Bundle command: `./gradlew releaseBundle`
-- Release jar: `build/libs/keyboard-wizard-ce-forge-1.18.2-1.0.1.jar`
-- Source jar: `build/libs/keyboard-wizard-ce-forge-1.18.2-1.0.1-sources.jar`
-- Release bundle: `build/release/keyboard-wizard-ce-forge-1.18.2-1.0.1-release.zip`
+- Release jar: `build/libs/keyboard-wizard-ce-forge-1.18.2-1.0.2beta.jar`
+- Source jar: `build/libs/keyboard-wizard-ce-forge-1.18.2-1.0.2beta-sources.jar`
+- Release bundle: `build/release/keyboard-wizard-ce-forge-1.18.2-1.0.2beta-release.zip`
 - Checksum file: `build/release/SHA256SUMS.txt`
 - Changelog: `CHANGELOG.md`
 - Release notes: `RELEASE_NOTES.md`
