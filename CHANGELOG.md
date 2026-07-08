@@ -1,8 +1,14 @@
 # Changelog
 
+## 1.0.2beta CE - 2026-07-09
+
+- Published this branch under release tag `forge-1.16.5-v1.0.2beta`.
+- Added optional Hide Key Binding compatibility without making Hide Key Binding a required dependency.
+- Hidden key bindings are filtered from lists, categories, keyboard tooltips/search, conflict/unbound statistics, and reset/clear operations.
+- Kept normal Keyboard Wizard CE behavior unchanged when Hide Key Binding is not installed.
 ## 1.0.1 CE - 2026-06-19
 
-- Published this branch under release tag forge-1.20.1-v1.0.1.
+- Published this branch under release tag forge-1.16.5-v1.0.1.
 - Added the left-side key binding mod/category label so similar bindings from different mods are easier to distinguish.
 
 ## Localization fix - 2026-06-17
@@ -14,7 +20,7 @@
 ## 1.0.0 CE - 2026-06-17
 
 - Restarted the Community Edition version line at 1.0.0.
-- Published this branch under release tag forge-1.20.1-v1.0.0.
+- Published this branch under release tag forge-1.16.5-v1.0.0.
 - Preserved the current CE feature set and metadata under keyboard_wizard_ce.
 
 ## Unreleased branch build - 2026-06-16
@@ -28,11 +34,11 @@
 
 ## 2.1.0 CE - 2026-06-15
 
-- Ported 按键精灵社区版（Keyboard Wizard CE） to Minecraft 1.20.1 + Forge 47.4.10.
+- Ported 按键精灵社区版（Keyboard Wizard CE） to Minecraft 1.16.5 + Forge 36.2.42.
 - Added Forge mod metadata and changed the CE mod id to `keyboard_wizard_ce`.
 - Added AGPL license files, CE notice, release checklist, and GitHub Actions build workflow.
 - Bundled README, NOTICE, COPYING, and LICENSE files into the release jar.
-- Published release artifacts as `keyboard-wizard-ce-forge-1.20.1-2.1.0`.
+- Published release artifacts as `keyboard-wizard-ce-forge-1.16.5-2.1.0`.
 
 
 

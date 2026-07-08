@@ -5,15 +5,12 @@ license="${mod_license}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
-displayName="${mod_name}"
-authors="${mod_authors}"
-credits="${mod_credits}"
+displayName="Keyboard Wizard CE"
+authors="WuXiaoYa; MrNerdy42; Tapio"
+credits="Art assets: WI_8614_ice"
 logoFile="keyboard_wizard_ce_icon.png"
 logoBlur=false
 description='''${mod_description}'''
-
-[[mixins]]
-config="keyboard_wizard_ce.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId="forge"
