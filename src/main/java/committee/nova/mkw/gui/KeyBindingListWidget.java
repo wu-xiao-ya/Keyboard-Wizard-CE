@@ -27,10 +27,12 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         super(Minecraft.getInstance(), top, left, width, height, itemHeight);
         this.keyWizardScreen = keyWizardScreen;
 
-        for (KeyMapping k : this.minecraft.options.keyMappings) {
+        for (KeyMapping k : KeyBindingUtil.getVisibleBindings()) {
             this.addEntry(new BindingEntry(k));
         }
-        this.setSelected(this.children().get(0));
+        if (!this.children().isEmpty()) {
+            this.setSelected(this.children().get(0));
+        }
     }
 
     @Nullable
@@ -66,7 +68,9 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 for (KeyMapping k : bindings) {
                     this.addEntry(new BindingEntry(k));
                 }
-                this.setSelected(this.children().get(0));
+                if (!this.children().isEmpty()) {
+                    this.setSelected(this.children().get(0));
+                }
             } else {
                 this.setSelected(null);
             }
@@ -121,7 +125,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     }
 
     private KeyMapping[] getBindingsByCategory(String category) {
-        KeyMapping[] bindings = Arrays.copyOf(this.minecraft.options.keyMappings, this.minecraft.options.keyMappings.length);
+        KeyMapping[] bindings = KeyBindingUtil.getVisibleBindings();
         switch (category) {
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALL:
                 return bindings;
