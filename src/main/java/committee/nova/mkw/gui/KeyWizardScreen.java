@@ -74,7 +74,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
         int maxBindingNameWidth = 0;
         if (this.minecraft == null) return;
-        for (KeyMapping k : this.minecraft.options.keyMappings) {
+        for (KeyMapping k : KeyBindingUtil.getVisibleBindings()) {
             int w = this.font.width(new TranslatableComponent(k.getName()));
             if (w > maxBindingNameWidth)
                 maxBindingNameWidth = w;
@@ -143,7 +143,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
             final Screen current = minecraft.screen;
             minecraft.setScreen(new ResetAllConfirmScreen(y -> {
                 if (y) {
-                    for (KeyMapping k : this.options.keyMappings) k.setToDefault();
+                    for (KeyMapping k : KeyBindingUtil.getVisibleBindings()) k.setToDefault();
                     KeyMapping.resetMapping();
                 }
                 minecraft.setScreen(current);

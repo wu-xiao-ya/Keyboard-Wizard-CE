@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.DrawingUtil;
+import committee.nova.mkw.util.KeyBindingUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -192,7 +193,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Wid
         @SuppressWarnings("resource")
         private void updateTooltip() {
             ArrayList<String> tooltipText = new ArrayList<>();
-            for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
+            for (KeyMapping b : KeyBindingUtil.getVisibleBindings()) {
                 if (b.getKey().equals(this.key)) {
                     tooltipText.add(I18n.get(b.getName()));
                 }
