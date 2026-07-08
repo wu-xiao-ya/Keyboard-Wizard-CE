@@ -1,7 +1,9 @@
 package mrnerdy42.keywizard.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import mrnerdy42.keywizard.compat.HideKeyBindingCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
@@ -11,6 +13,16 @@ public class KeybindUtils {
 
     public static final KeyBinding[] ALL_BINDINGS = Minecraft.getMinecraft().gameSettings.keyBindings;
 
+    public static KeyBinding[] getVisibleBindings() {
+        return Arrays.stream(ALL_BINDINGS)
+                .filter(KeybindUtils::isVisible)
+                .toArray(KeyBinding[]::new);
+    }
+
+    public static boolean isVisible(KeyBinding binding) {
+        return binding != null && !HideKeyBindingCompat.isHidden(binding.getKeyDescription());
+    }
+
     public static ArrayList<String> getBindingNames(int keyId, KeyModifier modifier) {
         ArrayList<String> bindingNames = new ArrayList<>();
 
@@ -18,7 +30,7 @@ public class KeybindUtils {
             return bindingNames;
         }
 
-        for (KeyBinding currentBinding : ALL_BINDINGS) {
+        for (KeyBinding currentBinding : getVisibleBindings()) {
             if (currentBinding.getKeyCode() == keyId && currentBinding.getKeyModifier() == modifier) {
                 bindingNames.add(I18n.format(currentBinding.getKeyDescription()));
             }
@@ -33,7 +45,7 @@ public class KeybindUtils {
             return bindingNames;
         }
 
-        for (KeyBinding currentBinding : ALL_BINDINGS) {
+        for (KeyBinding currentBinding : getVisibleBindings()) {
             if (currentBinding.getKeyCode() == keyId && currentBinding.getKeyModifier() == modifier) {
                 bindingNames.add(I18n.format(currentBinding.getKeyDescription()) + " (" + I18n.format(currentBinding.getKeyCategory()) + ")");
             }
@@ -48,7 +60,7 @@ public class KeybindUtils {
             return num;
         }
 
-        for (KeyBinding currentBinding : ALL_BINDINGS) {
+        for (KeyBinding currentBinding : getVisibleBindings()) {
             if (currentBinding.getKeyCode() == keyId && currentBinding.getKeyModifier() == modifier) {
                 num++;
             }
@@ -58,7 +70,7 @@ public class KeybindUtils {
 
     public static int getNumConficts(KeyBinding binding) {
         int num = 0;
-        for (KeyBinding currentBinding : ALL_BINDINGS) {
+        for (KeyBinding currentBinding : getVisibleBindings()) {
             if (currentBinding != binding
                     && currentBinding.getKeyCode() == binding.getKeyCode()
                     && currentBinding.getKeyModifier() == binding.getKeyModifier()) {
@@ -71,7 +83,7 @@ public class KeybindUtils {
     public static ArrayList<String> getCategories() {
         ArrayList<String> categories = new ArrayList<>();
 
-        for (KeyBinding currentBinding : ALL_BINDINGS) {
+        for (KeyBinding currentBinding : getVisibleBindings()) {
             if (!categories.contains(currentBinding.getKeyCategory())) {
                 categories.add(currentBinding.getKeyCategory());
             }

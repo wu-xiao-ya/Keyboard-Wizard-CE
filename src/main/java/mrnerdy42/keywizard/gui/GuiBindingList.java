@@ -40,7 +40,7 @@ public class GuiBindingList extends GuiScrollingList {
 		super(parent.getClient(), width, height, bottom - height, bottom, left, entryHeight, parent.width, parent.height);
 		
 		this.parent = parent;
-		this.bindings = Arrays.copyOf(KeybindUtils.ALL_BINDINGS, KeybindUtils.ALL_BINDINGS.length);
+		this.bindings = KeybindUtils.getVisibleBindings();
 		this.searchText = this.parent.getSearchText();
 		this.selectedCategory = this.parent.getSelectedCategory();
 		if (this.bindings.length > 0) {
@@ -220,8 +220,8 @@ public class GuiBindingList extends GuiScrollingList {
 	}
 	
 	private KeyBinding[] bindingsByCategory(String category) {
-		KeyBinding[] bindings = Arrays.copyOf(KeybindUtils.ALL_BINDINGS, KeybindUtils.ALL_BINDINGS.length);
-		
+		KeyBinding[] bindings = KeybindUtils.getVisibleBindings();
+
 		switch (category) {
 		case "categories.all":
 			return bindings;

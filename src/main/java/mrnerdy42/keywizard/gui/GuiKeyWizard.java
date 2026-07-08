@@ -79,7 +79,7 @@ public class GuiKeyWizard extends GuiScreen {
 
 		int maxBindingLength = 0;
 
-		for (KeyBinding binding : KeybindUtils.ALL_BINDINGS) {
+		for (KeyBinding binding : KeybindUtils.getVisibleBindings()) {
 			int bindingWidth = this.fontRenderer.getStringWidth(I18n.format(binding.getKeyDescription()));
 			if (bindingWidth > maxBindingLength)
 				maxBindingLength = bindingWidth;
@@ -345,7 +345,7 @@ public class GuiKeyWizard extends GuiScreen {
 	public void confirmClicked(boolean result, int id) {
 		if (id == RESET_ALL_DIALOG_ID) {
 			if (result) {
-				for (KeyBinding binding : KeybindUtils.ALL_BINDINGS) {
+				for (KeyBinding binding : KeybindUtils.getVisibleBindings()) {
 					binding.setToDefault();
 				}
 				KeyBinding.resetKeyBindingArrayAndHash();
