@@ -1,11 +1,13 @@
 package committee.nova.mkw.util;
 
+import committee.nova.mkw.compat.HideKeyBindingCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.client.settings.KeyModifier;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -25,9 +27,19 @@ public final class KeyBindingUtil {
     }
 
     @SuppressWarnings("resource")
+    public static KeyBinding[] getVisibleBindings() {
+        return Arrays.stream(Minecraft.getInstance().options.keyMappings)
+                .filter(KeyBindingUtil::isVisible)
+                .toArray(KeyBinding[]::new);
+    }
+
+    public static boolean isVisible(KeyBinding keyBinding) {
+        return keyBinding != null && !HideKeyBindingCompat.isHidden(keyBinding.getName());
+    }
+
     public static ArrayList<String> getCategories() {
         LinkedHashSet<String> categories = new LinkedHashSet<>();
-        for (KeyBinding keyBinding : Minecraft.getInstance().options.keyMappings) {
+        for (KeyBinding keyBinding : getVisibleBindings()) {
             categories.add(keyBinding.getCategory());
         }
         return categories.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
@@ -45,10 +57,9 @@ public final class KeyBindingUtil {
         return categories;
     }
 
-    @SuppressWarnings("resource")
     public static Map<InputMappings.Input, Integer> getBindingCountsByKey() {
         HashMap<InputMappings.Input, Integer> map = new HashMap<>();
-        for (KeyBinding binding : Minecraft.getInstance().options.keyMappings) {
+        for (KeyBinding binding : getVisibleBindings()) {
             map.merge(getKey(binding), 1, Integer::sum);
         }
         return Collections.unmodifiableMap(map);
