@@ -193,7 +193,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         @SuppressWarnings("resource")
         private void updateTooltip() {
             ArrayList<String> tooltipText = new ArrayList<>();
-            for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
+            for (KeyMapping b : KeyBindingUtil.getVisibleBindings()) {
                 if (b.getKey().equals(this.key)) {
                     tooltipText.add(I18n.get(b.getName()));
                 }

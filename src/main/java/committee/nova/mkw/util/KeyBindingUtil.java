@@ -19,6 +19,10 @@ public class KeyBindingUtil {
     public static final String DYNAMIC_CATEGORY_NONE = DynamicBindingCategories.NONE;
     private static final PlatformBindingBridge BRIDGE = new PlatformBindingBridge();
 
+    public static KeyMapping[] getVisibleBindings() {
+        return BRIDGE.getAllBindings().toArray(KeyMapping[]::new);
+    }
+
     public static ArrayList<String> getCategories() {
         return new ArrayList<>(BRIDGE.getCategories());
     }

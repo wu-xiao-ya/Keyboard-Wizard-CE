@@ -1,6 +1,7 @@
 package committee.nova.mkw.bridge.binding;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.compat.HideKeyBindingCompat;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -16,7 +17,9 @@ import java.util.stream.Collectors;
 public final class PlatformBindingBridge implements BindingAccessBridge<KeyMapping, InputConstants.Key, KeyModifier>, BindingMutationBridge<KeyMapping, InputConstants.Key, KeyModifier> {
     @Override
     public List<KeyMapping> getAllBindings() {
-        return Arrays.asList(Minecraft.getInstance().options.keyMappings);
+        return Arrays.stream(Minecraft.getInstance().options.keyMappings)
+                .filter(binding -> !HideKeyBindingCompat.isHidden(binding.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
