@@ -217,6 +217,10 @@ public class KeyWizardScreen extends GameOptionsScreen {
     }
 
     @Override
+    protected void addOptions() {
+    }
+
+    @Override
     public void tick() {
         for (Element child : this.children()) {
             if (child instanceof TickableElement tickableElement) {
