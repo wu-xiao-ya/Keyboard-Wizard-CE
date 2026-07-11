@@ -1,6 +1,5 @@
 package committee.nova.mkw.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -52,9 +51,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     @Override
     protected void renderList(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        double scaleH = this.client.getWindow().getHeight() / (double) this.client.getWindow().getScaledHeight();
-        double scaleW = this.client.getWindow().getWidth() / (double) this.client.getWindow().getScaledWidth();
-        RenderSystem.enableScissor((int) (this.getX() * scaleW), (int) (this.client.getWindow().getHeight() - (this.getListBottom() * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
+        ctx.enableScissor(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom());
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
             if (this.isSelectedEntry(i)) {
@@ -64,7 +61,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
             Entry entry = getEntry(i);
             entry.render(ctx, i, this.getRowTop(i), this.getRowLeft(), this.getRowWidth(), this.itemHeight - 4, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPosition(mouseX, mouseY), entry), delta);
         }
-        RenderSystem.disableScissor();
+        ctx.disableScissor();
     }
 
     @Override
