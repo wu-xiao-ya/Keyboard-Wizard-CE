@@ -1,7 +1,11 @@
 package committee.nova.mkw.gui;
 
+import committee.nova.mkw.bridge.binding.CategoryDisplayResolver;
+import committee.nova.mkw.core.layout.KeyboardScreenLayout;
+import committee.nova.mkw.core.layout.KeyboardScreenLayoutCalculator;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
@@ -14,26 +18,29 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
     public BindingCategoryListWidget categoryList;
 
-    public CategorySelectorWidget(KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
-        super(x, y, width, height, Text.empty());
+    public CategorySelectorWidget(KeyWizardScreen keyWizardScreen, KeyboardScreenLayout.Rect layoutRect, int screenHeight) {
+        super(layoutRect.x(), layoutRect.y(), layoutRect.width(), layoutRect.height(), Text.empty());
         this.keyWizardScreen = keyWizardScreen;
         MinecraftClient client = MinecraftClient.getInstance();
         int listItemHeight = client.textRenderer.fontHeight + 7;
-        int listHeight = KeyBindingUtil.getCategoriesWithDynamics().size() * listItemHeight + 10;
-        int listBottom = this.getY() + this.getHeight() + listHeight;
-        if (listBottom > this.keyWizardScreen.height) {
-            listHeight = this.keyWizardScreen.height - this.getY() - this.getHeight() - 10;
-        }
-        this.categoryList = new BindingCategoryListWidget(client, this.getY() + this.getHeight(), this.getX(), this.getWidth(), listHeight, listItemHeight);
+        int listHeight = KeyboardScreenLayoutCalculator.calculateCategoryListHeight(
+                KeyBindingUtil.getCategoriesWithDynamics().size(),
+                listItemHeight,
+                screenHeight,
+                layoutRect.bottom()
+        );
+        this.categoryList = new BindingCategoryListWidget(client, layoutRect.bottom(), layoutRect.x(), layoutRect.width(), listHeight, listItemHeight);
         this.categoryList.visible = false;
-        this.setMessage(Text.translatable(this.getSelectedCategory()));
+        this.setMessage(CategoryDisplayResolver.resolve(this.getSelectedCategory()));
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean listClicked = this.categoryList.mouseClicked(mouseX, mouseY, button);
         boolean thisClicked = super.mouseClicked(mouseX, mouseY, button);
-        if (!(listClicked || thisClicked)) {
+        if (listClicked && button == 0) {
+            this.extended = false;
+        } else if (!(listClicked || thisClicked)) {
             this.extended = false;
         }
         return listClicked || thisClicked;
@@ -48,11 +55,16 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
     @Override
     protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
         super.renderWidget(ctx, mouseX, mouseY, delta);
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        Text label = trimToWidth(this.getMessage(), this.getWidth() - 8);
+        int textX = this.getX() + (this.getWidth() - textRenderer.getWidth(label)) / 2;
+        int textY = this.getY() + (this.getHeight() - textRenderer.fontHeight) / 2;
+        ctx.drawTextWithShadow(textRenderer, label, textX, textY, this.active ? 0xFFFFFFFF : 0xFFA0A0A0);
     }
 
     @Override
     public void tick() {
-        this.setMessage(Text.translatable(this.getSelectedCategory()));
+        this.setMessage(CategoryDisplayResolver.resolve(this.getSelectedCategory()));
         this.categoryList.visible = this.extended;
     }
 
@@ -75,7 +87,9 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
             for (String category : KeyBindingUtil.getCategoriesWithDynamics()) {
                 this.addEntry(new CategoryEntry(category));
             }
-            this.setSelected(this.children().get(0));
+            if (!this.children().isEmpty()) {
+                this.setSelected(this.children().get(0));
+            }
         }
 
         public class CategoryEntry extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
@@ -87,7 +101,7 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
             @Override
             public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawTextWithShadow(client.textRenderer, Text.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
+                ctx.drawTextWithShadow(client.textRenderer, trimToWidth(CategoryDisplayResolver.resolve(this.category), entryWidth - 6), x + 3, y + 2, 0xFFFFFFFF);
             }
         }
 
@@ -95,5 +109,13 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
     @Override
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    }
+
+    private static Text trimToWidth(Text text, int width) {
+        if (width <= 0) {
+            return Text.empty();
+        }
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        return Text.literal(textRenderer.trimToWidth(text.getString(), width));
     }
 }
