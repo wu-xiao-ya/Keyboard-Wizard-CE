@@ -63,7 +63,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 bindings = filterBindings(bindings, searchQuery);
             }
 
-            this.children().clear();
+            this.clearEntries();
             if (bindings.length > 0) {
                 for (KeyBinding keyBinding : bindings) {
                     this.addEntry(new BindingEntry(keyBinding));
