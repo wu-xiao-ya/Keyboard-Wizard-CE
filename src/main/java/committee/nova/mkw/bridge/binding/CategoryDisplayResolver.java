@@ -24,7 +24,7 @@ public final class CategoryDisplayResolver {
             }
             return FabricLoader.getInstance().getModContainer(categoryOwner)
                     .filter(mod -> !"minecraft".equals(mod.getMetadata().getId()))
-                    .map(mod -> Text.literal(mod.getMetadata().getName() + " / " + translated.getString()))
+                    .<Text>map(mod -> Text.literal(mod.getMetadata().getName() + " / " + translated.getString()))
                     .orElse(translated);
         }
 
