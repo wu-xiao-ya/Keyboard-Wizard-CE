@@ -121,7 +121,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
         this.keyboardHeight = keyboardBounds.height();
         this.keyboard = KeyboardWidgetBuilder.keyboard(this, this.keyboardLayout, this.keyboardAnchorX, this.keyboardAnchorY, this.keyboardWidth, this.keyboardHeight);
 
-        this.categorySelector = new CategorySelectorWidget(this, categoryBounds.x(), categoryBounds.y(), categoryBounds.width(), categoryBounds.height());
+        this.categorySelector = new CategorySelectorWidget(this, categoryBounds, this.height);
         this.mainLayoutButton = createLayoutButton(KeyboardLayout.MAIN, layout.mainLayoutButton());
         this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, layout.numpadLayoutButton());
         this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layout.auxiliaryLayoutButton());
@@ -215,10 +215,6 @@ public class KeyWizardScreen extends GameOptionsScreen {
         if (this.helpButton != null && this.helpButton.isMouseOver(mouseX, mouseY)) {
             ctx.drawTooltip(this.textRenderer, HELP_TOOLTIP, mouseX, mouseY);
         }
-    }
-
-    @Override
-    protected void addOptions() {
     }
 
     @Override
