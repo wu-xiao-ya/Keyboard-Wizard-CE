@@ -56,10 +56,6 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
         for (int i = 0; i < this.getEntryCount(); ++i) {
             Entry entry = this.children().get(i);
             int rowTop = this.getRowTop(i);
-            entry.setX(this.getRowLeft());
-            entry.setY(rowTop);
-            entry.setWidth(this.getRowWidth());
-            entry.setHeight(this.itemHeight);
             if (Objects.equals(this.getSelectedOrNull(), entry)) {
                 DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, rowTop - 2, this.getRowRight(), rowTop + this.itemHeight - 4, 0xFFFFFFFF);
             }
