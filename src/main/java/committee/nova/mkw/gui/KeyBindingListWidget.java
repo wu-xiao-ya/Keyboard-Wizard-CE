@@ -1,9 +1,9 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyBinding;
-import committee.nova.mkw.api.IKeyBinding;
+import committee.nova.mkw.core.binding.BindingSearchParser;
+import committee.nova.mkw.core.binding.BindingSearchQuery;
 import committee.nova.mkw.keybinding.KeyModifier;
-import committee.nova.mkw.mixin.AccessorKeyBinding;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -18,8 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
     public KeyWizardScreen keyWizardScreen;
@@ -47,24 +45,25 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
     private void updateList() {
         boolean filterUpdate = !this.currentFilterText.equals(this.keyWizardScreen.getFilterText());
         boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
-        boolean keyFilter = this.keyWizardScreen.getFilterText().startsWith(KeyWizardScreen.KEY_FILTER_PREFIX);
+        BindingSearchQuery searchQuery = BindingSearchParser.parse(this.keyWizardScreen.getFilterText(), KeyWizardScreen.KEY_FILTER_PREFIX);
 
         if (categoryUpdate || filterUpdate) {
             if (categoryUpdate) {
                 this.currentCategory = this.keyWizardScreen.getSelectedCategory();
             }
 
-            KeyBinding[] bindings = getBindingsByCategory(keyFilter ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
+            KeyBinding[] bindings = getBindingsByCategory(searchQuery.keyFilter() ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
 
             if (filterUpdate) {
                 this.currentFilterText = this.keyWizardScreen.getFilterText();
+                searchQuery = BindingSearchParser.parse(this.currentFilterText, KeyWizardScreen.KEY_FILTER_PREFIX);
             }
 
             if (!this.currentFilterText.equals("")) {
-                bindings = filterBindings(bindings, this.currentFilterText, keyFilter);
+                bindings = filterBindings(bindings, searchQuery);
             }
 
-            this.children().clear();
+            this.clearEntries();
             if (bindings.length > 0) {
                 for (KeyBinding keyBinding : bindings) {
                     this.addEntry(new BindingEntry(keyBinding));
@@ -77,31 +76,21 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
-    private KeyBinding[] filterBindings(KeyBinding[] bindings, String filterText, boolean keyFilter) {
+    private KeyBinding[] filterBindings(KeyBinding[] bindings, BindingSearchQuery searchQuery) {
         KeyBinding[] bindingsFiltered = bindings;
-        if (keyFilter) {
-            filterText = filterText.substring(KeyWizardScreen.KEY_FILTER_PREFIX.length());
+
+        if (searchQuery.hasKeyNameFilter()) {
+            bindingsFiltered = filterBindingsByKey(bindingsFiltered, searchQuery.keyNameFilter());
         }
 
-        String keyNameRegex = "<.*>";
-        Matcher keyNameMatcher = Pattern.compile(keyNameRegex).matcher(filterText);
-
-        if (keyNameMatcher.find()) {
-            String keyNameWithBrackets = keyNameMatcher.group();
-            String keyName = keyNameWithBrackets.replace("<", "").replace(">", "");
-            filterText = filterText.replace(keyNameWithBrackets, "");
-            bindingsFiltered = filterBindingsByKey(bindingsFiltered, keyName);
-        }
-
-        if (!filterText.equals("")) {
-            bindingsFiltered = filterBindingsByName(bindingsFiltered, filterText);
+        if (searchQuery.hasTextTerms()) {
+            bindingsFiltered = filterBindingsByName(bindingsFiltered, searchQuery.textTerms().toArray(String[]::new));
         }
 
         return bindingsFiltered;
     }
 
-    private KeyBinding[] filterBindingsByName(KeyBinding[] bindings, String bindingName) {
-        String[] words = bindingName.split("\\s+");
+    private KeyBinding[] filterBindingsByName(KeyBinding[] bindings, String[] words) {
         return Arrays.stream(bindings).filter(binding -> {
             boolean flag = true;
             for (String word : words) {
@@ -113,7 +102,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
     private KeyBinding[] filterBindingsByKey(KeyBinding[] bindings, String keyName) {
         return Arrays.stream(bindings).filter(binding -> {
-            Text text = ((AccessorKeyBinding) binding).getBoundKey().getLocalizedText();
+            Text text = KeyBindingUtil.getKey(binding).getLocalizedText();
             if (text.getContent() instanceof TranslatableTextContent contents) {
                 return I18n.translate(contents.getKey()).equalsIgnoreCase(keyName);
             } else {
@@ -132,17 +121,17 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                     return new KeyBinding[0];
                 }
                 Map<InputUtil.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
-                return Arrays.stream(bindings).filter(binding -> bindingCounts.get(((AccessorKeyBinding) binding).getBoundKey()) > 1 && ((AccessorKeyBinding) binding).getBoundKey().getCode() != -1).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(binding -> bindingCounts.get(KeyBindingUtil.getKey(binding)) > 1 && KeyBindingUtil.getKey(binding).getCode() != -1).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
-                return Arrays.stream(bindings).filter(KeyBinding::isUnbound).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(KeyBindingUtil::isUnbound).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
-                return Arrays.stream(bindings).filter(keyBinding -> ((IKeyBinding) keyBinding).getKeyModifier().equals(KeyModifier.CONTROL)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(keyBinding -> KeyBindingUtil.getModifier(keyBinding).equals(KeyModifier.CONTROL)).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_ALT:
-                return Arrays.stream(bindings).filter(keyBinding -> ((IKeyBinding) keyBinding).getKeyModifier().equals(KeyModifier.ALT)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(keyBinding -> KeyBindingUtil.getModifier(keyBinding).equals(KeyModifier.ALT)).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_SHIFT:
-                return Arrays.stream(bindings).filter(keyBinding -> ((IKeyBinding) keyBinding).getKeyModifier().equals(KeyModifier.SHIFT)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(keyBinding -> KeyBindingUtil.getModifier(keyBinding).equals(KeyModifier.SHIFT)).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_NONE:
-                return Arrays.stream(bindings).filter(keyBinding -> ((IKeyBinding) keyBinding).getKeyModifier().equals(KeyModifier.NONE)).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(keyBinding -> KeyBindingUtil.getModifier(keyBinding).equals(KeyModifier.NONE)).toArray(KeyBinding[]::new);
             default:
                 return Arrays.stream(bindings).filter(binding -> binding.getCategory().equals(category)).toArray(KeyBinding[]::new);
         }
