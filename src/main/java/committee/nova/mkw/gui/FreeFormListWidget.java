@@ -1,6 +1,5 @@
 package committee.nova.mkw.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -52,17 +51,19 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     @Override
     protected void renderList(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        double scaleH = this.client.getWindow().getHeight() / (double) this.client.getWindow().getScaledHeight();
-        double scaleW = this.client.getWindow().getWidth() / (double) this.client.getWindow().getScaledWidth();
-        ctx.enableScissor((int) (this.getX() * scaleW), (int) (this.client.getWindow().getHeight() - (this.getListBottom() * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
+        ctx.enableScissor(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom());
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
-            if (this.isSelectedEntry(i)) {
-                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
+            Entry entry = this.children().get(i);
+            int rowTop = this.getRowTop(i);
+            entry.setX(this.getRowLeft());
+            entry.setY(rowTop);
+            entry.setWidth(this.getRowWidth());
+            entry.setHeight(this.itemHeight);
+            if (Objects.equals(this.getSelectedOrNull(), entry)) {
+                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, rowTop - 2, this.getRowRight(), rowTop + this.itemHeight - 4, 0xFFFFFFFF);
             }
-
-            Entry entry = getEntry(i);
-            entry.render(ctx, i, this.getRowTop(i), this.getRowLeft(), this.getRowWidth(), this.itemHeight - 4, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPosition(mouseX, mouseY), entry), delta);
+            entry.render(ctx, i, rowTop, this.getRowLeft(), this.getRowWidth(), this.itemHeight - 4, mouseX, mouseY, this.isMouseOver(mouseX, mouseY) && Objects.equals(this.getEntryAtPosition(mouseX, mouseY), entry), delta);
         }
         ctx.disableScissor();
     }
