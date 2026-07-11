@@ -52,7 +52,7 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
     @Override
     public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.drawButton(ctx);
+        super.renderWidget(ctx, mouseX, mouseY, delta);
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         Text label = trimToWidth(this.getMessage(), this.getWidth() - 8);
         int textX = this.getX() + (this.getWidth() - textRenderer.getWidth(label)) / 2;
