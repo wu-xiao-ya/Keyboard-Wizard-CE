@@ -155,7 +155,7 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (!this.active || !this.visible || !this.isHovered()) {
+            if (!this.active || !this.visible || !contains(mouseX, mouseY)) {
                 return false;
             }
 
@@ -165,6 +165,10 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
             }
 
             return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        private boolean contains(double mouseX, double mouseY) {
+            return mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
         }
 
         @Override

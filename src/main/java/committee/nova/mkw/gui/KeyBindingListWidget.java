@@ -1,23 +1,21 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyBinding;
+import committee.nova.mkw.bridge.binding.CategoryDisplayResolver;
 import committee.nova.mkw.core.binding.BindingSearchParser;
 import committee.nova.mkw.core.binding.BindingSearchQuery;
 import committee.nova.mkw.keybinding.KeyModifier;
 import committee.nova.mkw.util.KeyBindingUtil;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
     public KeyWizardScreen keyWizardScreen;
@@ -63,15 +61,11 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 bindings = filterBindings(bindings, searchQuery);
             }
 
-            this.children().clear();
-            if (bindings.length > 0) {
-                for (KeyBinding keyBinding : bindings) {
-                    this.addEntry(new BindingEntry(keyBinding));
-                }
-                this.setSelected(this.children().get(0));
-            } else {
-                this.setSelected(null);
+            this.clearEntries();
+            for (KeyBinding keyBinding : bindings) {
+                this.addEntry(new BindingEntry(keyBinding));
             }
+            this.setSelected(bindings.length > 0 ? this.children().get(0) : null);
             this.setScrollAmount(0);
         }
     }
@@ -120,8 +114,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                 if (ModernKeyBinding.nonConflictKeys()) {
                     return new KeyBinding[0];
                 }
-                Map<InputUtil.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
-                return Arrays.stream(bindings).filter(binding -> bindingCounts.get(KeyBindingUtil.getKey(binding)) > 1 && KeyBindingUtil.getKey(binding).getCode() != -1).toArray(KeyBinding[]::new);
+                return Arrays.stream(bindings).filter(binding -> KeyBindingUtil.getBindingCountsByKey().get(KeyBindingUtil.getKey(binding)) > 1 && KeyBindingUtil.getKey(binding).getCode() != -1).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
                 return Arrays.stream(bindings).filter(KeyBindingUtil::isUnbound).toArray(KeyBinding[]::new);
             case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
@@ -150,13 +143,13 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             }
         }
     }
+
     @Override
     public void tick() {
         updateList();
     }
 
     public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
-        private static final String CATEGORY_PREFIX = "key.categories.";
         private static final int CATEGORY_RIGHT_PADDING = 4;
         private static final int CATEGORY_BOTTOM_PADDING = 3;
         private final KeyBinding keyBinding;
@@ -190,21 +183,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
 
         private String getCategoryDisplayLabel(KeyBinding keyBinding) {
-            String category = keyBinding.getCategory();
-            String translatedCategory = Text.translatable(category).getString();
-            if (!category.startsWith(CATEGORY_PREFIX)) {
-                return translatedCategory;
-            }
-
-            String categoryPath = category.substring(CATEGORY_PREFIX.length());
-            if (categoryPath.isEmpty()) {
-                return translatedCategory;
-            }
-
-            String modId = categoryPath.split("\\.")[0];
-            return FabricLoader.getInstance().getModContainer(modId)
-                    .map(mod -> mod.getMetadata().getName() + " / " + translatedCategory)
-                    .orElse(translatedCategory);
+            return CategoryDisplayResolver.resolve(keyBinding.getCategory()).getString();
         }
     }
 
