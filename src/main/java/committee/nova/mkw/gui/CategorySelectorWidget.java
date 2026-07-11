@@ -1,7 +1,10 @@
 package committee.nova.mkw.gui;
 
+import committee.nova.mkw.bridge.binding.CategoryDisplayResolver;
+import committee.nova.mkw.core.layout.KeyboardScreenLayoutCalculator;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -10,7 +13,6 @@ import net.minecraft.client.input.AbstractInput;
 import net.minecraft.text.Text;
 
 public class CategorySelectorWidget extends PressableWidget implements TickableElement {
-
     public KeyWizardScreen keyWizardScreen;
     public boolean extended = false;
 
@@ -21,11 +23,12 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
         this.keyWizardScreen = keyWizardScreen;
         MinecraftClient client = MinecraftClient.getInstance();
         int listItemHeight = client.textRenderer.fontHeight + 7;
-        int listHeight = KeyBindingUtil.getCategoriesWithDynamics().size() * listItemHeight + 10;
-        int listBottom = this.getY() + this.getHeight() + listHeight;
-        if (listBottom > this.keyWizardScreen.height) {
-            listHeight = this.keyWizardScreen.height - this.getY() - this.getHeight() - 10;
-        }
+        int listHeight = KeyboardScreenLayoutCalculator.calculateCategoryListHeight(
+                KeyBindingUtil.getCategoriesWithDynamics().size(),
+                listItemHeight,
+                this.keyWizardScreen.height,
+                this.getY() + this.getHeight()
+        );
         this.categoryList = new BindingCategoryListWidget(client, this.getY() + this.getHeight(), this.getX(), this.getWidth(), listHeight, listItemHeight);
         this.categoryList.visible = false;
         this.setMessage(categoryText(this.getSelectedCategory()));
@@ -46,8 +49,15 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
         this.playDownSound(MinecraftClient.getInstance().getSoundManager());
         this.extended = !this.extended;
     }
+
     @Override
     protected void drawIcon(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        this.drawButton(ctx);
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        Text label = trimToWidth(this.getMessage(), this.getWidth() - 8);
+        int textX = this.getX() + (this.getWidth() - textRenderer.getWidth(label)) / 2;
+        int textY = this.getY() + (this.getHeight() - textRenderer.fontHeight) / 2;
+        ctx.drawTextWithShadow(textRenderer, label, textX, textY, this.active ? 0xFFFFFFFF : 0xFFA0A0A0);
     }
 
     @Override
@@ -68,7 +78,15 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
     }
 
     private static Text categoryText(String category) {
-        return category.startsWith("key.category.") ? Text.translatable(category) : Text.literal(category);
+        return CategoryDisplayResolver.resolve(category);
+    }
+
+    private static Text trimToWidth(Text text, int width) {
+        if (width <= 0) {
+            return Text.empty();
+        }
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        return Text.literal(textRenderer.trimToWidth(text.getString(), width));
     }
 
     private static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
@@ -79,7 +97,9 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
             for (String category : KeyBindingUtil.getCategoriesWithDynamics()) {
                 this.addEntry(new CategoryEntry(category));
             }
-            this.setSelected(this.children().get(0));
+            if (!this.children().isEmpty()) {
+                this.setSelected(this.children().get(0));
+            }
         }
 
         public class CategoryEntry extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
@@ -91,10 +111,9 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
             @Override
             public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawTextWithShadow(client.textRenderer, categoryText(this.category), x + 3, y + 2, 0xFFFFFFFF);
+                ctx.drawTextWithShadow(client.textRenderer, trimToWidth(categoryText(this.category), entryWidth - 6), x + 3, y + 2, 0xFFFFFFFF);
             }
         }
-
     }
 
     @Override

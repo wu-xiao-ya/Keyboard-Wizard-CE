@@ -54,9 +54,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     @Override
     protected void renderList(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        double scaleH = this.client.getWindow().getHeight() / (double) this.client.getWindow().getScaledHeight();
-        double scaleW = this.client.getWindow().getWidth() / (double) this.client.getWindow().getScaledWidth();
-        ctx.enableScissor((int) (this.getX() * scaleW), (int) (this.client.getWindow().getHeight() - (this.getListBottom() * scaleH)), (int) (this.width * scaleW), (int) (this.height * scaleH));
+        ctx.enableScissor(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom());
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
             Entry entry = this.children().get(i);
