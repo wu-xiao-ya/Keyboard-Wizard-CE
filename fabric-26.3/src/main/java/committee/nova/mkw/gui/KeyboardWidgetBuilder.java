@@ -1,0 +1,57 @@
+package committee.nova.mkw.gui;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.core.layout.KeyInputKind;
+import committee.nova.mkw.core.layout.KeyPlacement;
+import committee.nova.mkw.core.layout.KeyboardLayoutGeometry;
+
+import java.util.List;
+
+public class KeyboardWidgetBuilder {
+
+    public static KeyboardWidget keyboard(KeyWizardScreen keyWizardScreen, KeyboardLayout layout, float anchorX, float anchorY, float width, float height) {
+        List<KeyPlacement> geometry = switch (layout) {
+            case MAIN -> KeyboardLayoutGeometry.standard(width, height);
+            case NUMPAD -> KeyboardLayoutGeometry.numpad(width, height);
+            case AUXILIARY -> KeyboardLayoutGeometry.auxiliary(width, height);
+        };
+        return keyboardFromGeometry(keyWizardScreen, anchorX, anchorY, geometry);
+    }
+
+    public static KeyboardWidget standardKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height) {
+        return keyboardFromGeometry(keyWizardScreen, anchorX, anchorY, KeyboardLayoutGeometry.standard(width, height));
+    }
+
+    public static KeyboardWidget numpadKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height) {
+        return keyboardFromGeometry(keyWizardScreen, anchorX, anchorY, KeyboardLayoutGeometry.numpad(width, height));
+    }
+
+    public static KeyboardWidget auxiliaryKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height) {
+        return keyboardFromGeometry(keyWizardScreen, anchorX, anchorY, KeyboardLayoutGeometry.auxiliary(width, height));
+    }
+
+    public static KeyboardWidget singleKeyKeyboard(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, float width, float height, int keyCode, InputConstants.Type keyType) {
+        KeyInputKind inputKind = keyType == InputConstants.Type.MOUSE ? KeyInputKind.MOUSE : KeyInputKind.KEYSYM;
+        return keyboardFromGeometry(keyWizardScreen, anchorX, anchorY, KeyboardLayoutGeometry.singleKey(width, height, keyCode, inputKind));
+    }
+
+    private static KeyboardWidget keyboardFromGeometry(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, List<KeyPlacement> geometry) {
+        KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
+        for (KeyPlacement placement : geometry) {
+            kb.addKey(
+                    placement.x(),
+                    placement.y(),
+                    placement.width(),
+                    placement.height(),
+                    0.0F,
+                    placement.keyCode(),
+                    toInputType(placement.inputKind())
+            );
+        }
+        return kb;
+    }
+
+    private static InputConstants.Type toInputType(KeyInputKind inputKind) {
+        return inputKind == KeyInputKind.MOUSE ? InputConstants.Type.MOUSE : InputConstants.Type.KEYBOARD;
+    }
+}
