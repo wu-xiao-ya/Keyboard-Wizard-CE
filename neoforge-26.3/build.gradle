@@ -1,0 +1,144 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.1.39'
+}
+
+def neoLocalMavenPath = providers.gradleProperty('neoLocalMaven')
+        .orElse(providers.environmentVariable('NEOFORGE_LOCAL_MAVEN'))
+        .map { file(it) }
+        .orNull
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = archives_base_name
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    withSourcesJar()
+}
+
+repositories {
+    if (neoLocalMavenPath != null) {
+        maven {
+            name = 'LocalNeoForgedCache'
+            url = neoLocalMavenPath.toURI()
+            metadataSources {
+                mavenPom()
+                gradleMetadata()
+                artifact()
+            }
+        }
+    }
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
+    mavenCentral()
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('jar', Jar).configure {
+    from(['LICENSE.md', 'COPYING.md', 'NOTICE.md', 'README.md']) {
+        into 'META-INF'
+    }
+}
+
+def releaseFiles = [
+        tasks.named('jar'),
+        tasks.named('sourcesJar')
+]
+
+tasks.register('generateReleaseChecksums') {
+    group = 'distribution'
+    description = 'Generates SHA-256 checksums for release jars.'
+    dependsOn releaseFiles
+
+    outputs.file(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+
+    doLast {
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        def outputFile = layout.buildDirectory.file('release/SHA256SUMS.txt').get().asFile
+        outputFile.parentFile.mkdirs()
+        outputFile.text = releaseFiles.collect { provider ->
+            def file = provider.get().archiveFile.get().asFile
+            digest.reset()
+            file.withInputStream { input ->
+                byte[] buffer = new byte[8192]
+                int read
+                while ((read = input.read(buffer)) != -1) {
+                    digest.update(buffer, 0, read)
+                }
+            }
+            "${digest.digest().encodeHex()}  mods/${file.name}"
+        }.join(System.lineSeparator()) + System.lineSeparator()
+    }
+}
+
+tasks.register('releaseBundle', Zip) {
+    group = 'distribution'
+    description = 'Packages release jars, checksums, and legal notices.'
+    dependsOn releaseFiles
+    dependsOn tasks.named('generateReleaseChecksums')
+    archiveFileName = "${archives_base_name}-${mod_version}-release.zip"
+    destinationDirectory = layout.buildDirectory.dir('release')
+
+    from(releaseFiles.collect { it.get().archiveFile }) {
+        into 'mods'
+    }
+    from(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+    from(['README.md', 'NOTICE.md', 'LICENSE.md', 'COPYING.md', 'CHANGELOG.md', 'RELEASE.md'])
+}
+
+processResources {
+    filteringCharset = 'UTF-8'
+
+    def replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_credits            : mod_credits,
+            mod_description        : mod_description
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifactId = archives_base_name
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = 'local'
+            url = layout.buildDirectory.dir('repo')
+        }
+    }
+}
