@@ -1,7 +1,9 @@
 import hashlib
 from pathlib import Path
 import struct
+import struct
 import sys
+import zlib
 from zipfile import ZipFile
 
 
@@ -21,6 +23,25 @@ METADATA_FILES = {
 TEXTURE_PATH = "assets/keyboard_wizard_ce/textures/gui/"
 
 
+def verify_png(png, name):
+    if not png.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise ValueError(f"Invalid PNG signature: {name}")
+    position = 8
+    while position + 12 <= len(png):
+        size = struct.unpack_from(">I", png, position)[0]
+        kind = png[position + 4:position + 8]
+        end = position + 8 + size
+        if end + 4 > len(png):
+            break
+        expected = struct.unpack_from(">I", png, end)[0]
+        if zlib.crc32(png[position + 4:end]) != expected:
+            raise ValueError(f"Invalid PNG chunk checksum in {name}")
+        if kind == b"IEND":
+            return
+        position = end + 4
+    raise ValueError(f"Incomplete PNG resource: {name}")
+
+
 def verify(target):
     properties = dict(
         line.split("=", 1)
@@ -32,7 +53,7 @@ def verify(target):
     binary = libs / (artifact + ".jar")
     sources = libs / (artifact + "-sources.jar")
     loader, version = target.name.split("-", 1)
-    metadata = METADATA_FILES[loader]
+    metadata = "mcmod.info" if target.name == "forge-1.12.2" else METADATA_FILES[loader]
 
     with ZipFile(binary) as jar:
         for component in CORE_COMPONENTS:
@@ -41,9 +62,13 @@ def verify(target):
         if "keyboard_wizard_ce" not in descriptor or version not in descriptor:
             raise ValueError(f"Mod id or Minecraft version missing from {metadata}")
         for texture in ("key_wizard_background.png", "screen_toggle_widgets.png"):
-            png = jar.read(TEXTURE_PATH + texture)
-            if not png.startswith(b"\x89PNG\r\n\x1a\n") or len(png) < 33:
-                raise ValueError(f"Invalid PNG resource: {texture}")
+            verify_png(jar.read(TEXTURE_PATH + texture), texture)
+        if target.name in {"forge-1.12.2", "forge-1.16.5"}:
+            for name in jar.namelist():
+                if name.endswith(".class"):
+                    major = struct.unpack_from(">H", jar.read(name), 6)[0]
+                    if major > 52:
+                        raise ValueError(f"Java 8 cannot load {name} (class version {major})")
 
     with ZipFile(sources) as jar:
         for component in CORE_COMPONENTS:
