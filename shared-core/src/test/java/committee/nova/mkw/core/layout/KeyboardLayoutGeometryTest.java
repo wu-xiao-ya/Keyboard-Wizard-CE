@@ -44,4 +44,23 @@ class KeyboardLayoutGeometryTest {
         assertTrue(numpad.stream().anyMatch(placement -> placement.key() == PhysicalKey.KEY_KP_ENTER));
         assertTrue(numpad.stream().noneMatch(placement -> placement.key() == PhysicalKey.KEY_ENTER));
     }
+
+    @Test
+    void preservesLegacyKeyboardRowsAndNumpadDimensions() {
+        List<KeyPlacement> main = KeyboardLayoutGeometry.legacyStandard(900, 180);
+        List<KeyPlacement> numpad = KeyboardLayoutGeometry.legacyNumpad(900, 180);
+
+        assertEquals(72, main.size());
+        assertEquals(16, numpad.size());
+        assertEquals(13, KeyboardLayoutGeometry.legacyAuxiliary(900, 180).size());
+        assertEquals(120.0F, placement(main, PhysicalKey.KEY_Q).x(), 0.01F);
+        assertEquals(12.0F, placement(main, PhysicalKey.KEY_ENTER).height(), 0.01F);
+        assertEquals(220.0F / 3.0F, placement(numpad, PhysicalKey.KEY_KP_ENTER).width(), 0.01F);
+        assertPlacementsInside(main, 900, 180);
+        assertPlacementsInside(numpad, 900, 180);
+    }
+
+    private static KeyPlacement placement(List<KeyPlacement> placements, PhysicalKey key) {
+        return placements.stream().filter(placement -> placement.key() == key).findFirst().get();
+    }
 }

@@ -9,12 +9,21 @@ public final class KeyboardLayoutGeometry {
     private KeyboardLayoutGeometry() {
     }
 
+    private static final float KEY_SPACING = 5.0F;
+
     public static List<KeyPlacement> standard(float width, float height) {
+        return standardWithKeyHeight(width, height / 6.0F - KEY_SPACING);
+    }
+
+    public static List<KeyPlacement> legacyStandard(float width, float height) {
+        return standardWithKeyHeight(width, height / 15.0F);
+    }
+
+    private static List<KeyPlacement> standardWithKeyHeight(float width, float keyHeight) {
         ArrayList<KeyPlacement> placements = new ArrayList<>();
         float currentY = 0.0F;
-        float keySpacing = 5.0F;
+        float keySpacing = KEY_SPACING;
         float keyWidth = width / 12.0F - keySpacing;
-        float keyHeight = height / 6.0F - keySpacing;
 
         addHorizontalRow(placements, new PhysicalKey[]{KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12}, 0.0F, currentY, keyWidth, keyHeight, keySpacing);
 
@@ -46,7 +55,7 @@ public final class KeyboardLayoutGeometry {
 
     public static List<KeyPlacement> numpad(float width, float height) {
         ArrayList<KeyPlacement> placements = new ArrayList<>();
-        float keySpacing = 5.0F;
+        float keySpacing = KEY_SPACING;
         float keyWidth = Math.max(34.0F, Math.min((width - keySpacing * 3.0F) / 4.0F, 75.0F));
         float keyHeight = Math.max(24.0F, (height - keySpacing * 4.0F) / 5.0F);
         float layoutWidth = keyWidth * 4.0F + keySpacing * 3.0F;
@@ -72,11 +81,45 @@ public final class KeyboardLayoutGeometry {
         return placements;
     }
 
-    public static List<KeyPlacement> auxiliary(float width, float height) {
+    public static List<KeyPlacement> legacyNumpad(float width, float height) {
         ArrayList<KeyPlacement> placements = new ArrayList<>();
-        float keySpacing = 5.0F;
-        float keyWidth = Math.max(42.0F, Math.min((width - keySpacing * 6.0F) / 6.0F, 95.0F));
-        float keyHeight = Math.max(24.0F, (height - keySpacing * 3.0F) / 4.0F);
+        float keySpacing = KEY_SPACING;
+        float keyWidth = width / 4.0F - keySpacing;
+        float keyHeight = height / 14.0F;
+        float currentY = 0.0F;
+
+        float currentX = addHorizontalRow(placements, new PhysicalKey[]{KEY_KP_DIVIDE, KEY_KP_MULTIPLY, KEY_KP_SUBTRACT}, 0.0F, currentY, keyWidth, keyHeight, keySpacing);
+        addKey(placements, currentX, currentY, keyWidth / 3.0F, keyHeight * 2.0F + keySpacing, keySpacing, KEY_KP_ADD);
+
+        currentY += keyHeight + keySpacing;
+        addHorizontalRow(placements, new PhysicalKey[]{KEY_KP_7, KEY_KP_8, KEY_KP_9}, 0.0F, currentY, keyWidth, keyHeight, keySpacing);
+
+        currentY += keyHeight + keySpacing;
+        currentX = addHorizontalRow(placements, new PhysicalKey[]{KEY_KP_4, KEY_KP_5, KEY_KP_6}, 0.0F, currentY, keyWidth, keyHeight, keySpacing);
+        addKey(placements, currentX, currentY, keyWidth / 3.0F, keyHeight * 3.0F + keySpacing * 2.0F, keySpacing, KEY_KP_ENTER);
+
+        currentY += keyHeight + keySpacing;
+        addHorizontalRow(placements, new PhysicalKey[]{KEY_KP_1, KEY_KP_2, KEY_KP_3}, 0.0F, currentY, keyWidth, keyHeight, keySpacing);
+
+        currentY += keyHeight + keySpacing;
+        currentX = addKey(placements, 0.0F, currentY, keyWidth * 2.0F + keySpacing, keyHeight, keySpacing, KEY_KP_0);
+        addKey(placements, currentX, currentY, keyWidth, keyHeight, keySpacing, KEY_KP_DECIMAL);
+        return placements;
+    }
+
+    public static List<KeyPlacement> auxiliary(float width, float height) {
+        float keyWidth = Math.max(42.0F, Math.min((width - KEY_SPACING * 6.0F) / 6.0F, 95.0F));
+        float keyHeight = Math.max(24.0F, (height - KEY_SPACING * 3.0F) / 4.0F);
+        return auxiliaryWithKeySize(width, keyWidth, keyHeight);
+    }
+
+    public static List<KeyPlacement> legacyAuxiliary(float width, float height) {
+        return auxiliaryWithKeySize(width, width / 7.0F - KEY_SPACING, height / 14.0F);
+    }
+
+    private static List<KeyPlacement> auxiliaryWithKeySize(float width, float keyWidth, float keyHeight) {
+        ArrayList<KeyPlacement> placements = new ArrayList<>();
+        float keySpacing = KEY_SPACING;
         float clusterWidth = keyWidth * 3.0F + keySpacing * 2.0F;
         float clusterGap = keySpacing * 4.0F;
         float layoutWidth = clusterWidth * 2.0F + clusterGap;

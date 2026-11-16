@@ -1,0 +1,116 @@
+package mrnerdy42.keywizard.util;
+
+import committee.nova.mkw.core.layout.PhysicalKey;
+import org.lwjgl.input.Keyboard;
+
+/** Maps the game-independent physical keys to Forge 1.12.2's LWJGL2 codes. */
+final class Lwjgl2Keys {
+    private Lwjgl2Keys() { }
+    static int code(PhysicalKey key) {
+        switch (key) {
+            case KEY_SPACE: return Keyboard.KEY_SPACE;
+            case KEY_APOSTROPHE: return Keyboard.KEY_APOSTROPHE;
+            case KEY_COMMA: return Keyboard.KEY_COMMA;
+            case KEY_MINUS: return Keyboard.KEY_MINUS;
+            case KEY_PERIOD: return Keyboard.KEY_PERIOD;
+            case KEY_SLASH: return Keyboard.KEY_SLASH;
+            case KEY_0: return Keyboard.KEY_0;
+            case KEY_1: return Keyboard.KEY_1;
+            case KEY_2: return Keyboard.KEY_2;
+            case KEY_3: return Keyboard.KEY_3;
+            case KEY_4: return Keyboard.KEY_4;
+            case KEY_5: return Keyboard.KEY_5;
+            case KEY_6: return Keyboard.KEY_6;
+            case KEY_7: return Keyboard.KEY_7;
+            case KEY_8: return Keyboard.KEY_8;
+            case KEY_9: return Keyboard.KEY_9;
+            case KEY_SEMICOLON: return Keyboard.KEY_SEMICOLON;
+            case KEY_EQUAL: return Keyboard.KEY_EQUALS;
+            case KEY_A: return Keyboard.KEY_A;
+            case KEY_B: return Keyboard.KEY_B;
+            case KEY_C: return Keyboard.KEY_C;
+            case KEY_D: return Keyboard.KEY_D;
+            case KEY_E: return Keyboard.KEY_E;
+            case KEY_F: return Keyboard.KEY_F;
+            case KEY_G: return Keyboard.KEY_G;
+            case KEY_H: return Keyboard.KEY_H;
+            case KEY_I: return Keyboard.KEY_I;
+            case KEY_J: return Keyboard.KEY_J;
+            case KEY_K: return Keyboard.KEY_K;
+            case KEY_L: return Keyboard.KEY_L;
+            case KEY_M: return Keyboard.KEY_M;
+            case KEY_N: return Keyboard.KEY_N;
+            case KEY_O: return Keyboard.KEY_O;
+            case KEY_P: return Keyboard.KEY_P;
+            case KEY_Q: return Keyboard.KEY_Q;
+            case KEY_R: return Keyboard.KEY_R;
+            case KEY_S: return Keyboard.KEY_S;
+            case KEY_T: return Keyboard.KEY_T;
+            case KEY_U: return Keyboard.KEY_U;
+            case KEY_V: return Keyboard.KEY_V;
+            case KEY_W: return Keyboard.KEY_W;
+            case KEY_X: return Keyboard.KEY_X;
+            case KEY_Y: return Keyboard.KEY_Y;
+            case KEY_Z: return Keyboard.KEY_Z;
+            case KEY_LEFT_BRACKET: return Keyboard.KEY_LBRACKET;
+            case KEY_BACKSLASH: return Keyboard.KEY_BACKSLASH;
+            case KEY_RIGHT_BRACKET: return Keyboard.KEY_RBRACKET;
+            case KEY_GRAVE_ACCENT: return Keyboard.KEY_GRAVE;
+            case KEY_ENTER: return Keyboard.KEY_RETURN;
+            case KEY_TAB: return Keyboard.KEY_TAB;
+            case KEY_BACKSPACE: return Keyboard.KEY_BACK;
+            case KEY_INSERT: return Keyboard.KEY_INSERT;
+            case KEY_DELETE: return Keyboard.KEY_DELETE;
+            case KEY_RIGHT: return Keyboard.KEY_RIGHT;
+            case KEY_LEFT: return Keyboard.KEY_LEFT;
+            case KEY_DOWN: return Keyboard.KEY_DOWN;
+            case KEY_UP: return Keyboard.KEY_UP;
+            case KEY_PAGE_UP: return Keyboard.KEY_PRIOR;
+            case KEY_PAGE_DOWN: return Keyboard.KEY_NEXT;
+            case KEY_HOME: return Keyboard.KEY_HOME;
+            case KEY_END: return Keyboard.KEY_END;
+            case KEY_CAPS_LOCK: return Keyboard.KEY_CAPITAL;
+            case KEY_SCROLL_LOCK: return Keyboard.KEY_SCROLL;
+            case KEY_NUM_LOCK: return Keyboard.KEY_NUMLOCK;
+            case KEY_PRINT_SCREEN: return Keyboard.KEY_SYSRQ;
+            case KEY_PAUSE: return Keyboard.KEY_PAUSE;
+            case KEY_F1: return Keyboard.KEY_F1;
+            case KEY_F2: return Keyboard.KEY_F2;
+            case KEY_F3: return Keyboard.KEY_F3;
+            case KEY_F4: return Keyboard.KEY_F4;
+            case KEY_F5: return Keyboard.KEY_F5;
+            case KEY_F6: return Keyboard.KEY_F6;
+            case KEY_F7: return Keyboard.KEY_F7;
+            case KEY_F8: return Keyboard.KEY_F8;
+            case KEY_F9: return Keyboard.KEY_F9;
+            case KEY_F10: return Keyboard.KEY_F10;
+            case KEY_F11: return Keyboard.KEY_F11;
+            case KEY_F12: return Keyboard.KEY_F12;
+            case KEY_KP_0: return Keyboard.KEY_NUMPAD0;
+            case KEY_KP_1: return Keyboard.KEY_NUMPAD1;
+            case KEY_KP_2: return Keyboard.KEY_NUMPAD2;
+            case KEY_KP_3: return Keyboard.KEY_NUMPAD3;
+            case KEY_KP_4: return Keyboard.KEY_NUMPAD4;
+            case KEY_KP_5: return Keyboard.KEY_NUMPAD5;
+            case KEY_KP_6: return Keyboard.KEY_NUMPAD6;
+            case KEY_KP_7: return Keyboard.KEY_NUMPAD7;
+            case KEY_KP_8: return Keyboard.KEY_NUMPAD8;
+            case KEY_KP_9: return Keyboard.KEY_NUMPAD9;
+            case KEY_KP_DECIMAL: return Keyboard.KEY_DECIMAL;
+            case KEY_KP_DIVIDE: return Keyboard.KEY_DIVIDE;
+            case KEY_KP_MULTIPLY: return Keyboard.KEY_MULTIPLY;
+            case KEY_KP_SUBTRACT: return Keyboard.KEY_SUBTRACT;
+            case KEY_KP_ADD: return Keyboard.KEY_ADD;
+            case KEY_KP_ENTER: return Keyboard.KEY_NUMPADENTER;
+            case KEY_LEFT_SHIFT: return Keyboard.KEY_LSHIFT;
+            case KEY_LEFT_CONTROL: return Keyboard.KEY_LCONTROL;
+            case KEY_LEFT_ALT: return Keyboard.KEY_LMENU;
+            case KEY_LEFT_SUPER: return Keyboard.KEY_LMETA;
+            case KEY_RIGHT_SHIFT: return Keyboard.KEY_RSHIFT;
+            case KEY_RIGHT_CONTROL: return Keyboard.KEY_RCONTROL;
+            case KEY_RIGHT_ALT: return Keyboard.KEY_RMENU;
+            case KEY_RIGHT_SUPER: return Keyboard.KEY_RMETA;
+            default: throw new IllegalArgumentException("Unsupported key: " + key);
+        }
+    }
+}

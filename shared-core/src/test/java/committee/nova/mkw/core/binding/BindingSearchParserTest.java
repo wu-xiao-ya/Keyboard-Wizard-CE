@@ -38,4 +38,18 @@ class BindingSearchParserTest {
         assertTrue(query.matchesName("Move Forward"));
         assertFalse(query.matchesName("Move Backward"));
     }
+
+    @Test
+    void preservesLegacyKeyQueryAndCategoryScope() {
+        BindingSearchQuery typed = BindingSearchParser.parseLegacy("@W  walk forward", "#key#");
+        BindingSearchQuery clicked = BindingSearchParser.parseLegacy("#key#<NUMPADENTER>", "#key#");
+
+        assertFalse(typed.keyFilter());
+        assertEquals("W", typed.keyNameFilter());
+        assertTrue(typed.matchesName("Walk Forward"));
+        assertTrue(clicked.keyFilter());
+        assertEquals("NUMPADENTER", clicked.keyNameFilter());
+        assertFalse(clicked.hasTextTerms());
+        assertEquals("Key<A>", BindingSearchParser.parseLegacy("#key#<Key<A>>", "#key#").keyNameFilter());
+    }
 }

@@ -3,7 +3,6 @@ package committee.nova.mkw.core.binding;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public final class BindingSearchQuery {
     private final boolean keyFilter;
@@ -17,7 +16,7 @@ public final class BindingSearchQuery {
         this.textTerms = Collections.unmodifiableList(new ArrayList<>(textTerms));
         this.normalizedTerms = new ArrayList<>(textTerms.size());
         for (String term : textTerms) {
-            this.normalizedTerms.add(term.toLowerCase(Locale.ROOT));
+            this.normalizedTerms.add(term.toLowerCase());
         }
     }
 
@@ -42,7 +41,7 @@ public final class BindingSearchQuery {
     }
 
     public boolean matchesName(String localizedName) {
-        String normalizedName = localizedName.toLowerCase(Locale.ROOT);
+        String normalizedName = localizedName.toLowerCase();
         for (String term : normalizedTerms) {
             if (!normalizedName.contains(term)) {
                 return false;

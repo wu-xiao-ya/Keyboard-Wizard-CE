@@ -1,0 +1,105 @@
+buildscript {
+    repositories {
+        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://maven.minecraftforge.net/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+version = project.mod_version
+group = project.maven_group
+archivesBaseName = project.archives_base_name
+
+sourceCompatibility = targetCompatibility = "1.8"
+
+minecraft {
+    version = "${project.minecraft_version}-${project.forge_version}"
+    runDir = "run"
+    mappings = project.mappings
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven { url = "https://files.minecraftforge.net/maven" }
+    mavenCentral()
+}
+
+dependencies {
+}
+
+sourceSets.main.java {
+    srcDir rootProject.file('../../shared-core/src/main/java')
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft_version
+    inputs.property "modid", project.mod_id
+    inputs.property "name", project.mod_name
+    inputs.property "authorList", project.author_list
+    inputs.property "credits", project.art_credits
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand(
+            "version": project.version,
+            "mcversion": project.minecraft_version,
+            "modid": project.mod_id,
+            "name": project.mod_name,
+            "authorList": project.author_list,
+            "credits": project.art_credits
+        )
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+        exclude "META-INF/mods.toml"
+    }
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:none"
+}
+
+def releaseFiles = [jar, sourcesJar]
+task generateReleaseChecksums {
+    group = 'distribution'
+    description = 'Generates SHA-256 checksums for release jars.'
+    dependsOn releaseFiles, 'reobfJar', 'extractAnnotationsJar'
+    inputs.files releaseFiles.collect { it.archivePath }
+    outputs.file "$buildDir/release/SHA256SUMS.txt"
+    doLast {
+        def outputFile = file("$buildDir/release/SHA256SUMS.txt")
+        outputFile.parentFile.mkdirs()
+        outputFile.text = releaseFiles.collect { artifact ->
+            def digest = java.security.MessageDigest.getInstance('SHA-256')
+            artifact.archivePath.withInputStream { input ->
+                byte[] buffer = new byte[8192]
+                int read
+                while ((read = input.read(buffer)) != -1) digest.update(buffer, 0, read)
+            }
+            "${digest.digest().encodeHex()}  mods/${artifact.archivePath.name}"
+        }.join(System.lineSeparator()) + System.lineSeparator()
+    }
+}
+
+build.dependsOn generateReleaseChecksums

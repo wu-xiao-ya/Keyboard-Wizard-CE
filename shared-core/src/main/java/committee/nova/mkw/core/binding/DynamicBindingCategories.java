@@ -1,6 +1,7 @@
 package committee.nova.mkw.core.binding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class DynamicBindingCategories {
@@ -26,6 +27,14 @@ public final class DynamicBindingCategories {
         result.add(ALT);
         result.add(SHIFT);
         result.add(NONE);
+        return result;
+    }
+
+    public static ArrayList<String> withLegacyDynamicCategories(List<String> categories) {
+        ArrayList<String> result = new ArrayList<>(categories.size() + 7);
+        result.addAll(Arrays.asList("categories.all", "categories.unbound", "categories.conflicts"));
+        result.addAll(categories);
+        result.addAll(Arrays.asList("categories.ctrl", "categories.alt", "categories.shift", "categories.none"));
         return result;
     }
 }

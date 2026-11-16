@@ -69,6 +69,10 @@ def verify(target):
                     major = struct.unpack_from(">H", jar.read(name), 6)[0]
                     if major > 52:
                         raise ValueError(f"Java 8 cannot load {name} (class version {major})")
+        if target.name == "forge-1.12.2":
+            screen = jar.read("mrnerdy42/keywizard/gui/GuiKeyWizard.class")
+            if b"func_73866_w_" not in screen:
+                raise ValueError("Forge 1.12.2 JAR is missing the SRG-mapped initGui method")
 
     with ZipFile(sources) as jar:
         for component in CORE_COMPONENTS:
