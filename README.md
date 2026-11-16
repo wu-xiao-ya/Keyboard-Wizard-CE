@@ -1,64 +1,28 @@
-# Keyboard Wizard CE
+# Keyboard Wizard CE · 共享核心
 
-Keyboard Wizard CE is a community-maintained distribution of Modern KeyWizard / Keyboard Wizard for multiple Minecraft loader targets.
+这个分支在同一份源码中维护共享核心和各 Minecraft 目标。改动核心后，GitHub Actions 从同一个提交构建所有已接入目标。
 
-The `main` branch is the repository landing page and documentation branch. Version-specific source code is maintained on separate branches.
+| 目标 | 导入基线 | 构建 JDK | 迁移阶段 |
+| --- | --- | --- | --- |
+| Forge 1.20.1 | `e9fd013` | 17 | 首批 |
+| Fabric 1.21.1 | `64811ec` | 21 | 首批 |
+| NeoForge 26.3 | `70124d7:neoforge-26.3` | 25 | 首批 |
+| Forge 1.18.2 | `c71c4a0` | 17 | 第二批第 1 个 |
+| Forge 1.16.5 | `8df2b23` | 17（产物兼容 Java 8） | 第二批第 2 个 |
+| Forge 1.12.2 / Cleanroom | `9b1ff94` | 8 | 第二批第 3 个 |
 
-## Supported Targets
+## 架构
 
-| Target | Source branch | Java | Latest branch build | Baseline release |
-| --- | --- | --- | --- | --- |
-| Minecraft 1.12.2 + Forge / Cleanroom | `ce/forge-1.12.2` | 8 | [Actions run 27872807776](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27872807776) | - |
-| Minecraft 1.16.5 + Forge | `ce/forge-1.16.5` | 8 | [Actions run 27818845763](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27818845763) | - |
-| Minecraft 1.18.2 + Forge | `ce/forge-1.18.2` | 17 | [Actions run 27818850228](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27818850228) | - |
-| Minecraft 1.20.1 + Fabric | `ce/fabric-1.20.1` | 17 | [Actions run 28750100076](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100076) | - |
-| Minecraft 1.20.2 + Fabric | `ce/fabric-1.20.2` | 17 | [Actions run 28859633895](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859633895) | - |
-| Minecraft 1.20.3 + Fabric | `ce/fabric-1.20.3` | 17 | [Actions run 28859635803](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859635803) | - |
-| Minecraft 1.20.4 + Fabric | `ce/fabric-1.20.4` | 17 | [Actions run 28859638110](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859638110) | - |
-| Minecraft 1.20.5 + Fabric | `ce/fabric-1.20.5` | 21 | [Actions run 28859641369](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859641369) | - |
-| Minecraft 1.20.6 + Fabric | `ce/fabric-1.20.6` | 21 | [Actions run 28859644815](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859644815) | - |
-| Minecraft 1.21 + Fabric | `ce/fabric-1.21` | 21 | [Actions run 28859647798](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859647798) | - |
-| Minecraft 1.21.1 + Fabric | `ce/fabric-1.21.1` | 21 | [Actions run 28750100053](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100053) | - |
-| Minecraft 1.21.2 + Fabric | `ce/fabric-1.21.2` | 21 | [Actions run 28859650059](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859650059) | - |
-| Minecraft 1.21.3 + Fabric | `ce/fabric-1.21.3` | 21 | [Actions run 28859652487](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859652487) | - |
-| Minecraft 1.21.4 + Fabric | `ce/fabric-1.21.4` | 21 | [Actions run 28859654552](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859654552) | - |
-| Minecraft 1.21.5 + Fabric | `ce/fabric-1.21.5` | 21 | [Actions run 28859656790](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859656790) | - |
-| Minecraft 1.21.6 + Fabric | `ce/fabric-1.21.6` | 21 | [Actions run 28859658889](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859658889) | - |
-| Minecraft 1.21.7 + Fabric | `ce/fabric-1.21.7` | 21 | [Actions run 28859661079](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859661079) | - |
-| Minecraft 1.21.8 + Fabric | `ce/fabric-1.21.8` | 21 | [Actions run 28859663370](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859663370) | - |
-| Minecraft 1.21.9 + Fabric | `ce/fabric-1.21.9` | 21 | [Actions run 28859665359](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859665359) | - |
-| Minecraft 1.21.10 + Fabric | `ce/fabric-1.21.10` | 21 | [Actions run 28859667415](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859667415) | - |
-| Minecraft 1.21.11 + Fabric | `ce/fabric-1.21.11` | 21 | [Actions run 28859669528](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859669528) | - |
-| Minecraft 26.1 + Fabric | `ce/fabric-26.1` | 25 | [Actions run 28859672310](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859672310) | - |
-| Minecraft 26.1.1 + Fabric | `ce/fabric-26.1.1` | 25 | [Actions run 28859674268](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28859674268) | - |
-| Minecraft 26.1.2 + Fabric | `ce/fabric-26.1.2` | 25 | [Actions run 28750100052](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100052) | - |
-| Minecraft 26.2 + Fabric | `ce/fabric-26.2` | 25 | [Actions run 28750100226](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100226) | - |
-| Minecraft 26.3 snapshot 2 + Fabric | `ce/refactor/internal-api-fabric-26.3` | 25 | [Actions run 28750100264](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/28750100264) | snapshot-only |
-| Minecraft 1.20.1 + Forge | `ce/forge-1.20.1` | 17 | [Actions run 27646830595](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646830595) | [`forge-1.20.1-v1.0.1`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/forge-1.20.1-v1.0.1) |
-| Minecraft 1.21.1 + NeoForge | `ce/neoforge-1.21.1` | 21 | [Actions run 27646836029](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646836029) | [`neoforge-1.21.1-v1.0.1`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-1.21.1-v1.0.1) |
-| Minecraft 26.1.2 + NeoForge | `ce/neoforge-26.1.2` | 25 | [Actions run 27646857844](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27646857844) | [`neoforge-26.1.2-v1.0.1`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.1.2-v1.0.1) |
-| Minecraft 26.2 + NeoForge | `ce/neoforge-26.2` | 25 | [Actions run 27647213392](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/actions/runs/27647213392) | [`neoforge-26.2-v1.0.0`](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/neoforge-26.2-v1.0.0) |
+- `shared-core/` 维护 Java 8 兼容的搜索、分类、键盘布局和绑定接口。
+- `targets/glfw-keys/` 把布局使用的物理键标识转换成现代游戏使用的键符号。
+- `targets/<loader>-<version>/` 管理加载器入口、界面、游戏绑定和资源。各目标的 Gradle 构建读取同一份核心源码，并把它打进各自的模组 JAR。
 
-Old Fabric 1.16.5 and 1.18.2 branches were never released and are no longer maintained. Fabric support covers stable Minecraft 1.20.1 through 1.21.11, the 26.1/26.1.1/26.1.2/26.2 stable line, and the 26.3 snapshot test line. Historical snapshot, pre-release, and release-candidate versions are not maintained.
+## 验证
 
-## Current Features
+GitHub Actions 在分支推送时测试核心、独立构建已接入的目标，并上传各目标的 JAR、匹配源码和 SHA-256。需要单独验证核心时，在 `shared-core/` 使用 JDK 17 运行 `./gradlew test`。
 
-- Mod id: `keyboard_wizard_ce`.
-- Current CE version line: `1.0.x`.
-- F7 opens Keyboard Wizard CE in game.
-- Main keyboard, numpad, and auxiliary key layouts.
-- Filtering by mod/category, key binding name search, and reverse lookup by physical key.
-- Left-side key binding rows show binding name, assigned key, and owning mod/category.
-- Controls screen toggle button for switching between vanilla Controls and Keyboard Wizard CE.
-- CE background texture and bundled texture button icons.
+对同一提交输出的 JAR 逐个验证 F7、原版控制设置入口、三套键盘布局、文字搜索、按键反查和主键盘 Enter 与小键盘 Enter 的区分。验证改键、清除、还原、重启后保留设置，以及适用目标的 Hide Key Binding 兼容。Forge 1.16.5 使用 Java 8 启动，1.12.2 分别用 Forge 和 Cleanroom 验证。
 
-## License And Credits
+## 授权与致谢
 
-This community edition follows the upstream Modern KeyWizard AGPL-3.0-only obligations. If you publish a binary jar, provide the matching source code for that exact build.
-
-See [LICENSE.md](LICENSE.md), [COPYING.md](COPYING.md), and [NOTICE.md](NOTICE.md).
-
-- Modern KeyWizard upstream: https://github.com/VulpesStella/ModernKeyWizard
-- Keyboard Wizard upstream: https://github.com/Fuzss/keyboardwizard
-- Legacy reference: https://github.com/MrNerdy42/keywizard-legacy
-- Art assets: WI_8614_ice
+项目采用 AGPL-3.0-only。发布二进制 JAR 时应提供对应源码。具体授权和致谢见根目录及对应目标下的 LICENSE、COPYING 和 NOTICE。
