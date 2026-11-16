@@ -164,7 +164,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
                 case GLFW.GLFW_KEY_RIGHT_SUPER -> "right_meta";
                 default -> null;
             };
-            return compactLabel == null ? label : Component.translatable("gui.keyboard_wizard_ce.keycap." + compactLabel);
+            return compactLabel == null ? null : Component.translatable("gui.keyboard_wizard_ce.keycap." + compactLabel);
         }
 
         @Override
