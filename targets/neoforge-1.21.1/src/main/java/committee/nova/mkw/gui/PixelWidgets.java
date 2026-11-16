@@ -16,6 +16,7 @@ import java.util.List;
 
 final class PixelWidgets {
     private static final Component ELLIPSIS = Component.literal("…");
+    private static final float MIN_KEYCAP_LABEL_SCALE = 2f / 3f;
 
     private PixelWidgets() {
     }
@@ -35,17 +36,49 @@ final class PixelWidgets {
 
     static void drawButton(GuiGraphics graphics, Component label, int x, int y, int width, int height,
                            KeyState state, boolean highlighted, boolean selected) {
+        drawButton(graphics, label, x, y, width, height, state, highlighted, selected, 1f);
+    }
+
+    static void drawKeyboardKey(GuiGraphics graphics, Component label, int x, int y, int width, int height,
+                                KeyState state, boolean highlighted, boolean selected, boolean functionKey) {
+        drawButton(graphics, label, x, y, width, height, state, highlighted, selected,
+                functionKey ? 0f : MIN_KEYCAP_LABEL_SCALE);
+    }
+
+    private static void drawButton(GuiGraphics graphics, Component label, int x, int y, int width, int height,
+                                   KeyState state, boolean highlighted, boolean selected, float minLabelScale) {
         PixelKeyboardStyle.drawKeycap(graphics::fill, x, y, width, height, state, highlighted);
         Font font = Minecraft.getInstance().font;
         if (height < font.lineHeight + 3 || width < 5) return;
 
-        FormattedCharSequence text = fit(font, label, labelWidth(width));
+        int availableWidth = labelWidth(width);
+        FormattedCharSequence text = label.getVisualOrderText();
         int textWidth = font.width(text);
+        if (textWidth > availableWidth) {
+            float scale = (float) availableWidth / textWidth;
+            if (scale >= minLabelScale) {
+                float textX = x + (width - textWidth * scale) / 2f;
+                float textY = y + (height - font.lineHeight * scale - 2) / 2f;
+                graphics.pose().pushPose();
+                graphics.pose().translate(textX, textY, 0);
+                graphics.pose().scale(scale, scale, 1f);
+                drawLabel(graphics, font, text, 0, 0, textWidth, state.ink, selected);
+                graphics.pose().popPose();
+                return;
+            }
+            text = fit(font, label, availableWidth);
+            textWidth = font.width(text);
+        }
         int textX = x + (width - textWidth) / 2;
         int textY = y + (height - font.lineHeight - 2) / 2;
-        graphics.drawString(font, text, textX, textY, state.ink, false);
+        drawLabel(graphics, font, text, textX, textY, textWidth, state.ink, selected);
+    }
+
+    private static void drawLabel(GuiGraphics graphics, Font font, FormattedCharSequence text,
+                                  int textX, int textY, int textWidth, int ink, boolean selected) {
+        graphics.drawString(font, text, textX, textY, ink, false);
         if (selected && textWidth > 0) {
-            graphics.fill(textX, textY + font.lineHeight, textX + textWidth, textY + font.lineHeight + 1, state.ink);
+            graphics.fill(textX, textY + font.lineHeight, textX + textWidth, textY + font.lineHeight + 1, ink);
         }
     }
 

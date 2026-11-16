@@ -99,11 +99,17 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
     public class KeyboardKeyWidget extends AbstractButton implements TickableElement {
         private final InputConstants.Key key;
+        private final Component functionKeyLabel;
+        private final Component compactModifierLabel;
         private List<Component> bindingNames = List.of();
 
         protected KeyboardKeyWidget(int keyCode, float x, float y, float width, float height, InputConstants.Type keyType) {
             super((int) x, (int) y, (int) width, (int) height, Component.empty());
             this.key = keyType.getOrCreate(keyCode);
+            this.functionKeyLabel = keyType == InputConstants.Type.KEYSYM && keyCode >= GLFW.GLFW_KEY_F1
+                    && keyCode <= GLFW.GLFW_KEY_F25
+                    ? Component.literal("F" + (keyCode - GLFW.GLFW_KEY_F1 + 1)) : null;
+            this.compactModifierLabel = keyType == InputConstants.Type.KEYSYM ? compactModifierLabel(keyCode) : null;
             this.tick();
         }
 
@@ -135,17 +141,19 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             KeyMapping selected = keyWizardScreen.getSelectedKeyMapping();
             boolean selectedKey = selected != null && this.key.equals(KeyBindingUtil.getKey(selected));
             boolean highlighted = this.active && this.isHoveredOrFocused() && !keyWizardScreen.getCategorySelectorExtended();
-            PixelWidgets.drawButton(graphics, this.keycapLabel(Minecraft.getInstance().font),
+            PixelWidgets.drawKeyboardKey(graphics, this.keycapLabel(Minecraft.getInstance().font),
                     this.getX(), this.getY(), this.getWidth(),
-                    this.getHeight(), this.getState(), highlighted, selectedKey);
+                    this.getHeight(), this.getState(), highlighted, selectedKey, this.functionKeyLabel != null);
         }
 
         private Component keycapLabel(Font font) {
             Component label = this.getMessage();
-            if (font.width(label) <= PixelWidgets.labelWidth(this.getWidth())) {
-                return label;
-            }
-            String compactLabel = switch (this.key.getValue()) {
+            Component compactLabel = this.functionKeyLabel != null ? this.functionKeyLabel : this.compactModifierLabel;
+            return compactLabel != null && font.width(label) > PixelWidgets.labelWidth(this.getWidth()) ? compactLabel : label;
+        }
+
+        private static Component compactModifierLabel(int keyCode) {
+            String compactLabel = switch (keyCode) {
                 case GLFW.GLFW_KEY_LEFT_SHIFT -> "left_shift";
                 case GLFW.GLFW_KEY_RIGHT_SHIFT -> "right_shift";
                 case GLFW.GLFW_KEY_LEFT_CONTROL -> "left_control";
