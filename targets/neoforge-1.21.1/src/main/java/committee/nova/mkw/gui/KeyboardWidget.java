@@ -5,6 +5,7 @@ import committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Renderable;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.settings.KeyModifier;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -133,8 +135,28 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             KeyMapping selected = keyWizardScreen.getSelectedKeyMapping();
             boolean selectedKey = selected != null && this.key.equals(KeyBindingUtil.getKey(selected));
             boolean highlighted = this.active && this.isHoveredOrFocused() && !keyWizardScreen.getCategorySelectorExtended();
-            PixelWidgets.drawButton(graphics, this.getMessage(), this.getX(), this.getY(), this.getWidth(),
+            PixelWidgets.drawButton(graphics, this.keycapLabel(Minecraft.getInstance().font),
+                    this.getX(), this.getY(), this.getWidth(),
                     this.getHeight(), this.getState(), highlighted, selectedKey);
+        }
+
+        private Component keycapLabel(Font font) {
+            Component label = this.getMessage();
+            if (font.width(label) <= PixelWidgets.labelWidth(this.getWidth())) {
+                return label;
+            }
+            String compactLabel = switch (this.key.getValue()) {
+                case GLFW.GLFW_KEY_LEFT_SHIFT -> "left_shift";
+                case GLFW.GLFW_KEY_RIGHT_SHIFT -> "right_shift";
+                case GLFW.GLFW_KEY_LEFT_CONTROL -> "left_control";
+                case GLFW.GLFW_KEY_RIGHT_CONTROL -> "right_control";
+                case GLFW.GLFW_KEY_LEFT_ALT -> "left_alt";
+                case GLFW.GLFW_KEY_RIGHT_ALT -> "right_alt";
+                case GLFW.GLFW_KEY_LEFT_SUPER -> "left_meta";
+                case GLFW.GLFW_KEY_RIGHT_SUPER -> "right_meta";
+                default -> null;
+            };
+            return compactLabel == null ? label : Component.translatable("gui.keyboard_wizard_ce.keycap." + compactLabel);
         }
 
         @Override

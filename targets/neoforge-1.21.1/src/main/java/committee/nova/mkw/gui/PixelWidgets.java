@@ -30,7 +30,7 @@ final class PixelWidgets {
     }
 
     static int labelWidth(int width) {
-        return Math.max(0, width - (width >= 16 ? 8 : 4));
+        return Math.max(0, width - 4);
     }
 
     static void drawButton(GuiGraphics graphics, Component label, int x, int y, int width, int height,
