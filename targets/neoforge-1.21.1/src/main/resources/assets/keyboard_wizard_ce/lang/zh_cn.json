@@ -1,6 +1,7 @@
 {
   "gui.clear": "清除",
   "gui.confirm.resetAll": "确认重置全部按键绑定？",
+  "gui.keyboard_wizard_ce.open": "按键精灵社区版",
   "gui.keyboard_wizard_ce.layout": "布局：%s",
   "gui.keyboard_wizard_ce.layout.auxiliary": "辅助键",
   "gui.keyboard_wizard_ce.layout.main": "主键盘",

@@ -64,6 +64,11 @@ public class KeyWizardScreen extends OptionsSubScreen {
         super(parent, Minecraft.getInstance().options, Component.translatable("screen.keyboard_wizard_ce.title"));
     }
 
+    public static Button createControlsEntryButton(ControlsScreen controlsScreen) {
+        return PixelWidgets.controlsEntryButton(controlsScreen, Component.translatable("gui.keyboard_wizard_ce.open"),
+                button -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen)));
+    }
+
     @Override
     protected void init() {
         int mouseButtonX = this.width - 114;

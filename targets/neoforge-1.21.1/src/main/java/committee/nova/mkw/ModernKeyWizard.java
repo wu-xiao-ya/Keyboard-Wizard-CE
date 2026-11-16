@@ -53,11 +53,7 @@ public class ModernKeyWizard {
         @SubscribeEvent
         public static void onScreenInit(ScreenEvent.Init.Post event) {
             if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
-            event.addListener(KeyWizardScreen.createScreenToggleButton(
-                    controlsScreen.width - 22,
-                    controlsScreen.height - 22,
-                    btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))
-            ));
+            event.addListener(KeyWizardScreen.createControlsEntryButton(controlsScreen));
         }
     }
 }
