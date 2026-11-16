@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyWizard;
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.util.KeyBindingUtil;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -105,7 +106,14 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.numpadLayoutButton = createLayoutButton(KeyboardLayout.NUMPAD, layoutButtonX + layoutButtonWidth + layoutButtonGap, categorySelectorY);
         this.auxiliaryLayoutButton = createLayoutButton(KeyboardLayout.AUXILIARY, layoutButtonX + (layoutButtonWidth + layoutButtonGap) * 2, categorySelectorY);
         updateLayoutButtons();
-        this.screenToggleButton = new ImageButton(this.width - 22, this.height - 22, 20, 20, 20, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, (btn) -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options)));
+        this.screenToggleButton = new ImageButton(
+                this.width - 22, this.height - 22,
+                ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT,
+                ScreenToggleSprite.U, ScreenToggleSprite.V, ScreenToggleSprite.HOVER_V_OFFSET,
+                ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
+                ScreenToggleSprite.TEXTURE_WIDTH, ScreenToggleSprite.TEXTURE_HEIGHT,
+                (btn) -> this.minecraft.setScreen(new ControlsScreen(this.lastScreen, this.options))
+        );
         this.helpButton = new Button(this.width - 47, this.height - 22, 20, 20, new TextComponent("?"), b -> {});
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, TextComponent.EMPTY);
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);

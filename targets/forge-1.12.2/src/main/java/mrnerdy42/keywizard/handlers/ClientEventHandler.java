@@ -54,7 +54,7 @@ public class ClientEventHandler {
 
         int x = controlsButton == null ? event.getGui().width / 2 + 160 : controlsButton.x + controlsButton.width + 4;
         int y = controlsButton == null ? event.getGui().height / 6 + 72 : controlsButton.y;
-        event.getButtonList().add(new TexturedToggleButton(OPEN_KEY_WIZARD_BUTTON_ID, x, y, 0));
+        event.getButtonList().add(new TexturedToggleButton(OPEN_KEY_WIZARD_BUTTON_ID, x, y));
     }
 
     @SubscribeEvent

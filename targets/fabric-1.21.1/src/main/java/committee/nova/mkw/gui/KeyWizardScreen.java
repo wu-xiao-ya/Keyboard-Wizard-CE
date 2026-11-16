@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyWizard;
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.core.layout.KeyboardScreenLayout;
 import committee.nova.mkw.core.layout.KeyboardScreenLayout.Rect;
 import committee.nova.mkw.core.layout.KeyboardScreenLayoutCalculator;
@@ -296,13 +297,19 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
     private static class TextureButton extends ButtonWidget {
         protected TextureButton(int x, int y, PressAction onPress) {
-            super(x, y, 20, 20, net.minecraft.text.Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT, net.minecraft.text.Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
         }
 
         @Override
         public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
-            int textureY = this.isMouseOver(mouseX, mouseY) ? 20 : 0;
-            ctx.drawTexture(ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0, textureY, 20, 20, 40, 40);
+            int textureY = ScreenToggleSprite.textureV(this.isMouseOver(mouseX, mouseY));
+            ctx.drawTexture(
+                    ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
+                    this.getX(), this.getY(),
+                    ScreenToggleSprite.U, textureY,
+                    ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT,
+                    ScreenToggleSprite.TEXTURE_WIDTH, ScreenToggleSprite.TEXTURE_HEIGHT
+            );
         }
     }
 }

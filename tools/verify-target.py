@@ -1,7 +1,6 @@
 import hashlib
 from pathlib import Path
 import struct
-import struct
 import sys
 import zlib
 from zipfile import ZipFile
@@ -13,6 +12,7 @@ CORE_COMPONENTS = (
     "binding/DynamicBindingCategories",
     "layout/KeyboardLayoutGeometry",
     "layout/PhysicalKey",
+    "gui/ScreenToggleSprite",
 )
 CORE_PREFIX = "committee/nova/mkw/core/"
 METADATA_FILES = {
@@ -20,7 +20,12 @@ METADATA_FILES = {
     "forge": "META-INF/mods.toml",
     "neoforge": "META-INF/neoforge.mods.toml",
 }
-TEXTURE_PATH = "assets/keyboard_wizard_ce/textures/gui/"
+SHARED_RESOURCE_DIR = Path(__file__).resolve().parents[1] / "shared-core/src/main/resources"
+SHARED_RESOURCES = (
+    "assets/keyboard_wizard_ce/textures/gui/key_wizard_background.png",
+    "assets/keyboard_wizard_ce/textures/gui/screen_toggle_widgets.png",
+    "keyboard_wizard_ce_icon.png",
+)
 
 
 def verify_png(png, name):
@@ -42,6 +47,18 @@ def verify_png(png, name):
     raise ValueError(f"Incomplete PNG resource: {name}")
 
 
+def verify_shared_resources(jar):
+    entries = jar.namelist()
+    for resource in SHARED_RESOURCES:
+        name = f"{jar.filename}: {resource}"
+        if entries.count(resource) != 1:
+            raise ValueError(f"Expected exactly one copy of {name}")
+        png = jar.read(resource)
+        verify_png(png, name)
+        if png != (SHARED_RESOURCE_DIR / resource).read_bytes():
+            raise ValueError(f"Shared resource bytes differ in {name}")
+
+
 def verify(target):
     properties = dict(
         line.split("=", 1)
@@ -61,8 +78,7 @@ def verify(target):
         descriptor = jar.read(metadata).decode("utf-8")
         if "keyboard_wizard_ce" not in descriptor or version not in descriptor:
             raise ValueError(f"Mod id or Minecraft version missing from {metadata}")
-        for texture in ("key_wizard_background.png", "screen_toggle_widgets.png"):
-            verify_png(jar.read(TEXTURE_PATH + texture), texture)
+        verify_shared_resources(jar)
         if target.name in {"forge-1.12.2", "forge-1.16.5"}:
             for name in jar.namelist():
                 if name.endswith(".class"):
@@ -77,6 +93,7 @@ def verify(target):
     with ZipFile(sources) as jar:
         for component in CORE_COMPONENTS:
             jar.getinfo(CORE_PREFIX + component + ".java")
+        verify_shared_resources(jar)
 
     checksums = target / "build/release/SHA256SUMS.txt"
     recorded = {

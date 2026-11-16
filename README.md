@@ -14,6 +14,7 @@
 ## 架构
 
 - `shared-core/` 维护 Java 8 兼容的搜索、分类、键盘布局和绑定接口。
+- `shared-core/src/main/resources/` 维护界面切换图标、背景和模组标志。所有目标从这里打包，修改画面素材时只需更新这一处。
 - `targets/glfw-keys/` 把布局使用的物理键标识转换成现代游戏使用的键符号。
 - `targets/<loader>-<version>/` 管理加载器入口、界面、游戏绑定和资源。各目标的 Gradle 构建读取同一份核心源码，并把它打进各自的模组 JAR。
 

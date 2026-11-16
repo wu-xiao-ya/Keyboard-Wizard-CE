@@ -17,6 +17,7 @@
     "sources": "https://github.com/wu-xiao-ya/Keyboard-Wizard-CE"
   },
   "license": "AGPL-3.0-only",
+  "icon": "keyboard_wizard_ce_icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [

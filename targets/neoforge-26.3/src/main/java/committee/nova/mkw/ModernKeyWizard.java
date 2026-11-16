@@ -1,5 +1,6 @@
 package committee.nova.mkw;
 
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.gui.KeyWizardScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -19,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 public class ModernKeyWizard {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, ScreenToggleSprite.TEXTURE_PATH);
 
     private static KeyMapping keyOpenKeyWizard;
     private static final KeyMapping.Category MKW_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MODID, "bindings"));

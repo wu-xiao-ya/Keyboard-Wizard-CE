@@ -42,7 +42,10 @@ repositories {
     mavenCentral()
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+    srcDir rootProject.file('../../shared-core/src/main/resources')
+}
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"

@@ -19,6 +19,10 @@ sourceSets.main.java {
     srcDir rootProject.file('../glfw-keys/src/main/java')
 }
 
+sourceSets.main.resources {
+    srcDir rootProject.file('../../shared-core/src/main/resources')
+}
+
 minecraft {
     mappings channel: 'official', version: project.minecraft_version
 

@@ -1,5 +1,6 @@
 package committee.nova.mkw;
 
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.gui.KeyWizardScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -22,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = new ResourceLocation(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = new ResourceLocation(MODID, ScreenToggleSprite.TEXTURE_PATH);
 
     private static KeyMapping keyOpenKeyWizard;
 
@@ -53,7 +54,14 @@ public class ModernKeyWizard {
         @SubscribeEvent
         public static void onScreenInit(ScreenEvent.InitScreenEvent.Post event) {
             if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
-            ImageButton screenToggleButton = new ImageButton(controlsScreen.width - 22, controlsScreen.height - 22, 20, 20, 0, 0, 20, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, 40, 40, btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen)));
+            ImageButton screenToggleButton = new ImageButton(
+                    controlsScreen.width - 22, controlsScreen.height - 22,
+                    ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT,
+                    ScreenToggleSprite.U, ScreenToggleSprite.V, ScreenToggleSprite.HOVER_V_OFFSET,
+                    SCREEN_TOGGLE_WIDGETS,
+                    ScreenToggleSprite.TEXTURE_WIDTH, ScreenToggleSprite.TEXTURE_HEIGHT,
+                    btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))
+            );
             event.addListener(screenToggleButton);
         }
     }

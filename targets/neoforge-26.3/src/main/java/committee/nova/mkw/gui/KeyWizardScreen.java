@@ -2,6 +2,7 @@ package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import committee.nova.mkw.ModernKeyWizard;
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -225,13 +226,19 @@ public class KeyWizardScreen extends OptionsSubScreen {
 
     private static class TextureButton extends Button {
         private TextureButton(int x, int y, Button.OnPress onPress) {
-            super(x, y, 20, 20, Component.empty(), onPress, DEFAULT_NARRATION);
+            super(x, y, ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT, Component.empty(), onPress, DEFAULT_NARRATION);
         }
 
         @Override
         protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-            int textureY = this.isHoveredOrFocused() ? 20 : 0;
-            graphics.blit(RenderPipelines.GUI_TEXTURED, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS, this.getX(), this.getY(), 0.0F, textureY, 20, 20, 40, 40);
+            int textureY = ScreenToggleSprite.textureV(this.isHoveredOrFocused());
+            graphics.blit(
+                    RenderPipelines.GUI_TEXTURED, ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
+                    this.getX(), this.getY(),
+                    (float) ScreenToggleSprite.U, textureY,
+                    ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT,
+                    ScreenToggleSprite.TEXTURE_WIDTH, ScreenToggleSprite.TEXTURE_HEIGHT
+            );
         }
     }
 }

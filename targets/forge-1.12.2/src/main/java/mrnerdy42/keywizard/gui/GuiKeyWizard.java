@@ -124,7 +124,7 @@ public class GuiKeyWizard extends GuiScreen {
 		this.buttonResetAll = new GuiButton(0, this.guiStartX + 152, this.height - 23, 75, 20, I18n.format("gui.resetAll"));
 
 		this.buttonHelp = new GuiButton(2, this.width - 47, this.height - 22, 20, 20, "?");
-		this.buttonToggle = new TexturedToggleButton(3, this.width - 22, this.height - 22, 20);
+		this.buttonToggle = new TexturedToggleButton(3, this.width - 22, this.height - 22);
 
 		this.buttonActiveModifier = new GuiButton(1, this.guiStartX, this.height - 47, 150, 20,
 				I18n.format("gui.activeModifier")+ ": " + activeModifier.toString());

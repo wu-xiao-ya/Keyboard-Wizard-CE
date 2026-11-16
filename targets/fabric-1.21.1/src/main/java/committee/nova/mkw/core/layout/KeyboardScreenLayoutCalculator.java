@@ -1,5 +1,6 @@
 package committee.nova.mkw.core.layout;
 
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.core.layout.KeyboardScreenLayout.Rect;
 
 public final class KeyboardScreenLayoutCalculator {
@@ -101,7 +102,7 @@ public final class KeyboardScreenLayoutCalculator {
         Rect clear = new Rect(reset.right() + 1, bottomY, 50, CONTROL_HEIGHT);
         Rect resetAll = new Rect(clear.right() + 1, bottomY, 70, CONTROL_HEIGHT);
         Rect help = new Rect(screenWidth - 47, screenHeight - 22, 20, 20);
-        Rect screenToggle = new Rect(screenWidth - 22, screenHeight - 22, 20, 20);
+        Rect screenToggle = new Rect(screenWidth - 22, screenHeight - 22, ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT);
 
         return new KeyboardScreenLayout(
                 bindingList,

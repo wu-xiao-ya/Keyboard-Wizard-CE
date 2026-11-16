@@ -1,5 +1,6 @@
 package committee.nova.mkw;
 
+import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.gui.KeyWizardScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -14,7 +15,7 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard implements ClientModInitializer {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.of(MODID, "textures/gui/screen_toggle_widgets.png");
+    public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.of(MODID, ScreenToggleSprite.TEXTURE_PATH);
 
     private static KeyBinding keyOpenKeyWizard;
 
