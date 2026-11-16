@@ -1,5 +1,7 @@
 package committee.nova.mkw.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -94,7 +96,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-            if (event.button() == 0) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 FreeFormListWidget.this.setSelected(this);
                 return true;
             }

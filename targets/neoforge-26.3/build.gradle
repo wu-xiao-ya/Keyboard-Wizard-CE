@@ -145,5 +145,4 @@ publishing {
 
 sourceSets.main.java {
     srcDir rootProject.file('../../shared-core/src/main/java')
-    srcDir rootProject.file('../glfw-keys/src/main/java')
 }

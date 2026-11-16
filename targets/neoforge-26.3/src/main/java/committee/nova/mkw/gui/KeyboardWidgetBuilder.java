@@ -2,7 +2,7 @@ package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
-import committee.nova.mkw.bridge.input.GlfwKeys;
+import committee.nova.mkw.bridge.input.SdlKeys;
 import committee.nova.mkw.core.layout.KeyPlacement;
 import committee.nova.mkw.core.layout.KeyboardLayoutGeometry;
 
@@ -40,7 +40,7 @@ public class KeyboardWidgetBuilder {
     private static KeyboardWidget keyboardFromGeometry(KeyWizardScreen keyWizardScreen, float anchorX, float anchorY, List<KeyPlacement> geometry) {
         KeyboardWidget kb = new KeyboardWidget(keyWizardScreen, anchorX, anchorY);
         for (KeyPlacement placement : geometry) {
-            kb.addKey(placement.x(), placement.y(), placement.width(), placement.height(), 0.0F, GlfwKeys.code(placement.key()), InputConstants.Type.KEYSYM);
+            kb.addKey(placement.x(), placement.y(), placement.width(), placement.height(), 0.0F, SdlKeys.code(placement.key()), InputConstants.Type.KEYBOARD);
         }
         return kb;
     }

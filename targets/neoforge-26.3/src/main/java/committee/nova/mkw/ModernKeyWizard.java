@@ -33,7 +33,7 @@ public class ModernKeyWizard {
         keyOpenKeyWizard = new KeyMapping(
                 "key." + MODID + ".openKeyWizard",
                 InputConstants.Type.KEYBOARD,
-                296,
+                InputConstants.KEY_F7,
                 MKW_CATEGORY
         );
         event.register(keyOpenKeyWizard);

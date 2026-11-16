@@ -23,7 +23,16 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(ModernKeyWizard.MODID, "textures/gui/key_wizard_background.png");
     private static final int KEYBOARD_HEIGHT = 180;
 
-    private final int[] mouseCodes = {0, 1, 2, 3, 4, 5, 6, 7};
+    private static final int[] MOUSE_CODES = {
+            InputConstants.MOUSE_BUTTON_LEFT,
+            InputConstants.MOUSE_BUTTON_RIGHT,
+            InputConstants.MOUSE_BUTTON_MIDDLE,
+            InputConstants.MOUSE_BUTTON_4,
+            InputConstants.MOUSE_BUTTON_5,
+            InputConstants.MOUSE_BUTTON_6,
+            InputConstants.MOUSE_BUTTON_7,
+            InputConstants.MOUSE_BUTTON_8
+    };
     private int mouseCodeIndex = 0;
 
     private KeyboardWidget keyboard;
@@ -88,21 +97,21 @@ public class KeyWizardScreen extends OptionsSubScreen {
                 btn -> this.minecraft.setScreenAndShow(new ControlsScreen(this.lastScreen, this.options))
         );
         this.searchBar = new EditBox(this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
-        this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+        this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, MOUSE_CODES[mouseCodeIndex], InputConstants.Type.MOUSE);
 
         Button mousePlus = Button.builder(Component.literal("+"), b -> {
             this.mouseCodeIndex++;
-            if (this.mouseCodeIndex >= this.mouseCodes.length) this.mouseCodeIndex = 0;
+            if (this.mouseCodeIndex >= this.MOUSE_CODES.length) this.mouseCodeIndex = 0;
             this.removeWidget(this.mouseButton);
-            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, MOUSE_CODES[mouseCodeIndex], InputConstants.Type.MOUSE);
             this.addRenderableWidget(this.mouseButton);
         }).bounds((int) this.mouseButton.getAnchorX() + 83, (int) this.mouseButton.getAnchorY(), 25, 20).build();
 
         Button mouseMinus = Button.builder(Component.literal("-"), b -> {
             this.mouseCodeIndex--;
-            if (this.mouseCodeIndex < 0) this.mouseCodeIndex = this.mouseCodes.length - 1;
+            if (this.mouseCodeIndex < 0) this.mouseCodeIndex = this.MOUSE_CODES.length - 1;
             this.removeWidget(this.mouseButton);
-            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
+            this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, MOUSE_CODES[mouseCodeIndex], InputConstants.Type.MOUSE);
             this.addRenderableWidget(this.mouseButton);
         }).bounds((int) this.mouseButton.getAnchorX() - 26, (int) this.mouseButton.getAnchorY(), 25, 20).build();
 
