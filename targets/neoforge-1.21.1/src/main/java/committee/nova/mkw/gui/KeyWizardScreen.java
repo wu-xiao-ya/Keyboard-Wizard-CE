@@ -143,12 +143,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
             KeyBindingUtil.refreshMappings();
         });
 
-        Button clearBinding = PixelWidgets.button(keyboardX + resetWidth + 4, footerY, resetWidth, 20, Component.translatable("gui.clear"), b -> {
-            KeyMapping selectedBinding = this.getSelectedKeyMapping();
-            if (selectedBinding == null) return;
-            KeyBindingUtil.setModifierAndKey(selectedBinding, KeyModifier.NONE, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_UNKNOWN));
-            KeyBindingUtil.refreshMappings();
-        });
+        Button clearBinding = PixelWidgets.button(keyboardX + resetWidth + 4, footerY, resetWidth, 20,
+                Component.translatable("gui.clear"), b -> this.clearBinding(this.getSelectedKeyMapping()));
 
         Button resetAll = PixelWidgets.button(keyboardX + 2 * (resetWidth + 4), footerY, resetAllWidth, 20, Component.translatable("controls.resetAll"), b -> {
             final Screen current = this.minecraft.screen;
@@ -246,6 +242,23 @@ public class KeyWizardScreen extends OptionsSubScreen {
     @Nullable
     public KeyMapping getSelectedKeyMapping() {
         return this.bindingList.getSelectedKeyMapping();
+    }
+
+    void clearBinding(@Nullable KeyMapping binding) {
+        if (binding == null) return;
+        KeyBindingUtil.setModifierAndKey(binding, KeyModifier.NONE, InputConstants.UNKNOWN);
+        KeyBindingUtil.refreshMappings();
+        this.bindingList.refreshAfterClear();
+        this.keyboard.tick();
+        this.mouseButton.tick();
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && this.getCategorySelectorExtended()) {
+            return this.categorySelector.mouseClicked(mouseX, mouseY, button);
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     public boolean getCategorySelectorExtended() {

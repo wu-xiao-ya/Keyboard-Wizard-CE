@@ -161,6 +161,15 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                KeyMapping selected = keyWizardScreen.getSelectedKeyMapping();
+                if (this.isMouseOver(mouseX, mouseY) && selected != null && this.key.equals(KeyBindingUtil.getKey(selected))) {
+                    keyWizardScreen.clearBinding(selected);
+                    return true;
+                }
+                return false;
+            }
+
             if (!this.active || !this.visible || !this.isHovered()) {
                 return false;
             }

@@ -43,34 +43,28 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         return ((BindingEntry) this.getSelected()).keyMapping;
     }
 
-    private void updateList() {
-        boolean filterUpdate = !this.currentFilterText.equals(this.keyWizardScreen.getFilterText());
-        boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
-        BindingSearchQuery searchQuery = BindingSearchParser.parse(this.keyWizardScreen.getFilterText(), KeyWizardScreen.KEY_FILTER_PREFIX);
+    void refreshAfterClear() {
+        rebuildList(true);
+    }
 
-        if (categoryUpdate || filterUpdate) {
-            if (categoryUpdate) this.currentCategory = this.keyWizardScreen.getSelectedCategory();
+    private void rebuildList(boolean preserveSelection) {
+        KeyMapping selected = this.getSelectedKeyMapping();
+        double scrollAmount = this.getScrollAmount();
+        this.currentFilterText = this.keyWizardScreen.getFilterText();
+        this.currentCategory = this.keyWizardScreen.getSelectedCategory();
+        BindingSearchQuery searchQuery = BindingSearchParser.parse(this.currentFilterText, KeyWizardScreen.KEY_FILTER_PREFIX);
+        KeyMapping[] bindings = getBindingsByCategory(searchQuery.keyFilter() ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
+        bindings = filterBindings(bindings, searchQuery);
 
-            KeyMapping[] bindings = getBindingsByCategory(searchQuery.keyFilter() ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
-
-            if (filterUpdate) {
-                this.currentFilterText = this.keyWizardScreen.getFilterText();
-                searchQuery = BindingSearchParser.parse(this.currentFilterText, KeyWizardScreen.KEY_FILTER_PREFIX);
-            }
-
-            if (!this.currentFilterText.equals("")) {
-                bindings = filterBindings(bindings, searchQuery);
-            }
-
-            this.clearEntries();
-            if (bindings.length > 0) {
-                for (KeyMapping k : bindings) this.addEntry(new BindingEntry(k));
-                this.setSelected(this.children().get(0));
-            } else {
-                this.setSelected(null);
-            }
-            this.setScrollAmount(0);
+        this.clearEntries();
+        BindingEntry selectedEntry = null;
+        for (KeyMapping binding : bindings) {
+            BindingEntry entry = new BindingEntry(binding);
+            this.addEntry(entry);
+            if (binding == selected) selectedEntry = entry;
         }
+        this.setSelected(!preserveSelection && !this.children().isEmpty() ? this.children().get(0) : selectedEntry);
+        this.setScrollAmount(preserveSelection ? scrollAmount : 0);
     }
 
     private KeyMapping[] filterBindings(KeyMapping[] bindings, BindingSearchQuery searchQuery) {
@@ -130,7 +124,10 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
     @Override
     public void tick() {
-        updateList();
+        if (!this.currentFilterText.equals(this.keyWizardScreen.getFilterText())
+                || !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory())) {
+            rebuildList(false);
+        }
     }
 
     List<Component> tooltipLines() {
