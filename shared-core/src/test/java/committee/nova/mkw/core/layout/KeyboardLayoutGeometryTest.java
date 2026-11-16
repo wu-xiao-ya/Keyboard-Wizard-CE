@@ -22,6 +22,14 @@ class KeyboardLayoutGeometryTest {
         assertEquals(13, KeyboardLayoutGeometry.auxiliary(900, 180).size());
     }
 
+    @Test
+    void auxiliaryKeysFitTheAvailableWidthAndHeightAtCompactGuiScales() {
+        assertPlacementsInside(KeyboardLayoutGeometry.auxiliary(430, 180), 430, 180);
+        List<KeyPlacement> compact = KeyboardLayoutGeometry.auxiliary(210, 95);
+        assertEquals(13, compact.size());
+        assertPlacementsInside(compact, 210, 95);
+    }
+
     private static void assertPlacementsInside(List<KeyPlacement> placements, float width, float height) {
         for (KeyPlacement placement : placements) {
             assertTrue(placement.width() > 0);

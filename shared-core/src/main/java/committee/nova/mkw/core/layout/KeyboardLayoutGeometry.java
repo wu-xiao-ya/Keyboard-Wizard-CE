@@ -1,6 +1,7 @@
 package committee.nova.mkw.core.layout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static committee.nova.mkw.core.layout.PhysicalKey.*;
@@ -10,6 +11,7 @@ public final class KeyboardLayoutGeometry {
     }
 
     private static final float KEY_SPACING = 5.0F;
+    private static final float AUXILIARY_CLUSTER_GAP_UNITS = 4.0F;
 
     public static List<KeyPlacement> standard(float width, float height) {
         return standardWithKeyHeight(width, height / 6.0F - KEY_SPACING);
@@ -108,20 +110,24 @@ public final class KeyboardLayoutGeometry {
     }
 
     public static List<KeyPlacement> auxiliary(float width, float height) {
-        float keyWidth = Math.max(42.0F, Math.min((width - KEY_SPACING * 6.0F) / 6.0F, 95.0F));
-        float keyHeight = Math.max(24.0F, (height - KEY_SPACING * 3.0F) / 4.0F);
-        return auxiliaryWithKeySize(width, keyWidth, keyHeight);
+        if (width <= 0.0F || height <= 0.0F) {
+            return Collections.emptyList();
+        }
+        float horizontalGapUnits = 4.0F + AUXILIARY_CLUSTER_GAP_UNITS;
+        float spacing = Math.min(KEY_SPACING, Math.min(width / (2.0F * horizontalGapUnits), height / 6.0F));
+        float keyWidth = Math.min((width - spacing * horizontalGapUnits) / 6.0F, 95.0F);
+        float keyHeight = (height - spacing * 3.0F) / 4.0F;
+        return auxiliaryWithKeySize(width, keyWidth, keyHeight, spacing);
     }
 
     public static List<KeyPlacement> legacyAuxiliary(float width, float height) {
-        return auxiliaryWithKeySize(width, width / 7.0F - KEY_SPACING, height / 14.0F);
+        return auxiliaryWithKeySize(width, width / 7.0F - KEY_SPACING, height / 14.0F, KEY_SPACING);
     }
 
-    private static List<KeyPlacement> auxiliaryWithKeySize(float width, float keyWidth, float keyHeight) {
+    private static List<KeyPlacement> auxiliaryWithKeySize(float width, float keyWidth, float keyHeight, float keySpacing) {
         ArrayList<KeyPlacement> placements = new ArrayList<>();
-        float keySpacing = KEY_SPACING;
         float clusterWidth = keyWidth * 3.0F + keySpacing * 2.0F;
-        float clusterGap = keySpacing * 4.0F;
+        float clusterGap = keySpacing * AUXILIARY_CLUSTER_GAP_UNITS;
         float layoutWidth = clusterWidth * 2.0F + clusterGap;
         float xOffset = Math.max(0.0F, (width - layoutWidth) / 2.0F);
         float leftStart = xOffset;
