@@ -12,6 +12,7 @@ CORE_COMPONENTS = (
     "binding/DynamicBindingCategories",
     "layout/KeyboardLayoutGeometry",
     "layout/PhysicalKey",
+    "gui/PixelKeyboardStyle",
     "gui/ScreenToggleSprite",
 )
 CORE_PREFIX = "committee/nova/mkw/core/"
