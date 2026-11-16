@@ -5,7 +5,6 @@ import committee.nova.mkw.gui.KeyWizardScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,7 +20,6 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard {
     public static final String MODID = "keyboard_wizard_ce";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/screen_toggle_widgets.png");
 
     private static final KeyMapping KEY_OPEN_KEY_WIZARD = new KeyMapping(
             "key." + MODID + ".openKeyWizard",

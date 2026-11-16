@@ -58,8 +58,8 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
                 this.getHeight(), KeyState.UNASSIGNED, this.isHoveredOrFocused(), this.extended);
     }
 
-    List<Component> getTooltip() {
-        if (this.extended) return this.categoryList.getTooltip();
+    List<Component> tooltipLines() {
+        if (this.extended) return this.categoryList.tooltipLines();
         return this.isHovered() && Minecraft.getInstance().font.width(this.getMessage()) > PixelWidgets.labelWidth(this.getWidth())
                 ? List.of(this.getMessage()) : List.of();
     }
@@ -115,7 +115,7 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             }
         }
 
-        private List<Component> getTooltip() {
+        private List<Component> tooltipLines() {
             if (this.getHovered() instanceof CategoryEntry entry && this.minecraft.font.width(entry.getLabel()) > this.getRowWidth() - 3) {
                 return List.of(entry.getLabel());
             }

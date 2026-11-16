@@ -53,11 +53,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
     }
 
-    List<Component> getTooltip() {
+    List<Component> tooltipLines() {
         if (keyWizardScreen.getCategorySelectorExtended()) return List.of();
         for (KeyboardKeyWidget k : this.children()) {
             if (k.active && k.isHovered()) {
-                return k.getTooltip();
+                return k.tooltipLines();
             }
         }
         return List.of();
@@ -115,7 +115,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             return this.bindingNames.size() == 1 ? KeyState.ASSIGNED : KeyState.CONFLICT;
         }
 
-        private List<Component> getTooltip() {
+        private List<Component> tooltipLines() {
             Component status = switch (this.getState()) {
                 case UNASSIGNED -> Component.translatable("gui.keyboard_wizard_ce.state.unassigned");
                 case ASSIGNED -> Component.translatable("gui.keyboard_wizard_ce.state.assigned");

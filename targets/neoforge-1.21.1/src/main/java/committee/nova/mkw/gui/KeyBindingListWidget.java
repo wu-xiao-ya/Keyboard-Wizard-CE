@@ -133,7 +133,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         updateList();
     }
 
-    List<Component> getTooltip() {
+    List<Component> tooltipLines() {
         if (!(this.getHovered() instanceof BindingEntry entry)) return List.of();
         List<Component> labels = entry.getLabels();
         return labels.stream().anyMatch(label -> this.minecraft.font.width(label) > this.getRowWidth() - 4)

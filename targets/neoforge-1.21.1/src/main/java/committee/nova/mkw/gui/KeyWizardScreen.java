@@ -23,6 +23,7 @@ import java.util.List;
 
 public class KeyWizardScreen extends OptionsSubScreen {
     private static final int KEYBOARD_HEIGHT = 180;
+    private static final int SEARCH_MAX_LENGTH = 256;
     private static final List<Component> HELP_TOOLTIP = List.of(
             Component.translatable("gui.keyboard_wizard_ce.help.title"),
             Component.translatable("gui.keyboard_wizard_ce.help.select"),
@@ -116,6 +117,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         int resetAllWidth = Math.min(70, footerAvailable - 2 * resetWidth);
         this.helpButton = PixelWidgets.button(helpX, footerY, 20, 20, Component.literal("?"), b -> {});
         this.searchBar = PixelWidgets.searchBox(this.font, 8, footerY, bindingListWidth, Component.translatable("gui.keyboard_wizard_ce.search"));
+        this.searchBar.setMaxLength(SEARCH_MAX_LENGTH);
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseButtonX, mouseButtonY, mouseButtonWidth, mouseButtonHeight, mouseCodes[mouseCodeIndex], InputConstants.Type.MOUSE);
 
         Button mousePlus = PixelWidgets.button(mouseButtonX + 83, mouseButtonY, 25, 20, Component.literal("+"), b -> {
@@ -190,16 +192,16 @@ public class KeyWizardScreen extends OptionsSubScreen {
             }
         }
         this.categorySelector.getCategoryList().render(graphics, mouseX, mouseY, partialTick);
-        List<Component> tooltip = this.categorySelector.getTooltip();
+        List<Component> tooltip = this.categorySelector.tooltipLines();
         if (!this.getCategorySelectorExtended() && tooltip.isEmpty()) {
             if (this.helpButton.isHoveredOrFocused()) {
                 tooltip = HELP_TOOLTIP;
             } else if (!buttonTooltip.isEmpty()) {
                 tooltip = buttonTooltip;
             } else {
-                tooltip = this.mouseButton.getTooltip();
-                if (tooltip.isEmpty()) tooltip = this.keyboard.getTooltip();
-                if (tooltip.isEmpty()) tooltip = this.bindingList.getTooltip();
+                tooltip = this.mouseButton.tooltipLines();
+                if (tooltip.isEmpty()) tooltip = this.keyboard.tooltipLines();
+                if (tooltip.isEmpty()) tooltip = this.bindingList.tooltipLines();
             }
         }
         PixelWidgets.renderTooltip(graphics, this.font, tooltip, mouseX, mouseY);
@@ -259,6 +261,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public void setSearchText(String s) {
+        this.searchBar.setMaxLength(Math.max(SEARCH_MAX_LENGTH, s.length()));
         this.searchBar.setValue(s);
     }
 
