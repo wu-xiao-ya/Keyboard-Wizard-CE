@@ -168,16 +168,16 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
 
         @Override
         public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            ctx.drawTextWithShadow(client.textRenderer, Text.translatable(this.keyBinding.getTranslationKey()), x, y, 0xFFFFFFFF);
-            int color = 0xFF999999;
-            ctx.drawTextWithShadow(client.textRenderer, this.keyBinding.getBoundKeyLocalizedText(), x, y + client.textRenderer.fontHeight + 5, color);
+            ctx.drawTextWithShadow(client.textRenderer, client.textRenderer.trimToWidth(Text.translatable(this.keyBinding.getTranslationKey()).getString(), Math.max(0, entryWidth - 6)), x, y, 0xFF202020);
+            int color = 0xFF444444;
+            ctx.drawTextWithShadow(client.textRenderer, client.textRenderer.trimToWidth(this.keyBinding.getBoundKeyLocalizedText().getString(), Math.max(0, entryWidth - 6)), x, y + client.textRenderer.fontHeight + 5, color);
             String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
             int maxCategoryWidth = entryWidth - CATEGORY_RIGHT_PADDING * 2;
             if (maxCategoryWidth > 0 && !categoryLabel.isEmpty()) {
                 String clippedCategoryLabel = client.textRenderer.trimToWidth(categoryLabel, maxCategoryWidth);
                 int categoryX = x + entryWidth - CATEGORY_RIGHT_PADDING - client.textRenderer.getWidth(clippedCategoryLabel);
                 int categoryY = y + entryHeight - client.textRenderer.fontHeight - CATEGORY_BOTTOM_PADDING;
-                ctx.drawTextWithShadow(client.textRenderer, clippedCategoryLabel, categoryX, categoryY, 0xFF7F7F7F);
+                ctx.drawTextWithShadow(client.textRenderer, clippedCategoryLabel, categoryX, categoryY, 0xFF555555);
             }
         }
 

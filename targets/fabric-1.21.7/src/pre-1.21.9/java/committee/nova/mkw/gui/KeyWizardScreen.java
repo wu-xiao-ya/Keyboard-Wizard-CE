@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.ModernKeyWizard;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.core.layout.KeyboardScreenLayout;
 import committee.nova.mkw.core.layout.KeyboardScreenLayout.Rect;
@@ -129,7 +130,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
         updateLayoutButtons();
 
         this.screenToggleButton = createScreenToggleButton(layout.screenToggleButton().x(), layout.screenToggleButton().y(), button -> this.client.setScreen(new ControlsOptionsScreen(this.parent, this.gameOptions)));
-        this.helpButton = ButtonWidget.builder(Text.literal("?"), button -> {
+        this.helpButton = PixelWidgets.pixelBuilder(Text.literal("?"), button -> {
         }).dimensions(layout.helpButton().x(), layout.helpButton().y(), layout.helpButton().width(), layout.helpButton().height()).build();
         this.searchBar = new TextFieldWidget(
                 this.textRenderer,
@@ -139,19 +140,21 @@ public class KeyWizardScreen extends GameOptionsScreen {
                 layout.searchBar().height(),
                 Text.empty()
         );
+        this.searchBar.setDrawsBackground(false);
+        this.searchBar.setEditableColor(PixelKeyboardStyle.INK);
         this.searchBar.setChangedListener(this::setSearchText);
 
         this.mouseButton = KeyboardWidgetBuilder.singleKeyKeyboard(this, mouseBounds.x(), mouseBounds.y(), mouseBounds.width(), mouseBounds.height(), MOUSE_CODES[this.mouseCodeIndex], InputUtil.Type.MOUSE);
-        this.mousePlus = ButtonWidget.builder(Text.literal("+"), button -> {
+        this.mousePlus = PixelWidgets.pixelBuilder(Text.literal("+"), button -> {
             this.mouseCodeIndex = (this.mouseCodeIndex + 1) % MOUSE_CODES.length;
             rebuildMouseButton(mouseBounds.x(), mouseBounds.y(), mouseBounds.width(), mouseBounds.height());
         }).dimensions(layout.mousePlusButton().x(), layout.mousePlusButton().y(), layout.mousePlusButton().width(), layout.mousePlusButton().height()).build();
-        this.mouseMinus = ButtonWidget.builder(Text.literal("-"), button -> {
+        this.mouseMinus = PixelWidgets.pixelBuilder(Text.literal("-"), button -> {
             this.mouseCodeIndex = (this.mouseCodeIndex - 1 + MOUSE_CODES.length) % MOUSE_CODES.length;
             rebuildMouseButton(mouseBounds.x(), mouseBounds.y(), mouseBounds.width(), mouseBounds.height());
         }).dimensions(layout.mouseMinusButton().x(), layout.mouseMinusButton().y(), layout.mouseMinusButton().width(), layout.mouseMinusButton().height()).build();
 
-        this.resetBinding = ButtonWidget.builder(Text.translatable("controls.reset"), button -> {
+        this.resetBinding = PixelWidgets.pixelBuilder(Text.translatable("controls.reset"), button -> {
             KeyBinding selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) {
                 return;
@@ -160,7 +163,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
             KeyBindingUtil.refreshMappings();
             refreshBindingList();
         }).dimensions(layout.resetButton().x(), layout.resetButton().y(), layout.resetButton().width(), layout.resetButton().height()).build();
-        this.clearBinding = ButtonWidget.builder(Text.translatable("gui.clear"), button -> {
+        this.clearBinding = PixelWidgets.pixelBuilder(Text.translatable("gui.clear"), button -> {
             KeyBinding selectedBinding = this.getSelectedKeyMapping();
             if (selectedBinding == null) {
                 return;
@@ -169,7 +172,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
             KeyBindingUtil.refreshMappings();
             refreshBindingList();
         }).dimensions(layout.clearButton().x(), layout.clearButton().y(), layout.clearButton().width(), layout.clearButton().height()).build();
-        this.resetAll = ButtonWidget.builder(Text.translatable("controls.resetAll"), button -> {
+        this.resetAll = PixelWidgets.pixelBuilder(Text.translatable("controls.resetAll"), button -> {
             Screen current = this.client.currentScreen;
             this.client.setScreen(new ResetAllConfirmScreen(result -> {
                 if (result) {
@@ -210,8 +213,8 @@ public class KeyWizardScreen extends GameOptionsScreen {
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
         this.renderBackground(ctx, mouseX, mouseY, delta);
-        ctx.drawTexture(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, 0, 0, 0, 0, this.width, this.height, 512, 512);
-        ctx.fill(0, 0, this.width, this.height, 0x77000000);
+        PixelKeyboardStyle.drawPanel(ctx::fill, 0, 0, this.width, this.height);
+        PixelWidgets.drawSearch(ctx, this.searchBar);
         super.render(ctx, mouseX, mouseY, delta);
         if (this.helpButton != null && this.helpButton.isMouseOver(mouseX, mouseY)) {
             ctx.drawTooltip(this.textRenderer, HELP_TOOLTIP, mouseX, mouseY);
@@ -232,13 +235,13 @@ public class KeyWizardScreen extends GameOptionsScreen {
     }
 
     private ButtonWidget createLayoutButton(KeyboardLayout layout, Rect bounds) {
-        return ButtonWidget.builder(layout.getDisplayName(), button -> setKeyboardLayout(layout))
+        return PixelWidgets.pixelBuilder(layout.getDisplayName(), button -> setKeyboardLayout(layout))
                 .dimensions(bounds.x(), bounds.y(), bounds.width(), bounds.height())
                 .build();
     }
 
     public static ButtonWidget createScreenToggleButton(int x, int y, ButtonWidget.PressAction onPress) {
-        return new TextureButton(x, y, onPress);
+        return PixelWidgets.iconBuilder(Text.translatable("screen.keyboard_wizard_ce.title"), onPress).dimensions(x, y, 20, 20).build();
     }
 
     private void setKeyboardLayout(KeyboardLayout layout) {

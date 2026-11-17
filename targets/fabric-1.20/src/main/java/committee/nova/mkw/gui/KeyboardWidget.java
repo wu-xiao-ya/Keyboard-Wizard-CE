@@ -123,36 +123,13 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
         @Override
         public void renderButton(DrawContext ctx, int mouseX, int mouseY, float delta) {
             int bindingCount = this.tooltipText.size();
-            int color;
-            if (this.active) {
-                if (this.isHovered() && !keyWizardScreen.getCategorySelectorExtended()) {
-                    color = 0xFFAAAAAA;
-                    if (bindingCount >= 1 && ModernKeyBinding.nonConflictKeys()) {
-                        color = 0xFF00AA00;
-                    } else if (bindingCount == 1) {
-                        color = 0xFF00AA00;
-                    } else if (bindingCount > 1) {
-                        color = 0xFFAA0000;
-                    }
-                } else {
-                    color = 0xFFFFFFFF;
-                    if (bindingCount >= 1 && ModernKeyBinding.nonConflictKeys()) {
-                        color = 0xFF00FF00;
-                    } else if (bindingCount == 1) {
-                        color = 0xFF00FF00;
-                    } else if (bindingCount > 1) {
-                        color = 0xFFFF0000;
-                    }
-                }
-            } else {
-                color = 0xFF555555;
-            }
-            DrawingUtil.drawNoFillRect(ctx, this.x, this.y, this.x + this.width, this.y + this.height, color);
-            @SuppressWarnings("resource")
-            TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            ctx.drawTextWithShadow(textRenderer, this.getMessage(),
-                    (int) (this.x + (this.width) / 2 - textRenderer.getWidth(this.getMessage()) / 2.0F),
-                    (int) (this.y + (this.height - 6) / 2), color);
+            committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState state = bindingCount == 0
+                    ? committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.UNASSIGNED
+                    : bindingCount == 1 || ModernKeyBinding.nonConflictKeys()
+                    ? committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.ASSIGNED
+                    : committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.CONFLICT;
+            PixelWidgets.drawButton(ctx, this.getMessage(), (int)this.x, (int)this.y,
+                    (int)this.width, (int)this.height, state, this.isHovered());
         }
 
         @Override

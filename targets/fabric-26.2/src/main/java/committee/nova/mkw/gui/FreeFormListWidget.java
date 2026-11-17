@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkw.util.DrawingUtil;
+import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSelectionList;
@@ -16,36 +17,42 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     @Override
     protected int scrollBarX() {
-        return this.getX() + this.width - 5;
+        return this.getX() + this.width - 8;
     }
 
     @Override
     public int getRowWidth() {
-        return this.width;
+        return this.width - 16;
     }
 
     protected int getListBottom() {
         return this.getY() + this.height;
     }
 
-    protected void extractPanelBackground(GuiGraphicsExtractor graphics) {
-        graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom(), -1072689136, -804253680);
+    @Override
+    protected void extractListBackground(GuiGraphicsExtractor graphics) {
+        graphics.fill(this.getX(), this.getY(), this.getRight(), this.getListBottom(), PixelKeyboardStyle.BORDER);
+        graphics.fill(this.getX() + 2, this.getY() + 2, this.getRight() - 2, this.getListBottom() - 2,
+                PixelKeyboardStyle.LIST_SURFACE);
+    }
+
+    @Override
+    protected void extractListSeparators(GuiGraphicsExtractor graphics) {
+        graphics.fill(this.getX(), this.getY(), this.getRight(), this.getY() + 2, PixelKeyboardStyle.BORDER);
+        graphics.fill(this.getX(), this.getListBottom() - 2, this.getRight(), this.getListBottom(), PixelKeyboardStyle.BORDER);
+    }
+
+    @Override
+    protected void extractSelection(GuiGraphicsExtractor graphics, FreeFormListWidget<E>.Entry entry, int border) {
+        graphics.fill(this.getX() + 2, entry.getY(), this.getRight() - 2,
+                entry.getY() + entry.getHeight(), PixelKeyboardStyle.LIST_SELECTED);
     }
 
     @Override
     protected void extractItem(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, FreeFormListWidget<E>.Entry entry) {
-        if (this.getSelected() == entry) {
-            DrawingUtil.drawNoFillRect(graphics, this.getRowLeft() - 2, entry.getY() - 2, this.getRowRight() - 8, entry.getY() + entry.getHeight() - 4, 0xFFFFFFFF);
-        }
         super.extractItem(graphics, mouseX, mouseY, partialTick, entry);
-    }
-
-    @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        if (this.visible) {
-            this.extractPanelBackground(graphics);
-            super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
-        }
+        int bottom = entry.getY() + entry.getHeight();
+        graphics.fill(this.getX() + 4, bottom - 1, this.getRight() - 8, bottom, PixelKeyboardStyle.PANEL_FOOT);
     }
 
     @Override
@@ -94,7 +101,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-            if (event.button() == 0) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 FreeFormListWidget.this.setSelected(this);
                 return true;
             }

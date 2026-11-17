@@ -1,12 +1,11 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkw.util.DrawingUtil;
-import committee.nova.mkw.util.KeyBindingUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.IRenderable;
+
+import committee.nova.mkw.util.KeyBindingUtil;
+
 import net.minecraft.client.gui.INestedGuiEventHandler;
+import net.minecraft.client.gui.IRenderable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -22,7 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEventHandler, TickableElement {
+public class KeyboardWidget extends Widget
+        implements IRenderable, INestedGuiEventHandler, TickableElement {
     private final KeyWizardScreen keyWizardScreen;
     private final HashMap<Integer, KeyboardKeyWidget> keys = new HashMap<>();
     private final float anchorX;
@@ -35,12 +35,40 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
         this.anchorY = anchorY;
     }
 
-    public float addKey(float relativeX, float relativeY, float width, float height, float keySpacing, int keyCode) {
-        return addKey(relativeX, relativeY, width, height, keySpacing, keyCode, InputMappings.Type.KEYSYM);
+    public float addKey(
+            float relativeX,
+            float relativeY,
+            float width,
+            float height,
+            float keySpacing,
+            int keyCode) {
+        return addKey(
+                relativeX,
+                relativeY,
+                width,
+                height,
+                keySpacing,
+                keyCode,
+                InputMappings.Type.KEYSYM);
     }
 
-    public float addKey(float relativeX, float relativeY, float width, float height, float keySpacing, int keyCode, InputMappings.Type keyType) {
-        this.keys.put(keyCode, new KeyboardKeyWidget(keyCode, this.anchorX + relativeX, this.anchorY + relativeY, width, height, keyType));
+    public float addKey(
+            float relativeX,
+            float relativeY,
+            float width,
+            float height,
+            float keySpacing,
+            int keyCode,
+            InputMappings.Type keyType) {
+        this.keys.put(
+                keyCode,
+                new KeyboardKeyWidget(
+                        keyCode,
+                        this.anchorX + relativeX,
+                        this.anchorY + relativeY,
+                        width,
+                        height,
+                        keyType));
         return relativeX + width + keySpacing;
     }
 
@@ -53,7 +81,8 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
         if (!this.keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget key : this.children()) {
                 if (key.active && key.isHovered()) {
-                    this.keyWizardScreen.renderComponentTooltip(matrixStack, key.tooltipText, mouseX, mouseY);
+                    this.keyWizardScreen.renderComponentTooltip(
+                            matrixStack, key.tooltipText, mouseX, mouseY);
                 }
             }
         }
@@ -82,8 +111,7 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
     }
 
     @Override
-    public void setDragging(boolean dragging) {
-    }
+    public void setDragging(boolean dragging) {}
 
     @Override
     public net.minecraft.client.gui.IGuiEventListener getFocused() {
@@ -91,8 +119,7 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
     }
 
     @Override
-    public void setFocused(net.minecraft.client.gui.IGuiEventListener listener) {
-    }
+    public void setFocused(net.minecraft.client.gui.IGuiEventListener listener) {}
 
     @Override
     public void tick() {
@@ -118,8 +145,20 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
         private final InputMappings.Input key;
         private List<ITextComponent> tooltipText = new ArrayList<>();
 
-        protected KeyboardKeyWidget(int keyCode, float x, float y, float width, float height, InputMappings.Type keyType) {
-            super((int) x, (int) y, (int) width, (int) height, StringTextComponent.EMPTY, button -> { });
+        protected KeyboardKeyWidget(
+                int keyCode,
+                float x,
+                float y,
+                float width,
+                float height,
+                InputMappings.Type keyType) {
+            super(
+                    (int) x,
+                    (int) y,
+                    (int) width,
+                    (int) height,
+                    StringTextComponent.EMPTY,
+                    button -> {});
             this.x = x;
             this.y = y;
             this.width = width;
@@ -129,32 +168,19 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
         }
 
         @Override
-        public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-            int bindingCount = this.tooltipText.size();
-            int color;
-            if (this.active) {
-                if (this.isHovered() && !keyWizardScreen.getCategorySelectorExtended()) {
-                    color = 0xFFAAAAAA;
-                    if (bindingCount == 1) {
-                        color = 0xFF00AA00;
-                    } else if (bindingCount > 1) {
-                        color = 0xFFAA0000;
-                    }
-                } else {
-                    color = 0xFFFFFFFF;
-                    if (bindingCount == 1) {
-                        color = 0xFF00FF00;
-                    } else if (bindingCount > 1) {
-                        color = 0xFFFF0000;
-                    }
-                }
-            } else {
-                color = 0xFF555555;
-            }
-
-            DrawingUtil.drawNoFillRect(matrixStack, (int) this.x, (int) this.y, (int) (this.x + this.width), (int) (this.y + this.height), color);
-            FontRenderer font = Minecraft.getInstance().font;
-            font.draw(matrixStack, this.getMessage(), this.x + this.width / 2.0F - font.width(this.getMessage().getString()) / 2.0F, this.y + (this.height - 6) / 2.0F, color);
+        public void renderButton(
+                MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+            PixelWidgets.key(
+                    matrixStack,
+                    getMessage().getString(),
+                    (int) this.x,
+                    (int) this.y,
+                    (int) this.width,
+                    (int) this.height,
+                    this.tooltipText.size(),
+                    this.active
+                            && this.isHovered()
+                            && !keyWizardScreen.getCategorySelectorExtended());
         }
 
         @Override
@@ -198,7 +224,11 @@ public class KeyboardWidget extends Widget implements IRenderable, INestedGuiEve
                     tooltip.add(I18n.get(binding.getName()));
                 }
             }
-            this.tooltipText = tooltip.stream().sorted().map(StringTextComponent::new).collect(Collectors.toCollection(ArrayList::new));
+            this.tooltipText =
+                    tooltip.stream()
+                            .sorted()
+                            .map(StringTextComponent::new)
+                            .collect(Collectors.toCollection(ArrayList::new));
         }
 
         @SuppressWarnings("removal")

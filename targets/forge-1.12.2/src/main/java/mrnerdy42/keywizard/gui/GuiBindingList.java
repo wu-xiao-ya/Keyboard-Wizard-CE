@@ -1,6 +1,7 @@
 package mrnerdy42.keywizard.gui;
 
 import java.util.Arrays;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import committee.nova.mkw.core.binding.BindingSearchParser;
 import committee.nova.mkw.core.binding.BindingSearchQuery;
 
@@ -41,8 +42,8 @@ public class GuiBindingList extends GuiScrollingList {
 
 		this.parent = parent;
 		this.bindings = KeybindUtils.getVisibleBindings();
-		this.searchText = this.parent.getSearchText();
-		this.selectedCategory = this.parent.getSelectedCategory();
+		this.searchText = "";
+		this.selectedCategory = "categories.all";
 		if (this.bindings.length > 0) {
 			this.selectKeybind(0);
 		} else {
@@ -73,12 +74,12 @@ public class GuiBindingList extends GuiScrollingList {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
-		this.handleClick(mouseX, mouseY);
+		if (!parent.getCategoryListExtended()) {
+            this.handleClick(mouseX, mouseY);
+        }
 		this.applyScrollLimits();
 
-		Gui.drawRect(this.left, this.top, this.left + this.listWidth, this.bottom, 0xAA020606);
-		Gui.drawRect(this.left, this.top, this.left + this.listWidth, this.top + 1, 0x663E9F82);
-		Gui.drawRect(this.left, this.bottom - 1, this.left + this.listWidth, this.bottom, 0x663E9F82);
+        Gui.drawRect(this.left, this.top, this.left + this.listWidth, this.bottom, PixelKeyboardStyle.LIST_SURFACE);
 
 		double scaleX = this.parent.getClient().displayWidth / (double) this.parent.width;
 		double scaleY = this.parent.getClient().displayHeight / (double) this.parent.height;
@@ -93,9 +94,9 @@ public class GuiBindingList extends GuiScrollingList {
 			int slotTop = baseY + slotIdx * this.slotHeight;
 			int slotBuffer = this.slotHeight - BORDER;
 			if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
-				if (this.isSelected(slotIdx)) {
-					Gui.drawRect(this.left, slotTop - 2, entryRight, slotTop + slotBuffer + 2, 0xFF808080);
-					Gui.drawRect(this.left + 1, slotTop - 1, entryRight - 1, slotTop + slotBuffer + 1, 0xFF000000);
+				if (this.isSelected(slotIdx) || (!parent.getCategoryListExtended() && mouseX >= this.left && mouseX < entryRight && mouseY >= slotTop && mouseY < slotTop + slotBuffer)) {
+					Gui.drawRect(this.left, slotTop - 2, entryRight, slotTop + slotBuffer + 2, PixelKeyboardStyle.PANEL_FOOT);
+					Gui.drawRect(this.left + 1, slotTop - 1, entryRight - 1, slotTop + slotBuffer + 1, PixelKeyboardStyle.LIST_SELECTED);
 				}
 				this.drawSlot(slotIdx, entryRight, slotTop, slotBuffer, tess);
 			}
@@ -111,7 +112,7 @@ public class GuiBindingList extends GuiScrollingList {
 	}
 
 	public void handleMouseInput(int mouseX, int mouseY, int scroll) {
-		if (scroll == 0 || mouseY < this.top || mouseY > this.bottom) {
+		if (scroll == 0 || mouseX < this.left || mouseX >= this.left + this.listWidth || mouseY < this.top || mouseY > this.bottom) {
 			return;
 		}
 		this.scrollByWheel(scroll);
@@ -136,10 +137,10 @@ public class GuiBindingList extends GuiScrollingList {
 		FontRenderer fontRender = this.parent.getFontRenderer();
 		KeyBinding currentBinding = this.bindings[slotIdx];
 
-		fontRender.drawStringWithShadow(I18n.format(currentBinding.getKeyDescription()), this.left + 3 , slotTop, 0xFFFFFF);
+		fontRender.drawString(fontRender.trimStringToWidth(I18n.format(currentBinding.getKeyDescription()), entryRight - this.left - 6), this.left + 3, slotTop, PixelKeyboardStyle.INK);
 
 		int keyColor = getBindingColor(currentBinding);
-		fontRender.drawStringWithShadow(currentBinding.getDisplayName(), this.left + 3, slotTop + fontRender.FONT_HEIGHT + 2, keyColor);
+		fontRender.drawString(fontRender.trimStringToWidth(currentBinding.getDisplayName(), entryRight - this.left - 6), this.left + 3, slotTop + fontRender.FONT_HEIGHT + 2, keyColor);
 
 		String categoryLabel = getCategoryDisplayLabel(currentBinding);
 		int contentRight = entryRight - CONTENT_PADDING;
@@ -149,7 +150,7 @@ public class GuiBindingList extends GuiScrollingList {
 			int labelWidth = fontRender.getStringWidth(clipped);
 			int labelX = contentRight - labelWidth;
 			int labelY = slotTop + fontRender.FONT_HEIGHT * 2 + 3;
-			fontRender.drawStringWithShadow(clipped, labelX, labelY, 0xFF7F7F7F);
+			fontRender.drawString(clipped, labelX, labelY, PixelKeyboardStyle.PANEL_FOOT);
 		}
 	}
 
@@ -169,6 +170,7 @@ public class GuiBindingList extends GuiScrollingList {
 			}
 
 			this.bindings = bindingsNew;
+            this.scrollDistance = 0;
 
 			if (this.bindings.length != 0) {
 				this.selectKeybind(0);
@@ -196,9 +198,9 @@ public class GuiBindingList extends GuiScrollingList {
 		}
 		int conflicts = KeybindUtils.getNumConficts(binding);
 		if (conflicts > 0) {
-			return 0xFFFF0000;
+			return 0xFFAA212B;
 		}
-		return binding.isSetToDefaultValue() ? 0xFFFFFFFF : 0xFF00FF00;
+		return 0xFF087343;
 	}
 
 	private String getCategoryDisplayLabel(KeyBinding binding) {

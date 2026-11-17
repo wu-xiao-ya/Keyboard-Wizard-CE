@@ -3,6 +3,7 @@ package mrnerdy42.keywizard.gui;
 import static org.lwjgl.input.Keyboard.*;
 
 import committee.nova.mkw.core.binding.DynamicBindingCategories;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import static org.lwjgl.input.Mouse.getButtonName;
 
 import java.io.IOException;
@@ -11,7 +12,6 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import mrnerdy42.keywizard.KeyWizard;
 import mrnerdy42.keywizard.KeyWizardConfig;
 import mrnerdy42.keywizard.util.KeybindUtils;
 import mrnerdy42.keywizard.util.KeyboardFactory;
@@ -22,17 +22,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiKeyWizard extends GuiScreen {
 
-	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(KeyWizard.MODID, "textures/gui/key_wizard_background.png");
 	public static final String KEY_FILTER_PREFIX = "#key#";
 	private static final int RESET_ALL_DIALOG_ID = 0;
 
@@ -80,60 +77,38 @@ public class GuiKeyWizard extends GuiScreen {
 	@Override
 	public void initGui() {
 
-		int maxBindingLength = 0;
-
-		for (KeyBinding binding : KeybindUtils.getVisibleBindings()) {
-			int bindingWidth = this.fontRenderer.getStringWidth(I18n.format(binding.getKeyDescription()));
-			if (bindingWidth > maxBindingLength)
-				maxBindingLength = bindingWidth;
-		}
-
-		int bindingListWidth = maxBindingLength + 20;
-
-		this.bindingList = new GuiBindingList(this, 10, this.height - 30, bindingListWidth, this.height - 40,
-				fontRenderer.FONT_HEIGHT * 3 + 10);
-
-		this.searchBar = new GuiTextField(0, this.fontRenderer, 10, this.height - 20, bindingListWidth, 14);
-		this.searchBar.setFocused(true);
-		this.searchBar.setCanLoseFocus(false);
-
-		this.guiStartX = bindingListWidth + 15;
-		this.guiWidth = this.width - this.guiStartX;
-
-		ArrayList<String> categories = DynamicBindingCategories.withLegacyDynamicCategories(KeybindUtils.getCategories());
-
-		int maxCategoryLength = 0;
-		for(String s:categories) {
-			int width = this.fontRenderer.getStringWidth(I18n.format(s));
-			if (width > maxCategoryLength)
-				maxCategoryLength = width;
-		}
-
-		int categoryWidth = maxCategoryLength + 20;
-		this.categoryList = new GuiCategorySelector(this, this.guiStartX, 5, categoryWidth, categories);
-		this.selectedCategory = this.categoryList.getSelctedCategory();
-
-		this.keyboard = KeyboardFactory.makeKeyboard(this.pages[this.pageNum], this, this.guiStartX, this.height / 2 - 90, this.guiWidth - 5, this.height);
-
-		int layoutButtonX = this.guiStartX + categoryWidth + 8;
-		this.buttonLayoutMain = new GuiButton(0, layoutButtonX, 5, 50, 20, I18n.format("gui.layout.main"));
-		this.buttonLayoutNumpad = new GuiButton(0, layoutButtonX + 54, 5, 50, 20, I18n.format("gui.layout.numpad"));
-		this.buttonLayoutAux = new GuiButton(0, layoutButtonX + 108, 5, 50, 20, I18n.format("gui.layout.auxiliary"));
-
-		this.buttonReset = new GuiButton(0, this.guiStartX, this.height - 23, 75, 20, I18n.format("gui.resetBinding"));
-		this.buttonClear = new GuiButton(0, this.guiStartX + 76, this.height - 23, 75, 20, I18n.format("gui.clearBinding"));
-		this.buttonResetAll = new GuiButton(0, this.guiStartX + 152, this.height - 23, 75, 20, I18n.format("gui.resetAll"));
-
-		this.buttonHelp = new GuiButton(2, this.width - 47, this.height - 22, 20, 20, "?");
-		this.buttonToggle = new TexturedToggleButton(3, this.width - 22, this.height - 22);
-
-		this.buttonActiveModifier = new GuiButton(1, this.guiStartX, this.height - 47, 150, 20,
-				I18n.format("gui.activeModifier")+ ": " + activeModifier.toString());
-
-		int mouseRowY = this.height / 2 - 115;
-		this.buttonMouseMinus = new GuiButton(0, this.width - 137, mouseRowY, 25, 20, "-");
-		this.buttonMouse = new GuiButton(0, this.width - 110, mouseRowY, 78, 20, I18n.format("gui.mouse") + ": " + getButtonName(this.mouse));
-		this.buttonMousePlus = new GuiButton(0, this.width - 30, mouseRowY, 25, 20, "+");
+        this.buttonList.clear();
+        int bindingListWidth = Math.max(96, Math.min(240, this.width / 3));
+        this.guiStartX = bindingListWidth + 16;
+        this.guiWidth = this.width - this.guiStartX - 8;
+        this.bindingList = new GuiBindingList(this, 10, this.height - 34, bindingListWidth - 4,
+                this.height - 70, fontRenderer.FONT_HEIGHT * 3 + 12);
+        this.searchBar = new GuiTextField(0, this.fontRenderer, 14, 15, bindingListWidth - 12, 14);
+        this.searchBar.setEnableBackgroundDrawing(false);
+        this.searchBar.setTextColor(PixelKeyboardStyle.INK);
+        this.searchBar.setText(this.searchText);
+        this.searchBar.setFocused(true);
+        this.searchBar.setCanLoseFocus(false);
+        ArrayList<String> categories = DynamicBindingCategories.withLegacyDynamicCategories(KeybindUtils.getCategories());
+        this.categoryList = new GuiCategorySelector(this, this.guiStartX, 10, this.guiWidth, categories);
+        this.selectedCategory = this.categoryList.getSelctedCategory();
+        int tabWidth = (this.guiWidth - 4) / 3;
+        this.buttonLayoutMain = PixelWidgets.button(0, guiStartX, 34, tabWidth, 20, I18n.format("gui.layout.main"));
+        this.buttonLayoutNumpad = PixelWidgets.button(0, guiStartX + tabWidth + 2, 34, tabWidth, 20, I18n.format("gui.layout.numpad"));
+        this.buttonLayoutAux = PixelWidgets.button(0, guiStartX + 2 * (tabWidth + 2), 34, tabWidth, 20, I18n.format("gui.layout.auxiliary"));
+        this.keyboard = KeyboardFactory.makeKeyboard(this.pages[this.pageNum], this, guiStartX + 6, 86, guiWidth - 12, Math.max(24, this.height - 148));
+        int actionWidth = (this.guiWidth - 4) / 3;
+        this.buttonReset = PixelWidgets.button(0, guiStartX, height - 30, actionWidth, 20, I18n.format("gui.resetBinding"));
+        this.buttonClear = PixelWidgets.button(0, guiStartX + actionWidth + 2, height - 30, actionWidth, 20, I18n.format("gui.clearBinding"));
+        this.buttonResetAll = PixelWidgets.button(0, guiStartX + 2 * (actionWidth + 2), height - 30, actionWidth, 20, I18n.format("gui.resetAll"));
+        this.buttonHelp = PixelWidgets.button(2, 10, height - 29, 20, 20, "?");
+        this.buttonToggle = PixelWidgets.button(3, 34, height - 29, bindingListWidth - 28, 20, I18n.format("gui.done"));
+        this.buttonActiveModifier = PixelWidgets.button(1, guiStartX, height - 54, guiWidth, 20,
+                I18n.format("gui.activeModifier") + ": " + activeModifier.toString());
+        int mouseRowY = 58;
+        this.buttonMouseMinus = PixelWidgets.button(0, guiStartX, mouseRowY, 20, 20, "-");
+        this.buttonMouse = PixelWidgets.button(0, guiStartX + 22, mouseRowY, guiWidth - 44, 20, I18n.format("gui.mouse") + ": " + getButtonName(this.mouse));
+        this.buttonMousePlus = PixelWidgets.button(0, guiStartX + guiWidth - 20, mouseRowY, 20, 20, "+");
 
 		this.setSelectedKeybind(this.bindingList.getSelectedKeybind());
 
@@ -157,13 +132,10 @@ public class GuiKeyWizard extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
-		// Textured grid background + dark overlay (visual parity with the modern ports)
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.enableBlend();
-		this.mc.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
-		drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, this.width, this.height, 512.0F, 512.0F);
-		drawRect(0, 0, this.width, this.height, 0x77000000);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        PixelWidgets.panel(4, 4, guiStartX - 10, height - 8);
+        PixelWidgets.panel(guiStartX - 4, 4, guiWidth + 8, height - 8);
+        drawRect(10, 10, guiStartX - 12, 31, PixelKeyboardStyle.BORDER);
+        drawRect(11, 11, guiStartX - 13, 30, PixelKeyboardStyle.LIST_SELECTED);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.bindingList.drawScreen(mouseX, mouseY, partialTicks);
@@ -183,6 +155,12 @@ public class GuiKeyWizard extends GuiScreen {
 			GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 		}
 	}
+
+    @Override
+    public void onGuiClosed() {
+        this.mc.gameSettings.saveOptions();
+        super.onGuiClosed();
+    }
 
 	@Override
 	public void updateScreen() {
@@ -353,7 +331,7 @@ public class GuiKeyWizard extends GuiScreen {
 	/** Switch the visible keyboard layout and refresh the layout buttons. */
 	private void setLayout(int index) {
 		this.pageNum = index;
-		this.keyboard = KeyboardFactory.makeKeyboard(this.pages[this.pageNum], this, this.guiStartX, this.height / 2 - 90, this.guiWidth - 5, this.height);
+		this.keyboard = KeyboardFactory.makeKeyboard(this.pages[this.pageNum], this, this.guiStartX + 6, 86, this.guiWidth - 12, Math.max(24, this.height - 148));
 		this.updateLayoutButtons();
 	}
 
@@ -378,7 +356,7 @@ public class GuiKeyWizard extends GuiScreen {
 			if (this.categoryList.getExtended()) {
 				this.categoryList.handleMouseInput(mouseX, mouseY, scroll);
 			} else {
-				this.bindingList.handleMouseInput(scroll);
+				this.bindingList.handleMouseInput(mouseX, mouseY, scroll);
 			}
 			return;
 		}
@@ -390,8 +368,9 @@ public class GuiKeyWizard extends GuiScreen {
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 	    super.mouseClicked(x, y, button);
 	    this.searchBar.mouseClicked(x, y, button);
-	    this.categoryList.mouseClicked(this.mc, x, y, button);
-	    this.keyboard.mouseClicked(mc, x, y, button);
+	    boolean categoryWasOpen = this.categoryList.getExtended();
+        this.categoryList.mouseClicked(this.mc, x, y, button);
+        if (!categoryWasOpen) this.keyboard.mouseClicked(mc, x, y, button);
 	}
 
 	@Override

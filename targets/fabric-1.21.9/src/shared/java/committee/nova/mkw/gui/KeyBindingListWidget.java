@@ -170,15 +170,15 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
             int contentRight = x + entryWidth - CATEGORY_RIGHT_PADDING;
             int maxTextWidth = Math.max(0, contentRight - x);
 
-            ctx.drawTextWithShadow(client.textRenderer, trimToWidth(Text.translatable(this.keyBinding.getId()), maxTextWidth), x, y, 0xFFFFFFFF);
-            int color = 0xFF999999;
+            ctx.drawTextWithShadow(client.textRenderer, trimToWidth(Text.translatable(this.keyBinding.getId()), maxTextWidth), x, y, 0xFF202020);
+            int color = 0xFF444444;
             ctx.drawTextWithShadow(client.textRenderer, trimToWidth(this.keyBinding.getBoundKeyLocalizedText(), maxTextWidth), x, y + client.textRenderer.fontHeight + 5, color);
             String categoryLabel = getCategoryDisplayLabel(this.keyBinding);
             if (maxTextWidth > 0 && !categoryLabel.isEmpty()) {
                 String clippedCategoryLabel = client.textRenderer.trimToWidth(categoryLabel, maxTextWidth);
                 int categoryX = Math.max(x, contentRight - client.textRenderer.getWidth(clippedCategoryLabel));
                 int categoryY = y + entryHeight - client.textRenderer.fontHeight - CATEGORY_BOTTOM_PADDING;
-                ctx.drawTextWithShadow(client.textRenderer, clippedCategoryLabel, categoryX, categoryY, 0xFF7F7F7F);
+                ctx.drawTextWithShadow(client.textRenderer, clippedCategoryLabel, categoryX, categoryY, 0xFF555555);
             }
         }
 

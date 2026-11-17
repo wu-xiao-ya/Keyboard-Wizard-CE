@@ -87,6 +87,27 @@ def verify_metadata(jar, metadata, minecraft_version, mod_version):
         raise ValueError(f"Unexpected mod id, mod version or Minecraft version in {jar.filename}: {metadata}")
 
 
+def verify_pixel_ui(jar, target):
+    if target == "forge-1.12.2":
+        package = "mrnerdy42/keywizard/gui/"
+        screen_name = "GuiKeyWizard"
+        keyboard_name = "GuiKeyboard$GuiKeyboardKey"
+    else:
+        package = "committee/nova/mkw/gui/"
+        screen_name = "KeyWizardScreen"
+        keyboard_name = "KeyboardWidget$KeyboardKeyWidget"
+
+    screen = jar.read(package + screen_name + ".class")
+    keyboard = jar.read(package + keyboard_name + ".class")
+    widgets = jar.read(package + "PixelWidgets.class")
+    if b"PixelKeyboardStyle" not in screen or b"drawPanel" not in screen:
+        raise ValueError(f"The active screen does not render pixel panels in {jar.filename}")
+    if b"PixelWidgets" not in screen or b"PixelWidgets" not in keyboard:
+        raise ValueError(f"The active screen or keyboard uses legacy widgets in {jar.filename}")
+    if b"PixelKeyboardStyle" not in widgets or b"drawKeycap" not in widgets:
+        raise ValueError(f"Pixel widgets do not render the shared keycaps in {jar.filename}")
+
+
 def verify(target):
     properties = dict(
         line.split("=", 1)
@@ -105,6 +126,7 @@ def verify(target):
             jar.getinfo(CORE_PREFIX + component + ".class")
         verify_metadata(jar, metadata, version, properties["mod_version"])
         verify_shared_resources(jar)
+        verify_pixel_ui(jar, target.name)
         if target.name in {"forge-1.12.2", "forge-1.16.5"}:
             for name in jar.namelist():
                 if name.endswith(".class"):

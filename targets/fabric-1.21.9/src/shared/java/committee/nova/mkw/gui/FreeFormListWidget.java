@@ -49,7 +49,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     protected void renderPanelBackground(DrawContext ctx) {
-        ctx.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom(), -1072689136, -804253680);
+        ctx.fill(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom(), 0xFFEDEDED);
     }
 
     @Override
@@ -64,7 +64,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
             entry.setWidth(this.getRowWidth());
             entry.setHeight(this.itemHeight);
             if (Objects.equals(this.getSelectedOrNull(), entry)) {
-                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, rowTop - 2, this.getRowRight(), rowTop + this.itemHeight - 4, 0xFFFFFFFF);
+                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, rowTop - 2, this.getRowRight(), rowTop + this.itemHeight - 4, 0xFF202020);
             }
             entry.render(ctx, mouseX, mouseY, Objects.equals(this.getHoveredEntry(), entry), delta);
         }

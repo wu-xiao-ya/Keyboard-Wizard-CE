@@ -1,10 +1,11 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.KeyBindingUtil;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class CategorySelectorWidget extends AbstractButton implements TickableElement {
@@ -13,7 +14,8 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
 
     public BindingCategoryListWidget categoryList;
 
-    public CategorySelectorWidget(KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
+    public CategorySelectorWidget(
+            KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal(""));
         this.keyWizardScreen = keyWizardScreen;
         Minecraft c = Minecraft.getInstance();
@@ -23,7 +25,14 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
         if (listBottom > this.keyWizardScreen.height) {
             listHeight = this.keyWizardScreen.height - this.getY() - this.height - 10;
         }
-        this.categoryList = new BindingCategoryListWidget(c, this.getY() + this.height, this.getX(), this.width, listHeight, listItemHeight);
+        this.categoryList =
+                new BindingCategoryListWidget(
+                        c,
+                        this.getY() + this.height,
+                        this.getX(),
+                        this.width,
+                        listHeight,
+                        listItemHeight);
         this.categoryList.visible = false;
         this.setMessage(Component.translatable(this.getSelectedCategory()));
     }
@@ -39,9 +48,7 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput builder) {
-
-    }
+    protected void updateWidgetNarration(NarrationElementOutput builder) {}
 
     @Override
     public void onPress() {
@@ -51,7 +58,15 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
 
     @Override
     public void render(GuiGraphics ctx, int mouseX, int mouseY, float delta) {
-        super.render(ctx, mouseX, mouseY, delta);
+        PixelWidgets.key(
+                ctx,
+                getMessage().getString(),
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight(),
+                0,
+                isMouseOver(mouseX, mouseY));
         this.categoryList.render(ctx, mouseX, mouseY, delta);
     }
 
@@ -72,9 +87,11 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
         return this.categoryList;
     }
 
-    private static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
+    private static class BindingCategoryListWidget
+            extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
 
-        public BindingCategoryListWidget(Minecraft client, int top, int left, int width, int height, int itemHeight) {
+        public BindingCategoryListWidget(
+                Minecraft client, int top, int left, int width, int height, int itemHeight) {
             super(client, top, left, width, height, itemHeight);
 
             for (String c : KeyBindingUtil.getCategoriesWithDynamics()) {
@@ -83,7 +100,8 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             this.setSelected(this.children().get(0));
         }
 
-        public class CategoryEntry extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
+        public class CategoryEntry
+                extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
             private final String category;
 
             public CategoryEntry(String category) {
@@ -91,11 +109,24 @@ public class CategorySelectorWidget extends AbstractButton implements TickableEl
             }
 
             @Override
-            public void render(GuiGraphics ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawString(minecraft.font, Component.translatable(this.category), x + 3, y + 2, 0xFFFFFFFF);
+            public void render(
+                    GuiGraphics ctx,
+                    int index,
+                    int y,
+                    int x,
+                    int entryWidth,
+                    int entryHeight,
+                    int mouseX,
+                    int mouseY,
+                    boolean hovered,
+                    float tickDelta) {
+                ctx.drawString(
+                        minecraft.font,
+                        Component.translatable(this.category),
+                        x + 3,
+                        y + 2,
+                        0xFF202020);
             }
-
         }
     }
-
 }

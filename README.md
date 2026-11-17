@@ -19,21 +19,21 @@ Fabric 覆盖 Minecraft Java 版 1.20 至 26.3 的 24 个正式版本。1.20 至
 
 ## 安装和升级
 
-从 [GitHub Releases](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases) 下载与 Minecraft 版本和加载器对应的模组 JAR。升级到 1.1.0 时，先移除旧的 Keyboard Wizard CE JAR，再把新版放入 `mods` 文件夹。
+从 [GitHub Releases](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases) 下载与 Minecraft 版本和加载器对应的模组 JAR。升级到 1.1.1 时，先移除旧的 Keyboard Wizard CE JAR，再把新版放入 `mods` 文件夹。
 
-1.1.0 的模组 ID 为 `keyboard_wizard_community_edition`。现有按键配置继续使用原有的键名。自定义资源包需要把该模组的资源移到 `assets/keyboard_wizard_community_edition/`。
+1.1.1 的模组 ID 为 `keyboard_wizard_community_edition`。现有按键配置继续使用原有的键名。自定义资源包需要把该模组的资源移到 `assets/keyboard_wizard_community_edition/`。
 
 ## 架构
 
 - `shared-core/` 维护 Java 8 兼容的搜索、分类、键盘布局和绑定接口。
 - `shared-core/src/main/resources/` 维护界面切换图标、背景和模组标志。所有目标从这里打包，修改画面素材时只需更新这一处。
-- `PixelKeyboardStyle` 统一银灰主题的面板、三色键帽和导航图标。Fabric 与 NeoForge 的 26.3 目标还共用 `targets/gui-26.3/` 下的游戏界面组件。
+- `PixelKeyboardStyle` 统一全部 33 个目标的银灰主题面板、三色键帽和导航图标。每个目标的实际界面和键盘组件都调用这份绘制逻辑。Fabric 与 NeoForge 的 26.3 目标还共用 `targets/gui-26.3/` 下的游戏界面组件。
 - `targets/glfw-keys/` 和 `targets/sdl-keys/` 把布局使用的物理键标识转换成游戏使用的键码。
 - `targets/<loader>-<version>/` 管理加载器入口、界面、游戏绑定和资源。各目标的 Gradle 构建读取同一份核心源码，并把它打进各自的模组 JAR。
 
 ## 验证
 
-GitHub Actions 在分支推送时测试核心、独立构建已接入的目标，并上传各目标的 JAR、匹配源码和 SHA-256。需要单独验证核心时，在 `shared-core/` 使用 JDK 17 运行 `./gradlew test`。
+GitHub Actions 在分支推送时测试核心、独立构建已接入的目标，并上传各目标的 JAR、匹配源码和 SHA-256。制品校验还会检查实际界面、键盘键帽和像素控件之间的调用，防止包含共享类的旧界面包通过验证。需要单独验证核心时，在 `shared-core/` 使用 JDK 17 运行 `./gradlew test`。
 
 对同一提交输出的 JAR 逐个验证 F7、原版控制设置入口、三套键盘布局、文字搜索、按键反查和主键盘 Enter 与小键盘 Enter 的区分。验证改键、清除、还原、重启后保留设置，以及适用目标的 Hide Key Binding 兼容。Forge 1.16.5 使用 Java 8 启动，1.12.2 分别用 Forge 和 Cleanroom 验证。
 

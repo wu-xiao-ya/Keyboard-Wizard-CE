@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1 - 2026-11-17
+
+- Applied the silver pixel interface to the remaining 29 Fabric, Forge and NeoForge targets.
+- Connected the active screens, category lists, search fields, action buttons and keyboard keycaps to the shared pixel style.
+- Retained the three keyboard layouts, modifier handling, binding search and saved key bindings.
+- Added release-artifact checks that reject legacy screens even when the shared theme classes are packaged.
+
 ## Fabric texture asset restore - 2026-07-07
 
 - Restored binary PNG GUI assets on all newly added Fabric stable gap branches after detecting corrupted background, toggle, and icon resources in packaged jars.

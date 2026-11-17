@@ -16,9 +16,9 @@ public class GuiKeyboard extends FloatGui{
 	public double anchorX;
 	public double anchorY;
 	public GuiKeyWizard parent;
-	
+
 	protected HashMap<Integer, GuiKeyboardKey> keyList = new HashMap<>();
-	
+
 	private double scaleFactor;
 
 	public GuiKeyboard(GuiKeyWizard parent, double anchorX, double anchorY) {
@@ -28,7 +28,7 @@ public class GuiKeyboard extends FloatGui{
 	}
 
 
-	public void draw(Minecraft mc, int mouseX, int mouseY, float partialTicks) {  
+	public void draw(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		for(GuiKeyboardKey k:this.keyList.values()) {
 			k.drawKey(mc, mouseX, mouseY, partialTicks);
 		}
@@ -40,7 +40,7 @@ public class GuiKeyboard extends FloatGui{
 			}
 		}
 	}
-	
+
 	public void mouseClicked(Minecraft mc, int mouseX, int mouseY, int button) {
 		for(GuiKeyboardKey k:this.keyList.values()) {
 			k.mouseClicked(mc, mouseX, mouseY, button);
@@ -50,17 +50,17 @@ public class GuiKeyboard extends FloatGui{
 	public void addKey(double xIn, double yIn, double width, double height, int keyCode) {
 		this.keyList.put(new Integer(keyCode), new GuiKeyboardKey(this, xIn, yIn, width, height, keyCode));
 	}
-	
+
 	public void disableKey(int keyCode) {
 		if (this.HasKey(keyCode))
 			this.keyList.get(keyCode).enabled = false;
 	}
-	
+
 	public void enableKey(int keyCode) {
-		if (this.HasKey(keyCode)) 
+		if (this.HasKey(keyCode))
 		    this.keyList.get(keyCode).enabled = true;
 	}
-	
+
 	/**
 	 * Returns the width of the keyboard. Currently unused.
 	 * @return the width of the keyboard
@@ -74,11 +74,11 @@ public class GuiKeyboard extends FloatGui{
 		}
 		return width;
 	}
-	
+
 	public double getScaleFactor () {
 		return this.scaleFactor;
 	}
-	
+
 	public void setScaleFactor(double scaleFactor) {
 		this.scaleFactor = scaleFactor;
 		for(GuiKeyboardKey k:this.keyList.values()) {
@@ -88,14 +88,14 @@ public class GuiKeyboard extends FloatGui{
 			k.y = k.y*scaleFactor;
 		}
 	}
-	
+
 	public void setZLevel(float zLevel) {
 		this.zLevel = zLevel;
 		for(GuiKeyboardKey k:this.keyList.values()) {
 			k.zLevel = this.zLevel;
 		}
 	}
-	
+
 	public boolean HasKey(int keyCode) {
 		return this.keyList.containsKey(keyCode);
 	}
@@ -112,7 +112,7 @@ public class GuiKeyboard extends FloatGui{
 		public String displayString;
 
 		protected boolean hovered;
-		
+
 
 		public GuiKeyboardKey(GuiKeyboard keyboard, double x, double y, double width, double height, int keyCode) {
 			this.keyboard = keyboard;
@@ -127,32 +127,16 @@ public class GuiKeyboard extends FloatGui{
 		public void drawKey(Minecraft mc, double mouseX, double mouseY, float partialTicks) {
 			this.hovered = mouseX >= this.absX() && mouseY >= this.absY() && mouseX < this.absX() + this.width && mouseY < this.absY() + this.height;
 			int modifiedBindings = KeybindUtils.getNumBindings(this.keyCode, parent.getActiveModifier());
-			//int unmodifiedBindings = KeybindUtils.getNumBindings(this.keyCode, KeyModifier.NONE);
-			int color = 0;
-			if (this.enabled) {
-				if (this.hovered && !parent.getCategoryListExtended()) {
-					color = 0xFFAAAAAA;
-					if(modifiedBindings == 1) {
-						color = 0xFF00AA00;
-					} else if (modifiedBindings > 1) {
-						color = 0xFFAA0000;
-					}
-				}else {
-					color = 0xFFFFFFFF;
-					if(modifiedBindings == 1) {
-						color = 0xFF00FF00;
-					} else if (modifiedBindings > 1) {
-						color = 0xFFFF0000;
-					}
-				}
-			} else {
-				color = 0xFF555555;
-			}
-
-			drawNoFillRect(this.absX(), this.absY(), this.absX() + this.width, this.absY() + this.height, color);
-			drawCenteredString(this.keyboard.parent.getFontRenderer(), this.displayString, (float)(this.absX()+(this.width+2)/2.0F), (float)(this.absY()+(this.height-6)/2.0F), color & 0x00FFFFFF);
+            committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState state = modifiedBindings > 1
+                    ? committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.CONFLICT
+                    : modifiedBindings == 1 ? committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.ASSIGNED
+                    : committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.UNASSIGNED;
+            KeyBinding selected = parent.getSelectedKeybind();
+            PixelWidgets.key(parent.getFontRenderer(), this.displayString, (int) this.absX(), (int) this.absY(),
+                    (int) this.width, (int) this.height, state, this.hovered && !parent.getCategoryListExtended(),
+                    !enabled || (selected != null && selected.getKeyCode() == keyCode && selected.getKeyModifier() == parent.getActiveModifier()));
 		}
-		
+
 		public void mouseClicked(Minecraft mc, int mouseX, int mouseY, int button) {
 			if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 2) {
 				parent.setSearchTextForKey(this.keyCode);
@@ -165,7 +149,7 @@ public class GuiKeyboard extends FloatGui{
 				}
 			}
 		}
-		
+
 		public double absX() {
 			return this.keyboard.anchorX + this.x;
 		}
@@ -173,5 +157,5 @@ public class GuiKeyboard extends FloatGui{
 			return this.keyboard.anchorY + this.y;
 		}
 	}
-	
+
 }

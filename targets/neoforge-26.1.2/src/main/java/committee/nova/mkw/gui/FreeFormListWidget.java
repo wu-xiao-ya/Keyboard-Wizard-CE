@@ -1,6 +1,5 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkw.util.DrawingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSelectionList;
@@ -8,8 +7,10 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 
-public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> extends AbstractSelectionList<FreeFormListWidget<E>.Entry> {
-    public FreeFormListWidget(Minecraft minecraft, int top, int left, int width, int height, int itemHeight) {
+public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
+        extends AbstractSelectionList<FreeFormListWidget<E>.Entry> {
+    public FreeFormListWidget(
+            Minecraft minecraft, int top, int left, int width, int height, int itemHeight) {
         super(minecraft, width, height, top, itemHeight);
         this.setX(left);
     }
@@ -29,19 +30,37 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     protected void extractPanelBackground(GuiGraphicsExtractor graphics) {
-        graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom(), -1072689136, -804253680);
+        graphics.fillGradient(
+                this.getX(),
+                this.getY(),
+                this.getX() + this.width,
+                this.getListBottom(),
+                0xFFEDEDED,
+                0xFFEDEDED);
     }
 
     @Override
-    protected void extractItem(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, FreeFormListWidget<E>.Entry entry) {
+    protected void extractItem(
+            GuiGraphicsExtractor graphics,
+            int mouseX,
+            int mouseY,
+            float partialTick,
+            FreeFormListWidget<E>.Entry entry) {
         if (this.getSelected() == entry) {
-            DrawingUtil.drawNoFillRect(graphics, this.getRowLeft() - 2, entry.getY() - 2, this.getRowRight() - 8, entry.getY() + entry.getHeight() - 4, 0xFFFFFFFF);
+            PixelWidgets.painter(graphics)
+                    .fill(
+                            this.getRowLeft() - 2,
+                            entry.getY() - 2,
+                            this.getRowRight() - 8,
+                            entry.getY() + entry.getHeight() - 4,
+                            0xFFFFFFFF);
         }
         super.extractItem(graphics, mouseX, mouseY, partialTick, entry);
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(
+            GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             this.extractPanelBackground(graphics);
             super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
@@ -90,7 +109,12 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
     public abstract class Entry extends AbstractSelectionList.Entry<FreeFormListWidget<E>.Entry> {
         @Override
-        public abstract void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float tickDelta);
+        public abstract void extractContent(
+                GuiGraphicsExtractor graphics,
+                int mouseX,
+                int mouseY,
+                boolean hovered,
+                float tickDelta);
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {

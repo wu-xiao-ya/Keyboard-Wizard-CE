@@ -52,12 +52,12 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
     @Override
     protected void drawIcon(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        this.drawButton(ctx);
+        PixelWidgets.drawButton(ctx, Text.empty(), getX(), getY(), getWidth(), getHeight(), committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.UNASSIGNED, isHovered());
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         Text label = trimToWidth(this.getMessage(), this.getWidth() - 8);
         int textX = this.getX() + (this.getWidth() - textRenderer.getWidth(label)) / 2;
         int textY = this.getY() + (this.getHeight() - textRenderer.fontHeight) / 2;
-        ctx.drawTextWithShadow(textRenderer, label, textX, textY, this.active ? 0xFFFFFFFF : 0xFFA0A0A0);
+        ctx.drawTextWithShadow(textRenderer, label, textX, textY, this.active ? 0xFF202020 : 0xFF666666);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class CategorySelectorWidget extends PressableWidget implements TickableE
 
             @Override
             public void render(DrawContext ctx, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ctx.drawTextWithShadow(client.textRenderer, trimToWidth(categoryText(this.category), entryWidth - 6), x + 3, y + 2, 0xFFFFFFFF);
+                ctx.drawTextWithShadow(client.textRenderer, trimToWidth(categoryText(this.category), entryWidth - 6), x + 3, y + 2, 0xFF202020);
             }
         }
     }

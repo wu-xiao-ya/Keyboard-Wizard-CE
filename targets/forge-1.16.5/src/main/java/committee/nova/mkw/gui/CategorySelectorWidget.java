@@ -1,7 +1,9 @@
 package committee.nova.mkw.gui;
 
-import committee.nova.mkw.util.KeyBindingUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
+
+import committee.nova.mkw.util.KeyBindingUtil;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,8 +15,9 @@ public class CategorySelectorWidget extends Button implements TickableElement {
     private final KeyWizardScreen keyWizardScreen;
     private final BindingCategoryListWidget categoryList;
 
-    public CategorySelectorWidget(KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
-        super(x, y, width, height, StringTextComponent.EMPTY, button -> { });
+    public CategorySelectorWidget(
+            KeyWizardScreen keyWizardScreen, int x, int y, int width, int height) {
+        super(x, y, width, height, StringTextComponent.EMPTY, button -> {});
         this.keyWizardScreen = keyWizardScreen;
         Minecraft client = Minecraft.getInstance();
         int listItemHeight = client.font.lineHeight + 7;
@@ -23,7 +26,14 @@ public class CategorySelectorWidget extends Button implements TickableElement {
         if (listBottom > this.keyWizardScreen.height) {
             listHeight = this.keyWizardScreen.height - this.y - this.getHeight() - 10;
         }
-        this.categoryList = new BindingCategoryListWidget(client, this.y + this.getHeight(), this.x, this.width, listHeight, listItemHeight);
+        this.categoryList =
+                new BindingCategoryListWidget(
+                        client,
+                        this.y + this.getHeight(),
+                        this.x,
+                        this.width,
+                        listHeight,
+                        listItemHeight);
         this.categoryList.visible = false;
         this.setMessage(new TranslationTextComponent(this.getSelectedCategory()));
     }
@@ -45,7 +55,15 @@ public class CategorySelectorWidget extends Button implements TickableElement {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        PixelWidgets.key(
+                matrixStack,
+                getMessage().getString(),
+                this.x,
+                this.y,
+                getWidth(),
+                getHeight(),
+                0,
+                isMouseOver(mouseX, mouseY));
         this.categoryList.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -66,8 +84,10 @@ public class CategorySelectorWidget extends Button implements TickableElement {
         return this.categoryList;
     }
 
-    public static class BindingCategoryListWidget extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
-        public BindingCategoryListWidget(Minecraft client, int top, int left, int width, int height, int itemHeight) {
+    public static class BindingCategoryListWidget
+            extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry> {
+        public BindingCategoryListWidget(
+                Minecraft client, int top, int left, int width, int height, int itemHeight) {
             super(client, top, left, width, height, itemHeight);
             for (String category : KeyBindingUtil.getCategoriesWithDynamics()) {
                 this.addEntry(new CategoryEntry(category));
@@ -75,7 +95,8 @@ public class CategorySelectorWidget extends Button implements TickableElement {
             this.setSelected(this.children().get(0));
         }
 
-        public class CategoryEntry extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
+        public class CategoryEntry
+                extends FreeFormListWidget<BindingCategoryListWidget.CategoryEntry>.Entry {
             private final String category;
 
             public CategoryEntry(String category) {
@@ -83,8 +104,23 @@ public class CategorySelectorWidget extends Button implements TickableElement {
             }
 
             @Override
-            public void render(MatrixStack matrixStack, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                minecraft.font.draw(matrixStack, new TranslationTextComponent(this.category), x + 3, y + 2, 0xFFFFFFFF);
+            public void render(
+                    MatrixStack matrixStack,
+                    int index,
+                    int y,
+                    int x,
+                    int entryWidth,
+                    int entryHeight,
+                    int mouseX,
+                    int mouseY,
+                    boolean hovered,
+                    float tickDelta) {
+                minecraft.font.draw(
+                        matrixStack,
+                        new TranslationTextComponent(this.category),
+                        x + 3,
+                        y + 2,
+                        0xFF202020);
             }
         }
     }

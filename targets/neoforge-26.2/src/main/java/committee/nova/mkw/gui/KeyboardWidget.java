@@ -1,23 +1,24 @@
 package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import committee.nova.mkw.util.DrawingUtil;
+
 import committee.nova.mkw.util.KeyBindingUtil;
+
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
-import net.minecraft.client.input.InputWithModifiers;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.settings.KeyModifier;
+
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeyboardWidget extends AbstractContainerEventHandler implements Renderable, TickableElement, NarratableEntry {
+public class KeyboardWidget extends AbstractContainerEventHandler
+        implements Renderable, TickableElement, NarratableEntry {
     public KeyWizardScreen keyWizardScreen;
 
     private final HashMap<Integer, KeyboardKeyWidget> keys = new HashMap<>();
@@ -38,17 +40,46 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         this.anchorY = anchorY;
     }
 
-    public float addKey(float relativeX, float relativeY, float width, float height, float keySpacing, int keyCode) {
-        return addKey(relativeX, relativeY, width, height, keySpacing, keyCode, InputConstants.Type.KEYSYM);
+    public float addKey(
+            float relativeX,
+            float relativeY,
+            float width,
+            float height,
+            float keySpacing,
+            int keyCode) {
+        return addKey(
+                relativeX,
+                relativeY,
+                width,
+                height,
+                keySpacing,
+                keyCode,
+                InputConstants.Type.KEYSYM);
     }
 
-    public float addKey(float relativeX, float relativeY, float width, float height, float keySpacing, int keyCode, InputConstants.Type keyType) {
-        this.keys.put(keyCode, new KeyboardKeyWidget(keyCode, this.anchorX + relativeX, this.anchorY + relativeY, width, height, keyType));
+    public float addKey(
+            float relativeX,
+            float relativeY,
+            float width,
+            float height,
+            float keySpacing,
+            int keyCode,
+            InputConstants.Type keyType) {
+        this.keys.put(
+                keyCode,
+                new KeyboardKeyWidget(
+                        keyCode,
+                        this.anchorX + relativeX,
+                        this.anchorY + relativeY,
+                        width,
+                        height,
+                        keyType));
         return relativeX + width + keySpacing;
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(
+            GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         List<? extends KeyboardKeyWidget> keys = this.children();
         for (KeyboardKeyWidget k : keys) {
             k.extractRenderState(graphics, mouseX, mouseY, partialTick);
@@ -57,7 +88,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         if (!keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget k : keys) {
                 if (k.active && k.isHovered()) {
-                    graphics.setTooltipForNextFrame(Minecraft.getInstance().font, k.tooltipText.stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(
+                            Minecraft.getInstance().font,
+                            k.tooltipText.stream().map(Component::getVisualOrderText).toList(),
+                            mouseX,
+                            mouseY);
                 }
             }
         }
@@ -105,7 +140,13 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         private final InputConstants.Key key;
         private List<Component> tooltipText = new ArrayList<>();
 
-        protected KeyboardKeyWidget(int keyCode, float x, float y, float width, float height, InputConstants.Type keyType) {
+        protected KeyboardKeyWidget(
+                int keyCode,
+                float x,
+                float y,
+                float width,
+                float height,
+                InputConstants.Type keyType) {
             super((int) x, (int) y, (int) width, (int) height, Component.empty());
             this.x = x;
             this.y = y;
@@ -116,22 +157,19 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         }
 
         @Override
-        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-            int bindingCount = this.tooltipText.size();
-            int color;
-            if (this.active) {
-                if (this.isHovered() && !keyWizardScreen.getCategorySelectorExtended()) {
-                    color = bindingCount == 0 ? 0xFFAAAAAA : bindingCount == 1 ? 0xFF00AA00 : 0xFFAA0000;
-                } else {
-                    color = bindingCount == 0 ? 0xFFFFFFFF : bindingCount == 1 ? 0xFF00FF00 : 0xFFFF0000;
-                }
-            } else {
-                color = 0xFF555555;
-            }
-
-            DrawingUtil.drawNoFillRect(graphics, this.x, this.y, this.x + this.width, this.y + this.height, color);
-            Font font = Minecraft.getInstance().font;
-            graphics.text(font, getMessage(), (int) (this.x + this.width / 2 - font.width(this.getMessage()) / 2.0F), (int) (this.y + (this.height - 6) / 2), color);
+        protected void extractContents(
+                GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+            PixelWidgets.key(
+                    graphics,
+                    getMessage().getString(),
+                    (int) this.x,
+                    (int) this.y,
+                    (int) this.width,
+                    (int) this.height,
+                    this.tooltipText.size(),
+                    this.active
+                            && this.isHovered()
+                            && !keyWizardScreen.getCategorySelectorExtended());
         }
 
         @Override
@@ -141,7 +179,8 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && this.isMouseOver(event.x(), event.y())) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE
+                    && this.isMouseOver(event.x(), event.y())) {
                 keyWizardScreen.setSearchTextForKey(this.key);
                 return true;
             }
@@ -157,7 +196,12 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
             KeyMapping selectedKeyMapping = keyWizardScreen.getSelectedKeyMapping();
             if (selectedKeyMapping != null) {
-                KeyBindingUtil.setModifierAndKey(selectedKeyMapping, KeyModifier.getActiveModifiers().stream().findFirst().orElse(KeyModifier.NONE), this.key);
+                KeyBindingUtil.setModifierAndKey(
+                        selectedKeyMapping,
+                        KeyModifier.getActiveModifiers().stream()
+                                .findFirst()
+                                .orElse(KeyModifier.NONE),
+                        this.key);
                 KeyBindingUtil.refreshMappings();
             }
         }
@@ -169,7 +213,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
                     tooltipText.add(I18n.get(b.getName()));
                 }
             }
-            this.tooltipText = tooltipText.stream().sorted().map(Component::literal).collect(Collectors.toCollection(ArrayList::new));
+            this.tooltipText =
+                    tooltipText.stream()
+                            .sorted()
+                            .map(Component::literal)
+                            .collect(Collectors.toCollection(ArrayList::new));
         }
 
         @Override
@@ -179,8 +227,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput output) {
-    }
+    public void updateNarration(NarrationElementOutput output) {}
 
     @Override
     public NarrationPriority narrationPriority() {

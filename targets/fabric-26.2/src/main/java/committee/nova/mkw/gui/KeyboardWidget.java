@@ -118,20 +118,11 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         @Override
         protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             int bindingCount = this.tooltipText.size();
-            int color;
-            if (this.active) {
-                if (this.isHovered() && !keyWizardScreen.getCategorySelectorExtended()) {
-                    color = bindingCount == 0 ? 0xFFAAAAAA : bindingCount == 1 ? 0xFF00AA00 : 0xFFAA0000;
-                } else {
-                    color = bindingCount == 0 ? 0xFFFFFFFF : bindingCount == 1 ? 0xFF00FF00 : 0xFFFF0000;
-                }
-            } else {
-                color = 0xFF555555;
-            }
-
-            DrawingUtil.drawNoFillRect(graphics, this.x, this.y, this.x + this.width, this.y + this.height, color);
-            Font font = Minecraft.getInstance().font;
-            graphics.text(font, getMessage(), (int) (this.x + this.width / 2 - font.width(this.getMessage()) / 2.0F), (int) (this.y + (this.height - 6) / 2), color);
+            var state = bindingCount == 0 ? committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.UNASSIGNED
+                    : bindingCount == 1 ? committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.ASSIGNED
+                    : committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState.CONFLICT;
+            PixelWidgets.drawKeyboardKey(graphics, getMessage(), (int)this.x, (int)this.y,
+                    (int)this.width, (int)this.height, state, this.isHoveredOrFocused(), false, false);
         }
 
         @Override

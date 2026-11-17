@@ -52,7 +52,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     protected void renderPanelBackground(DrawContext ctx) {
-        ctx.fillGradient(this.panelLeft, this.panelTop, this.panelLeft + this.width, this.panelBottom, -1072689136, -804253680);
+        ctx.fill(this.panelLeft, this.panelTop, this.panelLeft + this.width, this.panelBottom, 0xFFEDEDED);
     }
 
     @Override
@@ -61,7 +61,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
             if (this.isSelectedEntry(i)) {
-                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, 0xFFFFFFFF);
+                DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, 0xFF202020);
             }
 
             Entry entry = getEntry(i);
