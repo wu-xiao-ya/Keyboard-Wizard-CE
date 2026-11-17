@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import committee.nova.mkw.util.DrawingUtil;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -46,15 +47,18 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     }
 
     protected void renderPanelBackground(DrawContext ctx) {
-        ctx.fill(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom(), 0xFFEDEDED);
+        ctx.fill(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom(), PixelKeyboardStyle.LIST_SURFACE);
     }
 
     @Override
     protected void renderList(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        // Parent rendering paints its vanilla background before dispatching this hook.
+        this.renderPanelBackground(ctx);
         ctx.enableScissor(this.getX(), this.getY(), this.getX() + this.width, this.getListBottom());
 
         for (int i = 0; i < this.getEntryCount(); ++i) {
             if (this.isSelectedEntry(i)) {
+                ctx.fill(this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, PixelKeyboardStyle.LIST_SELECTED);
                 DrawingUtil.drawNoFillRect(ctx, this.getRowLeft() - 2, this.getRowTop(i) - 2, this.getRowRight(), this.getRowTop(i) + this.itemHeight - 4, 0xFF202020);
             }
 
@@ -67,7 +71,6 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry> 
     @Override
     public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            this.renderPanelBackground(ctx);
             super.renderWidget(ctx, mouseX, mouseY, delta);
         }
     }

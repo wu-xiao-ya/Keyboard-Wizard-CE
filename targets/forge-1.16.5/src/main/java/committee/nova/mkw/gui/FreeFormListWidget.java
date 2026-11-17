@@ -3,6 +3,8 @@ package committee.nova.mkw.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractList;
 
@@ -17,6 +19,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
         super(client, width, height, top, top + height, itemHeight);
         this.setLeftPos(left);
         this.setRenderBackground(false);
+        this.setRenderTopAndBottom(false);
     }
 
     @Override
@@ -31,12 +34,15 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
 
     @Override
     protected void renderBackground(MatrixStack matrixStack) {
-        PixelWidgets.panel(matrixStack, this.x0, this.y0, this.width, this.y1 - this.y0);
+        PixelWidgets.painter(matrixStack)
+                .fill(this.x0, this.y0, this.x1, this.y1, PixelKeyboardStyle.LIST_SURFACE);
     }
 
     @Override
     protected void renderList(
             MatrixStack matrixStack, int x, int y, int mouseX, int mouseY, float partialTicks) {
+        PixelWidgets.painter(matrixStack)
+                .fill(this.x0, this.y0, this.x1, this.y1, PixelKeyboardStyle.LIST_SURFACE);
         enableScissor();
         for (int i = 0; i < this.getItemCount(); ++i) {
             if (this.isSelectedItem(i)) {
@@ -46,7 +52,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
                                 this.getRowTop(i) - 2,
                                 this.getRowRight() - 8,
                                 this.getRowTop(i) + this.itemHeight - 4,
-                                0xFFFFFFFF);
+                                PixelKeyboardStyle.LIST_SELECTED);
             }
             Entry entry = this.getEntry(i);
             entry.render(
@@ -68,6 +74,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
+            this.renderBackground(matrixStack);
             super.render(matrixStack, mouseX, mouseY, partialTicks);
         }
     }

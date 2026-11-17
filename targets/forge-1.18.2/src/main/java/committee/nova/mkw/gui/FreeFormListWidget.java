@@ -3,6 +3,8 @@ package committee.nova.mkw.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 
@@ -39,12 +41,21 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
 
     @Override
     public void renderBackground(PoseStack poseStack) {
-        fillGradient(poseStack, this.x0, this.y0, this.x1, this.y1, 0xFFEDEDED, 0xFFEDEDED);
+        fillGradient(
+                poseStack,
+                this.x0,
+                this.y0,
+                this.x1,
+                this.y1,
+                PixelKeyboardStyle.LIST_SURFACE,
+                PixelKeyboardStyle.LIST_SURFACE);
     }
 
     @Override
     protected void renderList(
             PoseStack poseStack, int left, int top, int mouseX, int mouseY, float delta) {
+        PixelWidgets.painter(poseStack)
+                .fill(this.x0, this.y0, this.x1, this.y1, PixelKeyboardStyle.LIST_SURFACE);
         double scaleH =
                 this.minecraft.getWindow().getHeight()
                         / (double) this.minecraft.getWindow().getGuiScaledHeight();
@@ -65,7 +76,7 @@ public abstract class FreeFormListWidget<E extends FreeFormListWidget<E>.Entry>
                                 this.getRowTop(i) - 2,
                                 this.getRowRight() - 8,
                                 this.getRowTop(i) + this.itemHeight - 4,
-                                0xFFFFFFFF);
+                                PixelKeyboardStyle.LIST_SELECTED);
             }
 
             Entry entry = getEntry(i);
