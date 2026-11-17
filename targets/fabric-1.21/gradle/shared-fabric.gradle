@@ -1,0 +1,174 @@
+base {
+    archivesName = project.archives_base_name
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    maven {
+        url = uri("https://maven.nova-committee.cn/releases")
+    }
+}
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    testImplementation platform("org.junit:junit-bom:5.11.4")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+def minecraftDependencyVersion = providers.gradleProperty("minecraft_dependency_version")
+        .orElse(providers.gradleProperty("minecraft_version"))
+        .get()
+def resourceModVersion = project.version
+
+processResources {
+    filteringCharset = 'UTF-8'
+    inputs.property "version", resourceModVersion
+    inputs.property "minecraft_version", minecraftDependencyVersion
+
+    filesMatching("fabric.mod.json") {
+        expand "version": resourceModVersion, "minecraft_version": minecraftDependencyVersion
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaExec).configureEach {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+}
+
+def legalNotices = [rootProject.file('../../LICENSE.md'), rootProject.file('../../COPYING.md'),
+                    file('NOTICE.md'), file('README.md')]
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+tasks.named('jar', Jar).configure {
+    from(legalNotices) {
+        into 'META-INF'
+    }
+}
+
+def releaseFiles = [
+        tasks.named('remapJar'),
+        tasks.named('remapSourcesJar')
+]
+
+tasks.register('generateReleaseChecksums') {
+    group = 'distribution'
+    description = 'Generates SHA-256 checksums for release jars.'
+    dependsOn releaseFiles
+
+    inputs.files(releaseFiles.collect { it.flatMap { archive -> archive.archiveFile } })
+    outputs.file(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+
+    doLast {
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        def outputFile = layout.buildDirectory.file('release/SHA256SUMS.txt').get().asFile
+        outputFile.parentFile.mkdirs()
+        outputFile.text = releaseFiles.collect { provider ->
+            def file = provider.get().archiveFile.get().asFile
+            digest.reset()
+            file.withInputStream { input ->
+                byte[] buffer = new byte[8192]
+                int read
+                while ((read = input.read(buffer)) != -1) {
+                    digest.update(buffer, 0, read)
+                }
+            }
+            "${digest.digest().encodeHex()}  mods/${file.name}"
+        }.join('\n') + '\n'
+    }
+}
+
+tasks.register('releaseBundle', Zip) {
+    group = 'distribution'
+    description = 'Packages release jars, checksums, and legal notices.'
+    dependsOn releaseFiles
+    dependsOn tasks.named('generateReleaseChecksums')
+    archiveFileName = "${archives_base_name}-${mod_version}-release.zip"
+    destinationDirectory = layout.buildDirectory.dir('release')
+
+    from(releaseFiles.collect { it.flatMap { archive -> archive.archiveFile } }) {
+        into 'mods'
+    }
+    from(layout.buildDirectory.file('release/SHA256SUMS.txt'))
+    from(legalNotices)
+    from('CHANGELOG.md')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+// Reuse the 1.21.1 adapter where the Yarn APIs match. Each listed source
+// directory contributes one replacement class for a changed Minecraft API.
+def fabricReference = rootProject.file('../fabric-1.21.1/src/main')
+def versionedScreen = [
+        '1.21.2': 'fabric-1.21.2',
+        '1.21.3': 'fabric-1.21.2',
+        '1.21.4': 'fabric-1.21.2',
+        '1.21.5': 'fabric-1.21.2',
+        '1.21.6': 'fabric-1.21.6'
+][minecraft_version]
+def versionedBindingList = ['1.21.4', '1.21.5', '1.21.6'].contains(minecraft_version)
+
+def referenceJava = objects.sourceDirectorySet('fabricReference', 'Fabric 1.21.1 adapter')
+referenceJava.srcDir new File(fabricReference, 'java')
+if (versionedScreen != null) {
+    referenceJava.exclude 'committee/nova/mkw/gui/KeyWizardScreen.java'
+}
+if (versionedBindingList) {
+    referenceJava.exclude 'committee/nova/mkw/gui/KeyBindingListWidget.java'
+}
+
+sourceSets.main.java {
+    source referenceJava
+    if (versionedScreen != null) {
+        srcDir rootProject.file("../${versionedScreen}/src/adapter/java")
+    }
+    if (versionedBindingList) {
+        srcDir rootProject.file('../fabric-1.21.4/src/adapter/java')
+    }
+    srcDir rootProject.file('../glfw-keys/src/main/java')
+    srcDir rootProject.file('../../shared-core/src/main/java')
+}
+
+def referenceResources = objects.sourceDirectorySet('fabricReferenceResources', 'Fabric 1.21.1 assets')
+referenceResources.srcDir new File(fabricReference, 'resources')
+referenceResources.exclude 'fabric.mod.json'
+
+sourceSets.main.resources {
+    source referenceResources
+    srcDir rootProject.file('../../shared-core/src/main/resources')
+}
+
+sourceSets.test.java.srcDir rootProject.file('../fabric-1.21.1/src/test/java')

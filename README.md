@@ -15,11 +15,13 @@
 | NeoForge 26.1.2 | `ab159e9` | 25 | 独立分支接入 |
 | NeoForge 26.2 | `2e8a6cc` | 25 | 独立分支接入 |
 
+Fabric 覆盖 Minecraft Java 版 1.20 至 26.3 的 24 个正式版本。1.20 至 1.20.4 用 JDK 17 构建，1.20.5 至 1.21.11 用 JDK 21，26.1 至 26.3 用 JDK 25。各版本的构建目标和产物名称见工作流。
+
 ## 架构
 
 - `shared-core/` 维护 Java 8 兼容的搜索、分类、键盘布局和绑定接口。
 - `shared-core/src/main/resources/` 维护界面切换图标、背景和模组标志。所有目标从这里打包，修改画面素材时只需更新这一处。
-- `targets/glfw-keys/` 把布局使用的物理键标识转换成现代游戏使用的键符号。
+- `targets/glfw-keys/` 和 `targets/sdl-keys/` 把布局使用的物理键标识转换成游戏使用的键码。
 - `targets/<loader>-<version>/` 管理加载器入口、界面、游戏绑定和资源。各目标的 Gradle 构建读取同一份核心源码，并把它打进各自的模组 JAR。
 
 ## 验证

@@ -1,0 +1,29 @@
+# Keyboard Wizard CE
+
+Keyboard Wizard CE is the community edition branch of Modern KeyWizard for Minecraft 1.21.5 on Fabric.
+
+- Branch: `ce/fabric-1.21.5`
+- Mod id: `keyboard_wizard_ce`
+- Mod name: `Keyboard Wizard CE`
+- Maven group: `io.github.wu_xiao_ya.keyboard_wizard_ce.fabric`
+- Archive base name: `keyboard-wizard-ce-fabric-1.21.5`
+- Original authors: MrNerdy42, Tapio
+- Art assets: WI_8614_ice
+- Target: Minecraft 1.21.5 + Fabric
+- Java: 21
+
+This branch keeps the shared internal API layer used by the modern Fabric ports: `core/binding`, `bridge/binding`, and `core/layout`. It includes the F7 entry, Controls screen icon entry, layout switching, search, key-based filtering, help tooltip, CE background, and bundled CE icon assets.
+
+## Support matrix
+
+| Loader | Minecraft | Java | Branch | Mapping layer |
+| --- | --- | --- | --- | --- |
+| Fabric | 1.21.5 | 21 | `ce/fabric-1.21.5` | Yarn `1.21.5+build.1` |
+
+## Validation target
+
+Build with `./gradlew build releaseBundle --no-daemon --stacktrace --warning-mode all`.
+
+## Shared-core source
+
+The adapter is based on commit f9e8b36bb4a92e5bcaad90830aad2c94f7add137. Build from this directory in the full repository checkout so Gradle can include the shared core and the compatible Fabric adapter sources. Run `bash gradlew build releaseBundle` on Linux or `gradlew.bat build releaseBundle` on Windows.
