@@ -7,6 +7,8 @@ import committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 
 final class PixelWidgets {
@@ -49,7 +51,7 @@ final class PixelWidgets {
         font.draw(g, text, tx, ty, state.ink);
     }
 
-    static class PixelButton extends net.minecraft.client.gui.widget.button.Button {
+    static class PixelButton extends Button {
         PixelButton(int x, int y, int w, int h, ITextComponent label, IPressable press) {
             super(x, y, w, h, label, press);
         }
@@ -68,17 +70,12 @@ final class PixelWidgets {
         }
     }
 
-    static net.minecraft.client.gui.widget.button.Button button(
-            int x,
-            int y,
-            int w,
-            int h,
-            ITextComponent label,
-            net.minecraft.client.gui.widget.button.Button.IPressable press) {
+    static Button button(
+            int x, int y, int w, int h, ITextComponent label, Button.IPressable press) {
         return new PixelButton(x, y, w, h, label, press);
     }
 
-    static class PixelSearch extends net.minecraft.client.gui.widget.TextFieldWidget {
+    static class PixelSearch extends TextFieldWidget {
         PixelSearch(FontRenderer font, int x, int y, int w, int h, ITextComponent label) {
             super(font, x, y, w, h, label);
             setBordered(false);
@@ -106,11 +103,7 @@ final class PixelWidgets {
     }
 
     static class IconButton extends PixelButton {
-        IconButton(
-                int x,
-                int y,
-                ITextComponent label,
-                net.minecraft.client.gui.widget.button.Button.IPressable press) {
+        IconButton(int x, int y, ITextComponent label, Button.IPressable press) {
             super(x, y, 20, 20, label, press);
         }
 

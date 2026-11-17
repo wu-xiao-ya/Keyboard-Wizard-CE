@@ -60,8 +60,6 @@ public class KeyWizardScreen extends OptionsSubScreen {
     @Override
     protected void init() {
         String previousSearch = this.searchBar == null ? "" : this.searchBar.getValue();
-        this.searchBar.setMaxLength(256);
-        this.searchBar.setValue(previousSearch);
         int mouseButtonX = this.width - 105;
         int mouseButtonY = Math.max(30, this.height / 2 - 115);
         int mouseButtonWidth = 80;
@@ -145,6 +143,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.searchBar =
                 new PixelWidgets.PixelSearch(
                         this.font, 10, this.height - 20, bindingListWidth, 14, Component.empty());
+        this.searchBar.setMaxLength(256);
+        this.searchBar.setValue(previousSearch);
         this.mouseButton =
                 KeyboardWidgetBuilder.singleKeyKeyboard(
                         this,

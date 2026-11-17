@@ -83,8 +83,6 @@ public class KeyWizardScreen extends SettingsScreen {
     @Override
     protected void init() {
         String previousSearch = this.searchBar == null ? "" : this.searchBar.getValue();
-        this.searchBar.setMaxLength(256);
-        this.searchBar.setValue(previousSearch);
         int mouseButtonX = this.width - 105;
         int mouseButtonY = Math.max(30, this.height / 2 - 115);
         int mouseButtonWidth = 80;
@@ -192,6 +190,8 @@ public class KeyWizardScreen extends SettingsScreen {
                         bindingListWidth,
                         14,
                         StringTextComponent.EMPTY);
+        this.searchBar.setMaxLength(256);
+        this.searchBar.setValue(previousSearch);
         this.mouseButton =
                 KeyboardWidgetBuilder.singleKeyKeyboard(
                         this,
