@@ -55,5 +55,11 @@ public class ModernKeyWizard {
             if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
             event.addListener(KeyWizardScreen.createControlsEntryButton(controlsScreen));
         }
+
+        @SubscribeEvent
+        public static void onScreenRender(ScreenEvent.Render.Pre event) {
+            if (!(event.getScreen() instanceof ControlsScreen controlsScreen)) return;
+            KeyWizardScreen.layoutControlsEntryButton(controlsScreen);
+        }
     }
 }

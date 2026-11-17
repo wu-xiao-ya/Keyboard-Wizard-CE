@@ -66,23 +66,37 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public static Button createControlsEntryButton(ControlsScreen controlsScreen) {
-        int size = 28;
-        int margin = 3;
-        Component title = Component.translatable("screen.keyboard_wizard_ce.title");
-        Button entry = new ScreenToggleButton(controlsScreen.width - size - margin, controlsScreen.height - size - margin,
-                size, title, button -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))) {
-            @Override
-            public int getX() {
-                return controlsScreen.width - getWidth() - margin;
-            }
+        return new ControlsEntryButton(controlsScreen);
+    }
 
-            @Override
-            public int getY() {
-                return controlsScreen.height - getHeight() - margin;
+    public static void layoutControlsEntryButton(ControlsScreen controlsScreen) {
+        for (GuiEventListener child : controlsScreen.children()) {
+            if (child instanceof ControlsEntryButton entry) {
+                entry.updateBounds(controlsScreen);
+                return;
             }
-        };
-        entry.setTooltip(Tooltip.create(title));
-        return entry;
+        }
+    }
+
+    private static final class ControlsEntryButton extends ScreenToggleButton {
+        private static final int MARGIN = 3;
+
+        private ControlsEntryButton(ControlsScreen controlsScreen) {
+            super(0, 0, 0, Component.translatable("screen.keyboard_wizard_ce.title"), true,
+                    button -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen)));
+            this.setTooltip(Tooltip.create(this.getMessage()));
+            this.updateBounds(controlsScreen);
+        }
+
+        private void updateBounds(ControlsScreen controlsScreen) {
+            double scale = Minecraft.getInstance().getWindow().getGuiScale();
+            int size = Math.clamp((int) Math.round(36 - 2 * scale), 24, 34);
+            int x = controlsScreen.width - size - MARGIN;
+            int y = controlsScreen.height - size - MARGIN;
+            if (this.getWidth() != size || this.getHeight() != size || this.getX() != x || this.getY() != y) {
+                this.setRectangle(size, size, x, y);
+            }
+        }
     }
 
     @Override
@@ -229,7 +243,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
-        return new ScreenToggleButton(x, y, 20, Component.translatable("options.controls"), onPress);
+        return new ScreenToggleButton(x, y, 20, Component.translatable("options.controls"), false, onPress);
     }
 
     private Button createLayoutButton(KeyboardLayout layout, int x, int y, int width) {
@@ -304,27 +318,60 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     private static class ScreenToggleButton extends Button {
-        private ScreenToggleButton(int x, int y, int size, Component label, Button.OnPress onPress) {
+        private static final int KEYBOARD_WIDTH = 16;
+        private static final int KEYBOARD_HEIGHT = 10;
+
+        private final boolean keyboardIcon;
+
+        private ScreenToggleButton(int x, int y, int size, Component label, boolean keyboardIcon, Button.OnPress onPress) {
             super(x, y, size, size, label, onPress, DEFAULT_NARRATION);
+            this.keyboardIcon = keyboardIcon;
         }
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             PixelKeyboardStyle.drawKeycap(graphics::fill, this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                     KeyState.UNASSIGNED, this.isHoveredOrFocused());
-            int keyWidth = Math.round(4 * this.getWidth() / 20f);
-            int keyHeight = Math.round(5 * this.getHeight() / 20f);
-            int gridX = this.getX() + (this.getWidth() - 3 * keyWidth) / 2;
-            int gridY = this.getY() + (this.getHeight() - 2 * keyHeight) / 2;
-            for (int row = 0; row < 2; row++) {
-                for (int column = 0; column < 3; column++) {
-                    int x = gridX + keyWidth * column;
-                    int y = gridY + keyHeight * row;
-                    KeyState state = column == 1 ? (row == 0 ? KeyState.CONFLICT : KeyState.ASSIGNED) : KeyState.UNASSIGNED;
-                    graphics.fill(x, y, x + keyWidth, y + keyHeight, PixelKeyboardStyle.BORDER);
-                    graphics.fill(x + 1, y + 1, x + keyWidth - 1, y + keyHeight - 1, state.bevel);
-                }
+            if (this.keyboardIcon) {
+                renderKeyboardIcon(graphics);
+            } else {
+                renderReturnIcon(graphics);
             }
+        }
+
+        private void renderReturnIcon(GuiGraphics graphics) {
+            int arrowWidth = 12;
+            int arrowHeight = 10;
+            int x = this.getX() + (this.getWidth() - arrowWidth) / 2;
+            int y = this.getY() + (this.getHeight() - arrowHeight) / 2;
+            int ink = PixelKeyboardStyle.INK;
+            graphics.fill(x, y + 4, x + arrowWidth, y + 6, ink);
+            for (int step = 0; step < 4; step++) {
+                int left = x + 4 - step;
+                int top = y + step;
+                int bottom = y + arrowHeight - step;
+                graphics.fill(left, top, left + 2, top + 1, ink);
+                graphics.fill(left, bottom - 1, left + 2, bottom, ink);
+            }
+        }
+
+        private void renderKeyboardIcon(GuiGraphics graphics) {
+            int x = this.getX() + (this.getWidth() - KEYBOARD_WIDTH) / 2;
+            int y = this.getY() + (this.getHeight() - KEYBOARD_HEIGHT) / 2;
+            graphics.fill(x + 1, y, x + KEYBOARD_WIDTH - 1, y + KEYBOARD_HEIGHT, PixelKeyboardStyle.BORDER);
+            graphics.fill(x, y + 1, x + KEYBOARD_WIDTH, y + KEYBOARD_HEIGHT - 1, PixelKeyboardStyle.BORDER);
+            graphics.fill(x + 1, y + 1, x + 15, y + 2, PixelKeyboardStyle.PANEL_FOOT);
+
+            for (int column = 0; column < 4; column++) {
+                int keyX = x + 2 + 3 * column;
+                graphics.fill(keyX, y + 2, keyX + 2, y + 4, PixelKeyboardStyle.PANEL_HIGHLIGHT);
+                graphics.fill(keyX + 1, y + 5, keyX + 3, y + 6, PixelKeyboardStyle.PANEL);
+            }
+
+            graphics.fill(x + 2, y + 7, x + 4, y + 8, KeyState.ASSIGNED.bevel);
+            graphics.fill(x + 5, y + 7, x + 11, y + 8, PixelKeyboardStyle.PANEL_HIGHLIGHT);
+            graphics.fill(x + 12, y + 7, x + 14, y + 8, KeyState.CONFLICT.bevel);
+            graphics.fill(x + 2, y + 8, x + 14, y + 9, PixelKeyboardStyle.PANEL_FOOT);
         }
     }
 }
