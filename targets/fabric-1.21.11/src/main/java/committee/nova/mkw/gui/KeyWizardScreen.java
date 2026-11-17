@@ -297,7 +297,7 @@ public class KeyWizardScreen extends GameOptionsScreen {
 
     private static class TextureButton extends ButtonWidget {
         protected TextureButton(int x, int y, PressAction onPress) {
-            super(x, y, ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT, Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT, net.minecraft.text.Text.empty(), onPress, DEFAULT_NARRATION_SUPPLIER);
         }
 
         @Override
