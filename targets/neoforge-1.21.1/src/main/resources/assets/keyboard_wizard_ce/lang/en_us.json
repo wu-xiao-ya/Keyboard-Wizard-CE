@@ -1,7 +1,6 @@
 {
   "gui.clear": "Clear",
   "gui.confirm.resetAll": "Reset all keys?",
-  "gui.keyboard_wizard_ce.open": "Keyboard Wizard CE",
   "gui.keyboard_wizard_ce.layout": "Layout: %s",
   "gui.keyboard_wizard_ce.layout.auxiliary": "Aux",
   "gui.keyboard_wizard_ce.layout.main": "Main",

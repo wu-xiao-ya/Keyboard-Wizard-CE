@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
@@ -65,8 +66,23 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public static Button createControlsEntryButton(ControlsScreen controlsScreen) {
-        return PixelWidgets.controlsEntryButton(controlsScreen, Component.translatable("gui.keyboard_wizard_ce.open"),
-                button -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen)));
+        int size = 28;
+        int margin = 3;
+        Component title = Component.translatable("screen.keyboard_wizard_ce.title");
+        Button entry = new ScreenToggleButton(controlsScreen.width - size - margin, controlsScreen.height - size - margin,
+                size, title, button -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))) {
+            @Override
+            public int getX() {
+                return controlsScreen.width - getWidth() - margin;
+            }
+
+            @Override
+            public int getY() {
+                return controlsScreen.height - getHeight() - margin;
+            }
+        };
+        entry.setTooltip(Tooltip.create(title));
+        return entry;
     }
 
     @Override
@@ -213,7 +229,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
-        return new ScreenToggleButton(x, y, onPress);
+        return new ScreenToggleButton(x, y, 20, Component.translatable("options.controls"), onPress);
     }
 
     private Button createLayoutButton(KeyboardLayout layout, int x, int y, int width) {
@@ -288,21 +304,25 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     private static class ScreenToggleButton extends Button {
-        private ScreenToggleButton(int x, int y, Button.OnPress onPress) {
-            super(x, y, 20, 20, Component.translatable("options.controls"), onPress, DEFAULT_NARRATION);
+        private ScreenToggleButton(int x, int y, int size, Component label, Button.OnPress onPress) {
+            super(x, y, size, size, label, onPress, DEFAULT_NARRATION);
         }
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             PixelKeyboardStyle.drawKeycap(graphics::fill, this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                     KeyState.UNASSIGNED, this.isHoveredOrFocused());
+            int keyWidth = Math.round(4 * this.getWidth() / 20f);
+            int keyHeight = Math.round(5 * this.getHeight() / 20f);
+            int gridX = this.getX() + (this.getWidth() - 3 * keyWidth) / 2;
+            int gridY = this.getY() + (this.getHeight() - 2 * keyHeight) / 2;
             for (int row = 0; row < 2; row++) {
                 for (int column = 0; column < 3; column++) {
-                    int x = this.getX() + 4 + 4 * column;
-                    int y = this.getY() + 5 + 5 * row;
+                    int x = gridX + keyWidth * column;
+                    int y = gridY + keyHeight * row;
                     KeyState state = column == 1 ? (row == 0 ? KeyState.CONFLICT : KeyState.ASSIGNED) : KeyState.UNASSIGNED;
-                    graphics.fill(x, y, x + 4, y + 5, PixelKeyboardStyle.BORDER);
-                    graphics.fill(x + 1, y + 1, x + 3, y + 4, state.bevel);
+                    graphics.fill(x, y, x + keyWidth, y + keyHeight, PixelKeyboardStyle.BORDER);
+                    graphics.fill(x + 1, y + 1, x + keyWidth - 1, y + keyHeight - 1, state.bevel);
                 }
             }
         }

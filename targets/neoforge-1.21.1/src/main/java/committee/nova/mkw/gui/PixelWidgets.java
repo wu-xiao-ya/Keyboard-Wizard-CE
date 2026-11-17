@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -94,21 +93,7 @@ final class PixelWidgets {
         return new PixelButton(x, y, width, height, label, onPress);
     }
 
-    static Button controlsEntryButton(ControlsScreen screen, Component label, Button.OnPress onPress) {
-        return new PixelButton(0, 0, 164, 24, label, onPress) {
-            @Override
-            public int getX() {
-                return (screen.width - getWidth()) / 2;
-            }
-
-            @Override
-            public int getY() {
-                return screen.height - 58;
-            }
-        };
-    }
-
-    private static class PixelButton extends Button {
+    private static final class PixelButton extends Button {
         private PixelButton(int x, int y, int width, int height, Component label, OnPress onPress) {
             super(x, y, width, height, label, onPress, DEFAULT_NARRATION);
         }
