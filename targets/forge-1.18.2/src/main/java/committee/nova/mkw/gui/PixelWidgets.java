@@ -66,7 +66,7 @@ final class PixelWidgets {
                     getWidth(),
                     getHeight(),
                     0,
-                    active && isHovered());
+                    active && isMouseOver(mx, my));
             if (!active) {
                 int textWidth =
                         Math.min(
@@ -131,7 +131,7 @@ final class PixelWidgets {
                     getWidth(),
                     getHeight(),
                     KeyState.UNASSIGNED,
-                    isHovered());
+                    isMouseOver(mx, my));
             PixelKeyboardStyle.drawKeyboardIcon(
                     painter(g), this.x, this.y, getWidth(), getHeight());
         }

@@ -172,7 +172,7 @@ public class KeyboardWidget extends AbstractContainerEventHandler
                     (int) this.height,
                     this.tooltipText.size(),
                     this.active
-                            && this.isHovered()
+                            && this.isMouseOver(mouseX, mouseY)
                             && !keyWizardScreen.getCategorySelectorExtended());
         }
 
