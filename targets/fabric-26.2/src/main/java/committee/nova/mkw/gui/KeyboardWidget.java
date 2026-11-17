@@ -65,11 +65,18 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (!keyWizardScreen.getCategorySelectorExtended()) {
-            for (KeyboardKeyWidget k : this.children()) {
-                if (k.mouseClicked(event, doubleClick)) {
-                    return true;
-                }
+        // Native parent routing also records the focused key and left-button drag state.
+        return !this.keyWizardScreen.getCategorySelectorExtended() && super.mouseClicked(event, doubleClick);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if (this.keyWizardScreen.getCategorySelectorExtended()) {
+            return false;
+        }
+        for (KeyboardKeyWidget key : this.children()) {
+            if (key.active && key.visible && key.isMouseOver(mouseX, mouseY)) {
+                return true;
             }
         }
         return false;

@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+import re
 import struct
 import sys
 import tomllib
@@ -108,6 +109,16 @@ def verify_pixel_ui(jar, target):
         raise ValueError(f"Pixel widgets do not render the shared keycaps in {jar.filename}")
 
 
+def verify_keyboard_hit_testing(sources, target):
+    if not (target.startswith(("fabric-26.", "neoforge-26."))
+            or target in {"fabric-1.21.9", "fabric-1.21.10", "fabric-1.21.11"}):
+        return
+    keyboard = sources.read("committee/nova/mkw/gui/KeyboardWidget.java").decode("utf-8")
+    container = keyboard.split("class KeyboardKeyWidget", 1)[0]
+    if not re.search(r"\bboolean\s+(?:isMouseOver|method_25405)\s*\(\s*double\b", container):
+        raise ValueError(f"The keyboard container has no native hit test in {sources.filename}")
+
+
 def verify(target):
     properties = dict(
         line.split("=", 1)
@@ -142,6 +153,7 @@ def verify(target):
         for component in CORE_COMPONENTS:
             jar.getinfo(CORE_PREFIX + component + ".java")
         verify_shared_resources(jar)
+        verify_keyboard_hit_testing(jar, target.name)
 
     checksums = target / "build/release/SHA256SUMS.txt"
     recorded = {

@@ -68,15 +68,22 @@ public class KeyboardWidget extends AbstractParentElement implements Drawable, T
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubleClick) {
-        if (!keyWizardScreen.getCategorySelectorExtended()) {
-            for (KeyboardKeyWidget key : this.children()) {
-                if (key.mouseClicked(click, doubleClick)) {
-                    return true;
-                }
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if (this.keyWizardScreen.getCategorySelectorExtended()) {
+            return false;
+        }
+        for (KeyboardKeyWidget key : this.children()) {
+            if (key.active && key.visible && key.isMouseOver(mouseX, mouseY)) {
+                return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubleClick) {
+        // Native parent routing also records the focused key and left-button drag state.
+        return !this.keyWizardScreen.getCategorySelectorExtended() && super.mouseClicked(click, doubleClick);
     }
 
     @Override
