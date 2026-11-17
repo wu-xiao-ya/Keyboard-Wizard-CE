@@ -18,6 +18,7 @@ import mrnerdy42.keywizard.util.KeyboardFactory;
 import mrnerdy42.keywizard.util.KeyboardLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -102,7 +103,7 @@ public class GuiKeyWizard extends GuiScreen {
         this.buttonClear = PixelWidgets.button(0, guiStartX + actionWidth + 2, height - 30, actionWidth, 20, I18n.format("gui.clearBinding"));
         this.buttonResetAll = PixelWidgets.button(0, guiStartX + 2 * (actionWidth + 2), height - 30, actionWidth, 20, I18n.format("gui.resetAll"));
         this.buttonHelp = PixelWidgets.button(2, 10, height - 29, 20, 20, "?");
-        this.buttonToggle = PixelWidgets.button(3, 34, height - 29, bindingListWidth - 28, 20, I18n.format("gui.done"));
+        this.buttonToggle = new TexturedToggleButton(3, 34, height - 29, "gui.done");
         this.buttonActiveModifier = PixelWidgets.button(1, guiStartX, height - 54, guiWidth, 20,
                 I18n.format("gui.activeModifier") + ": " + activeModifier.toString());
         int mouseRowY = 58;
@@ -132,8 +133,8 @@ public class GuiKeyWizard extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
-        PixelWidgets.panel(4, 4, guiStartX - 10, height - 8);
-        PixelWidgets.panel(guiStartX - 4, 4, guiWidth + 8, height - 8);
+        PixelKeyboardStyle.drawPanel(Gui::drawRect, 4, 4, guiStartX - 10, height - 8);
+        PixelKeyboardStyle.drawPanel(Gui::drawRect, guiStartX - 4, 4, guiWidth + 8, height - 8);
         drawRect(10, 10, guiStartX - 12, 31, PixelKeyboardStyle.BORDER);
         drawRect(11, 11, guiStartX - 13, 30, PixelKeyboardStyle.LIST_SELECTED);
 

@@ -1,4 +1,5 @@
 {
+  "gui.keyboard_wizard_ce.search": "搜索按键绑定",
   "gui.clear": "清除",
   "gui.confirm.resetAll": "确认重置全部按键绑定？",
   "gui.keyboard_wizard_ce.layout.auxiliary": "辅助键",

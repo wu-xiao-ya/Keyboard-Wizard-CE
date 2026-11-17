@@ -10,7 +10,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -53,7 +52,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     private Button mouseMinus;
     private KeyBindingListWidget bindingList;
     private CategorySelectorWidget categorySelector;
-    private ImageButton screenToggleButton;
+    private Button screenToggleButton;
     private Button helpButton;
     private EditBox searchBar;
     private Button resetBinding;
@@ -388,5 +387,10 @@ public class KeyWizardScreen extends OptionsSubScreen {
             searchKey = keyName.getString();
         }
         this.setSearchText(KEY_FILTER_PREFIX + "<" + searchKey + ">");
+    }
+
+    public static Button createScreenToggleButton(int x, int y, Button.OnPress press) {
+        return new PixelWidgets.IconButton(
+                x, y, new TranslatableComponent("options.controls"), press);
     }
 }

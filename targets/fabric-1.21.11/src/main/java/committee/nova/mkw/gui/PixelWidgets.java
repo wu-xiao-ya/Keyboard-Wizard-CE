@@ -78,7 +78,7 @@ final class PixelWidgets {
     private static final class PixelButton extends ButtonWidget {
         private final boolean keyboardIcon;
 
-        private PixelButton(int x, int y, int width, int height, Text label,
+        private PixelButton(int x, int y, int width, int height, net.minecraft.text.Text label,
                             PressAction action, boolean keyboardIcon) {
             super(x, y, width, height, label, action, DEFAULT_NARRATION_SUPPLIER);
             this.keyboardIcon = keyboardIcon;
@@ -91,7 +91,7 @@ final class PixelWidgets {
                         KeyState.UNASSIGNED, isHovered());
                 PixelKeyboardStyle.drawKeyboardIcon(context::fill, getX(), getY(), getWidth(), getHeight());
             } else {
-                drawButton(context, getMessage(), getX(), getY(), getWidth(), getHeight(),
+                PixelWidgets.drawButton(context, getMessage(), getX(), getY(), getWidth(), getHeight(),
                         KeyState.UNASSIGNED, isHovered());
             }
         }

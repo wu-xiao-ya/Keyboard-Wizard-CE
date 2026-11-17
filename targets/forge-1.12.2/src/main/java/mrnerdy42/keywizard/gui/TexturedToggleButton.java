@@ -1,18 +1,24 @@
 package mrnerdy42.keywizard.gui;
 
-import committee.nova.mkw.core.gui.ScreenToggleSprite;
-import mrnerdy42.keywizard.KeyWizard;
+import java.util.Collections;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
-/** Small textured icon button shared by the legacy screens. */
+/** Pixel keyboard navigation button; keeps the legacy public constructor. */
 public class TexturedToggleButton extends GuiButton {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(KeyWizard.MODID, ScreenToggleSprite.TEXTURE_PATH);
+    private final String tooltipKey;
 
     public TexturedToggleButton(int buttonId, int x, int y) {
-        super(buttonId, x, y, ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT, "");
+        this(buttonId, x, y, "gui.openKeyWiz");
+    }
+
+    public TexturedToggleButton(int buttonId, int x, int y, String tooltipKey) {
+        super(buttonId, x, y, 20, 20, "");
+        this.tooltipKey = tooltipKey;
     }
 
     @Override
@@ -20,15 +26,14 @@ public class TexturedToggleButton extends GuiButton {
         if (!this.visible) {
             return;
         }
-        this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableBlend();
-        mc.getTextureManager().bindTexture(TEXTURE);
-        this.drawModalRectWithCustomSizedTexture(
-                this.x, this.y,
-                ScreenToggleSprite.U, ScreenToggleSprite.textureV(this.hovered),
-                this.width, this.height,
-                ScreenToggleSprite.TEXTURE_WIDTH, ScreenToggleSprite.TEXTURE_HEIGHT
-        );
+        this.hovered = mouseX >= this.x && mouseY >= this.y
+                && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        PixelKeyboardStyle.drawKeycap(Gui::drawRect, x, y, width, height,
+                PixelKeyboardStyle.KeyState.UNASSIGNED, hovered && enabled);
+        PixelKeyboardStyle.drawKeyboardIcon(Gui::drawRect, x, y, width, height);
+        if (hovered && mc.currentScreen != null) {
+            GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(tooltipKey)), mouseX, mouseY,
+                    mc.currentScreen.width, mc.currentScreen.height, -1, mc.fontRenderer);
+        }
     }
 }

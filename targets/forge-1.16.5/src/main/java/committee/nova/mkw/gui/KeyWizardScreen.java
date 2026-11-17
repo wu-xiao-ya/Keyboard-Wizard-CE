@@ -2,9 +2,7 @@ package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.core.gui.PixelKeyboardStyle;
-import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.util.KeyBindingUtil;
 
 import net.minecraft.client.Minecraft;
@@ -15,7 +13,6 @@ import net.minecraft.client.gui.screen.SettingsScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
@@ -56,7 +53,7 @@ public class KeyWizardScreen extends SettingsScreen {
     private Button mouseMinus;
     private KeyBindingListWidget bindingList;
     private CategorySelectorWidget categorySelector;
-    private ImageButton screenToggleButton;
+    private Button screenToggleButton;
     private Button helpButton;
     private TextFieldWidget searchBar;
     private Button resetBinding;
@@ -160,17 +157,9 @@ public class KeyWizardScreen extends SettingsScreen {
                         categorySelectorY);
         updateLayoutButtons();
         this.screenToggleButton =
-                new ImageButton(
+                createScreenToggleButton(
                         this.width - 22,
                         this.height - 22,
-                        ScreenToggleSprite.WIDTH,
-                        ScreenToggleSprite.HEIGHT,
-                        ScreenToggleSprite.U,
-                        ScreenToggleSprite.V,
-                        ScreenToggleSprite.HOVER_V_OFFSET,
-                        ModernKeyWizard.SCREEN_TOGGLE_WIDGETS,
-                        ScreenToggleSprite.TEXTURE_WIDTH,
-                        ScreenToggleSprite.TEXTURE_HEIGHT,
                         button ->
                                 this.minecraft.setScreen(
                                         new ControlsScreen(this.lastScreen, this.options)));
@@ -418,5 +407,10 @@ public class KeyWizardScreen extends SettingsScreen {
     private void removeChild(Widget widget) {
         this.buttons.remove(widget);
         this.children.remove(widget);
+    }
+
+    public static Button createScreenToggleButton(int x, int y, Button.IPressable press) {
+        return new PixelWidgets.IconButton(
+                x, y, new TranslationTextComponent("options.controls"), press);
     }
 }

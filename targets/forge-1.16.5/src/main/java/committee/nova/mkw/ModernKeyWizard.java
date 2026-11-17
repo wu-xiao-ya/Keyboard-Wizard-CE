@@ -2,19 +2,20 @@ package committee.nova.mkw;
 
 import committee.nova.mkw.core.gui.ScreenToggleSprite;
 import committee.nova.mkw.gui.KeyWizardScreen;
-import net.minecraft.client.settings.KeyBinding;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ControlsScreen;
-import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -23,7 +24,8 @@ import org.lwjgl.glfw.GLFW;
 public class ModernKeyWizard {
     public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = new ResourceLocation(MODID, ScreenToggleSprite.TEXTURE_PATH);
+    public static final ResourceLocation SCREEN_TOGGLE_WIDGETS =
+            new ResourceLocation(MODID, ScreenToggleSprite.TEXTURE_PATH);
 
     private static KeyBinding keyOpenKeyWizard;
 
@@ -31,17 +33,27 @@ public class ModernKeyWizard {
         LOGGER.debug("{} initialized!", MODID);
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(
+            modid = MODID,
+            value = Dist.CLIENT,
+            bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ModClientEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             // Keep the key ID used by options.txt and Hide Key Binding.
-            keyOpenKeyWizard = new KeyBinding("key.keyboard_wizard_ce.openKeyWizard", GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings");
+            keyOpenKeyWizard =
+                    new KeyBinding(
+                            "key.keyboard_wizard_ce.openKeyWizard",
+                            GLFW.GLFW_KEY_F7,
+                            "key.categories." + MODID + ".bindings");
             ClientRegistry.registerKeyBinding(keyOpenKeyWizard);
         }
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @Mod.EventBusSubscriber(
+            modid = MODID,
+            value = Dist.CLIENT,
+            bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeClientEvents {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -56,15 +68,13 @@ public class ModernKeyWizard {
         public static void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event) {
             if (!(event.getGui() instanceof ControlsScreen)) return;
             ControlsScreen controlsScreen = (ControlsScreen) event.getGui();
-            ImageButton screenToggleButton = new ImageButton(
-                    controlsScreen.width - 22,
-                    controlsScreen.height - 22,
-                    ScreenToggleSprite.WIDTH, ScreenToggleSprite.HEIGHT,
-                    ScreenToggleSprite.U, ScreenToggleSprite.V, ScreenToggleSprite.HOVER_V_OFFSET,
-                    SCREEN_TOGGLE_WIDGETS,
-                    ScreenToggleSprite.TEXTURE_WIDTH, ScreenToggleSprite.TEXTURE_HEIGHT,
-                    btn -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen))
-            );
+            Button screenToggleButton =
+                    KeyWizardScreen.createScreenToggleButton(
+                            controlsScreen.width - 22,
+                            controlsScreen.height - 22,
+                            btn ->
+                                    Minecraft.getInstance()
+                                            .setScreen(new KeyWizardScreen(controlsScreen)));
             event.addWidget(screenToggleButton);
         }
     }

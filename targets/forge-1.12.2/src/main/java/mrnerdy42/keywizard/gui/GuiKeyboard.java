@@ -138,6 +138,8 @@ public class GuiKeyboard extends FloatGui{
 		}
 
 		public void mouseClicked(Minecraft mc, int mouseX, int mouseY, int button) {
+            this.hovered = mouseX >= this.absX() && mouseY >= this.absY()
+                    && mouseX < this.absX() + this.width && mouseY < this.absY() + this.height;
 			if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 2) {
 				parent.setSearchTextForKey(this.keyCode);
 			} else if(this.hovered && this.enabled && !parent.getCategoryListExtended() && button == 0) {

@@ -265,6 +265,11 @@ public class KeyWizardScreen extends OptionsSubScreen {
         this.bindingList.tick();
     }
 
+    public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
+        return new ScreenToggleButton(x, y, 20,
+                Component.translatable("screen.keyboard_wizard_ce.title"), onPress);
+    }
+
     public static Button createControlsEntryButton(ControlsScreen controlsScreen, Button.OnPress onPress) {
         Button button = new ControlsEntryButton(onPress);
         updateControlsEntryBounds(button, controlsScreen);

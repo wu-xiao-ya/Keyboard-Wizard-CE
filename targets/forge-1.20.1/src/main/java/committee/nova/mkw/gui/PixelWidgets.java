@@ -65,6 +65,22 @@ final class PixelWidgets {
                     getHeight(),
                     0,
                     active && isHovered());
+            if (!active) {
+                int textWidth =
+                        Math.min(
+                                getWidth() - 4,
+                                Minecraft.getInstance().font.width(getMessage().getString()));
+                int underlineX = getX() + (getWidth() - textWidth) / 2;
+                int underlineY =
+                        getY() + (getHeight() + Minecraft.getInstance().font.lineHeight - 2) / 2;
+                painter(g)
+                        .fill(
+                                underlineX,
+                                underlineY,
+                                underlineX + textWidth,
+                                underlineY + 1,
+                                PixelKeyboardStyle.INK);
+            }
         }
     }
 
