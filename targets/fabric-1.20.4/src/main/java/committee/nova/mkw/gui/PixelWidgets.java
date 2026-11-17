@@ -20,10 +20,40 @@ final class PixelWidgets {
         if (height < font.fontHeight + 3 || width < 5) {
             return;
         }
-        String fitted = font.trimToWidth(label.getString(), Math.max(0, width - 6));
-        int textX = x + (width - font.getWidth(fitted)) / 2;
+        String text = label.getString();
+        int availableWidth = Math.max(0, width - 6);
+        int textWidth = font.getWidth(text);
+        if (textWidth > availableWidth && availableWidth > 0) {
+            float scale = (float) availableWidth / textWidth;
+            boolean functionKey = text.matches("(?i)F\\d+");
+            if (functionKey || scale >= 2f / 3f) {
+                float textX = x + (width - textWidth * scale) / 2f;
+                float textY = y + (height - font.fontHeight * scale - 2) / 2f;
+                context.getMatrices().push();
+                context.getMatrices().translate(textX, textY, 0);
+                context.getMatrices().scale(scale, scale, 1);
+                context.drawText(font, text, 0, 0, state.ink, false);
+                context.getMatrices().pop();
+                return;
+            }
+            text = fitLabel(text, availableWidth);
+        }
+        int textX = x + (width - font.getWidth(text)) / 2;
         int textY = y + (height - font.fontHeight - 2) / 2;
-        context.drawText(font, fitted, textX, textY, state.ink, false);
+        context.drawText(font, text, textX, textY, state.ink, false);
+    }
+
+    private static String fitLabel(String text, int availableWidth) {
+        var font = MinecraftClient.getInstance().textRenderer;
+        String ellipsis = "\u2026";
+        if (font.getWidth(ellipsis) > availableWidth) {
+            return "";
+        }
+        int end = text.length();
+        while (end > 0 && font.getWidth(text.substring(0, end) + ellipsis) > availableWidth) {
+            end = text.offsetByCodePoints(end, -1);
+        }
+        return text.substring(0, end) + ellipsis;
     }
 
     static void drawSearch(DrawContext context, TextFieldWidget field) {

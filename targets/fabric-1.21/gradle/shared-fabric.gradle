@@ -143,6 +143,9 @@ def versionedBindingList = ['1.21.4', '1.21.5', '1.21.6'].contains(minecraft_ver
 
 def referenceJava = objects.sourceDirectorySet('fabricReference', 'Fabric 1.21.1 adapter')
 referenceJava.srcDir new File(fabricReference, 'java')
+if (minecraft_version == '1.21.6') {
+    referenceJava.exclude 'committee/nova/mkw/gui/PixelWidgets.java'
+}
 if (versionedScreen != null) {
     referenceJava.exclude 'committee/nova/mkw/gui/KeyWizardScreen.java'
 }
