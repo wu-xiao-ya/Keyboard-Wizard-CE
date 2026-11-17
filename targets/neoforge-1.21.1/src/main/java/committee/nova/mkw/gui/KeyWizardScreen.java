@@ -82,7 +82,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
         private static final int MARGIN = 3;
 
         private ControlsEntryButton(ControlsScreen controlsScreen) {
-            super(0, 0, 0, Component.translatable("screen.keyboard_wizard_ce.title"), true,
+            super(0, 0, 0, Component.translatable("screen.keyboard_wizard_ce.title"),
                     button -> Minecraft.getInstance().setScreen(new KeyWizardScreen(controlsScreen)));
             this.setTooltip(Tooltip.create(this.getMessage()));
             this.updateBounds(controlsScreen);
@@ -243,7 +243,7 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     public static Button createScreenToggleButton(int x, int y, Button.OnPress onPress) {
-        return new ScreenToggleButton(x, y, 20, Component.translatable("options.controls"), false, onPress);
+        return new ScreenToggleButton(x, y, 20, Component.translatable("options.controls"), onPress);
     }
 
     private Button createLayoutButton(KeyboardLayout layout, int x, int y, int width) {
@@ -321,57 +321,39 @@ public class KeyWizardScreen extends OptionsSubScreen {
         private static final int KEYBOARD_WIDTH = 16;
         private static final int KEYBOARD_HEIGHT = 10;
 
-        private final boolean keyboardIcon;
-
-        private ScreenToggleButton(int x, int y, int size, Component label, boolean keyboardIcon, Button.OnPress onPress) {
+        private ScreenToggleButton(int x, int y, int size, Component label, Button.OnPress onPress) {
             super(x, y, size, size, label, onPress, DEFAULT_NARRATION);
-            this.keyboardIcon = keyboardIcon;
         }
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             PixelKeyboardStyle.drawKeycap(graphics::fill, this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                     KeyState.UNASSIGNED, this.isHoveredOrFocused());
-            if (this.keyboardIcon) {
-                renderKeyboardIcon(graphics);
-            } else {
-                renderReturnIcon(graphics);
-            }
-        }
-
-        private void renderReturnIcon(GuiGraphics graphics) {
-            int arrowWidth = 12;
-            int arrowHeight = 10;
-            int x = this.getX() + (this.getWidth() - arrowWidth) / 2;
-            int y = this.getY() + (this.getHeight() - arrowHeight) / 2;
-            int ink = PixelKeyboardStyle.INK;
-            graphics.fill(x, y + 4, x + arrowWidth, y + 6, ink);
-            for (int step = 0; step < 4; step++) {
-                int left = x + 4 - step;
-                int top = y + step;
-                int bottom = y + arrowHeight - step;
-                graphics.fill(left, top, left + 2, top + 1, ink);
-                graphics.fill(left, bottom - 1, left + 2, bottom, ink);
-            }
+            renderKeyboardIcon(graphics);
         }
 
         private void renderKeyboardIcon(GuiGraphics graphics) {
-            int x = this.getX() + (this.getWidth() - KEYBOARD_WIDTH) / 2;
-            int y = this.getY() + (this.getHeight() - KEYBOARD_HEIGHT) / 2;
-            graphics.fill(x + 1, y, x + KEYBOARD_WIDTH - 1, y + KEYBOARD_HEIGHT, PixelKeyboardStyle.BORDER);
-            graphics.fill(x, y + 1, x + KEYBOARD_WIDTH, y + KEYBOARD_HEIGHT - 1, PixelKeyboardStyle.BORDER);
-            graphics.fill(x + 1, y + 1, x + 15, y + 2, PixelKeyboardStyle.PANEL_FOOT);
+            float scale = Math.min(1.0F, (this.getWidth() - 6.0F) / KEYBOARD_WIDTH);
+            var pose = graphics.pose();
+            pose.pushPose();
+            pose.translate(this.getX() + (this.getWidth() - KEYBOARD_WIDTH * scale) / 2.0F,
+                    this.getY() + (this.getHeight() - KEYBOARD_HEIGHT * scale) / 2.0F, 0.0F);
+            pose.scale(scale, scale, 1.0F);
+            graphics.fill(1, 0, KEYBOARD_WIDTH - 1, KEYBOARD_HEIGHT, PixelKeyboardStyle.BORDER);
+            graphics.fill(0, 1, KEYBOARD_WIDTH, KEYBOARD_HEIGHT - 1, PixelKeyboardStyle.BORDER);
+            graphics.fill(1, 1, KEYBOARD_WIDTH - 1, 2, PixelKeyboardStyle.PANEL_FOOT);
 
             for (int column = 0; column < 4; column++) {
-                int keyX = x + 2 + 3 * column;
-                graphics.fill(keyX, y + 2, keyX + 2, y + 4, PixelKeyboardStyle.PANEL_HIGHLIGHT);
-                graphics.fill(keyX + 1, y + 5, keyX + 3, y + 6, PixelKeyboardStyle.PANEL);
+                int keyX = 2 + 3 * column;
+                graphics.fill(keyX, 2, keyX + 2, 4, PixelKeyboardStyle.PANEL_HIGHLIGHT);
+                graphics.fill(keyX + 1, 5, keyX + 3, 6, PixelKeyboardStyle.PANEL);
             }
 
-            graphics.fill(x + 2, y + 7, x + 4, y + 8, KeyState.ASSIGNED.bevel);
-            graphics.fill(x + 5, y + 7, x + 11, y + 8, PixelKeyboardStyle.PANEL_HIGHLIGHT);
-            graphics.fill(x + 12, y + 7, x + 14, y + 8, KeyState.CONFLICT.bevel);
-            graphics.fill(x + 2, y + 8, x + 14, y + 9, PixelKeyboardStyle.PANEL_FOOT);
+            graphics.fill(2, 7, 4, 8, KeyState.ASSIGNED.bevel);
+            graphics.fill(5, 7, 11, 8, PixelKeyboardStyle.PANEL_HIGHLIGHT);
+            graphics.fill(12, 7, 14, 8, KeyState.CONFLICT.bevel);
+            graphics.fill(2, 8, 14, 9, PixelKeyboardStyle.PANEL_FOOT);
+            pose.popPose();
         }
     }
 }
