@@ -4,11 +4,11 @@
 
 按键精灵社区版是面向 Minecraft Java 版的 Modern KeyWizard 和 Keyboard Wizard 社区维护版本。你可以在交互式键盘界面中查找、查看和修改按键绑定。
 
-[下载 v1.1.0](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/v1.1.0) · [共享源码](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/tree/codex/shared-core) · [历史版本](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases)
+[下载 v1.1.1](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/v1.1.1) · [共享源码](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/tree/codex/shared-core) · [历史版本](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases)
 
 ## 支持的 Minecraft 版本
 
-v1.1.0 共提供 33 个构建目标，覆盖 Fabric、Forge 和 NeoForge。其中 Fabric 支持从 1.20 到 26.3 的 24 个正式版本。
+v1.1.1 共提供 33 个构建目标，覆盖 Fabric、Forge 和 NeoForge。其中 Fabric 支持从 1.20 到 26.3 的 24 个正式版本。
 
 | 加载器 | Minecraft 版本 | Java |
 | --- | --- | --- |
@@ -22,7 +22,7 @@ v1.1.0 共提供 33 个构建目标，覆盖 Fabric、Forge 和 NeoForge。其�
 
 ## 安装和升级
 
-1. 从发布页下载与 Minecraft 版本和加载器匹配的 `-1.1.0.jar`。使用 Fabric 时，还需安装对应 Minecraft 版本的 Fabric API。
+1. 从发布页下载与 Minecraft 版本和加载器匹配的 `-1.1.1.jar`。使用 Fabric 时，还需安装对应 Minecraft 版本的 Fabric API。
 2. 将下载的 JAR 放入 `mods` 文件夹。升级时，先移除其中旧版按键精灵社区版的 JAR。
 3. 已保存的按键绑定沿用原有的配置键名。如果自定义资源包覆盖了本模组的资源，请将这些资源从 `assets/keyboard_wizard_ce/` 移到 `assets/keyboard_wizard_community_edition/`。如果整合包引用了旧模组 ID，请改用完整的模组 ID `keyboard_wizard_community_edition`。
 
@@ -34,7 +34,7 @@ v1.1.0 共提供 33 个构建目标，覆盖 Fabric、Forge 和 NeoForge。其�
 - 查看主键盘、数字小键盘和辅助按键布局。
 - 按模组或类别筛选，按绑定名称搜索，或按物理按键反查绑定。
 - 在侧栏查看绑定名称、已分配的按键及其所属模组或类别。
-- 银灰像素主题和配套键盘图标适用于 Fabric 26.3，以及 NeoForge 1.21.1、1.21.4 和 26.3。
+- 全部 33 个构建目标使用银灰像素主题和配套键盘图标。
 
 ## 源码和开发历史
 

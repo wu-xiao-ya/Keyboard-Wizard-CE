@@ -4,11 +4,11 @@
 
 Keyboard Wizard CE is a community-maintained edition of Modern KeyWizard and Keyboard Wizard for Minecraft Java Edition. It lets you find, inspect, and change key bindings on an interactive keyboard.
 
-[Download v1.1.0](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/v1.1.0) · [Shared source](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/tree/codex/shared-core) · [Release history](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases)
+[Download v1.1.1](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/v1.1.1) · [Shared source](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/tree/codex/shared-core) · [Release history](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases)
 
 ## Supported Minecraft versions
 
-Version 1.1.0 ships 33 builds across Fabric, Forge, and NeoForge. Fabric covers 24 official releases from 1.20 through 26.3.
+Version 1.1.1 ships 33 builds across Fabric, Forge, and NeoForge. Fabric covers 24 official releases from 1.20 through 26.3.
 
 | Loader | Minecraft versions | Java |
 | --- | --- | --- |
@@ -22,7 +22,7 @@ Version 1.1.0 ships 33 builds across Fabric, Forge, and NeoForge. Fabric covers 
 
 ## Installation and upgrade
 
-1. In the release assets, download the `-1.1.0.jar` that matches your Minecraft version and loader. For Fabric, also install Fabric API for your Minecraft version.
+1. In the release assets, download the `-1.1.1.jar` that matches your Minecraft version and loader. For Fabric, also install Fabric API for your Minecraft version.
 2. When upgrading, remove the old Keyboard Wizard CE JAR from your `mods` folder, then place the new JAR there.
 3. Existing key bindings use the same saved option keys. If a custom resource pack overrides the mod's assets, move them from `assets/keyboard_wizard_ce/` to `assets/keyboard_wizard_community_edition/`. Update any modpack references to use the full mod ID, `keyboard_wizard_community_edition`.
 
@@ -34,7 +34,7 @@ The release also includes a matching `-sources.jar` for each build and a `SHA256
 - View the main keyboard, numpad, and auxiliary key layouts.
 - Filter bindings by mod or category, search by binding name, or look up bindings by physical key.
 - Inspect each binding's name, assigned key, and owning mod or category in the side panel.
-- The silver-gray pixel theme and its keyboard icons ship with Fabric 26.3 and NeoForge 1.21.1, 1.21.4, and 26.3.
+- All 33 builds use the silver-gray pixel theme and its keyboard icons.
 
 ## Source and history
 
