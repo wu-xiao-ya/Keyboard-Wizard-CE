@@ -34,6 +34,31 @@ class PixelKeyboardStyleTest {
         }
     }
 
+    @Test
+    void keyboardIconKeepsBothAccentsAtFooterAndEntrySizes() {
+        for (int size : new int[] {20, 24, 34}) {
+            int[][] pixels = new int[size][size];
+            PixelKeyboardStyle.drawKeyboardIcon(
+                    (left, top, right, bottom, color) -> {
+                        assertTrue(left >= 3 && top >= 3 && right <= size - 3 && bottom <= size - 3);
+                        fill(pixels, left, top, right, bottom, color);
+                    }, 0, 0, size, size);
+            assertTrue(contains(pixels, PixelKeyboardStyle.KeyState.ASSIGNED.bevel));
+            assertTrue(contains(pixels, PixelKeyboardStyle.KeyState.CONFLICT.bevel));
+        }
+    }
+
+    private static boolean contains(int[][] pixels, int color) {
+        for (int[] row : pixels) {
+            for (int pixel : row) {
+                if (pixel == color) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private static void fill(int[][] pixels, int left, int top, int right, int bottom, int color) {
         assertTrue(left >= 0 && top >= 0 && right <= pixels[0].length && bottom <= pixels.length);
         assertTrue(left < right && top < bottom);

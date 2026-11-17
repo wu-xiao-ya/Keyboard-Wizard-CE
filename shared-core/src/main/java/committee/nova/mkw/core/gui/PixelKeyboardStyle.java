@@ -49,6 +49,38 @@ public final class PixelKeyboardStyle {
         drawBevel(draw, x, y, width, height, 2, 4, BORDER, PANEL_HIGHLIGHT, PANEL, PANEL_FOOT);
     }
 
+    /** Draws the navigation glyph centered in the button, with a three-pixel margin. */
+    public static void drawKeyboardIcon(RectangleRenderer draw, int x, int y, int width, int height) {
+        float scale = Math.min(1.0F, Math.min((width - 6) / 16.0F, (height - 6) / 10.0F));
+        if (scale <= 0.0F) {
+            return;
+        }
+        int left = x + (width - Math.round(16 * scale)) / 2;
+        int top = y + (height - Math.round(10 * scale)) / 2;
+        RectangleRenderer icon = (x0, y0, x1, y1, color) -> {
+            int scaledLeft = Math.round(x0 * scale);
+            int scaledTop = Math.round(y0 * scale);
+            int scaledRight = Math.round(x1 * scale);
+            int scaledBottom = Math.round(y1 * scale);
+            if (scaledLeft < scaledRight && scaledTop < scaledBottom) {
+                draw.fill(left + scaledLeft, top + scaledTop, left + scaledRight, top + scaledBottom, color);
+            }
+        };
+
+        icon.fill(1, 0, 15, 10, BORDER);
+        icon.fill(0, 1, 16, 9, BORDER);
+        icon.fill(1, 1, 15, 2, PANEL_FOOT);
+        for (int column = 0; column < 4; column++) {
+            int keyX = 2 + 3 * column;
+            icon.fill(keyX, 2, keyX + 2, 4, PANEL_HIGHLIGHT);
+            icon.fill(keyX + 1, 5, keyX + 3, 6, PANEL);
+        }
+        icon.fill(2, 7, 4, 8, KeyState.ASSIGNED.bevel);
+        icon.fill(5, 7, 11, 8, PANEL_HIGHLIGHT);
+        icon.fill(12, 7, 14, 8, KeyState.CONFLICT.bevel);
+        icon.fill(2, 8, 14, 9, PANEL_FOOT);
+    }
+
     private static void drawBevel(RectangleRenderer draw, int x, int y, int width, int height,
                                    int edge, int depth, int border, int bevel, int face, int foot) {
         if (width <= 0 || height <= 0) {

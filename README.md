@@ -21,6 +21,7 @@ Fabric 覆盖 Minecraft Java 版 1.20 至 26.3 的 24 个正式版本。1.20 至
 
 - `shared-core/` 维护 Java 8 兼容的搜索、分类、键盘布局和绑定接口。
 - `shared-core/src/main/resources/` 维护界面切换图标、背景和模组标志。所有目标从这里打包，修改画面素材时只需更新这一处。
+- `PixelKeyboardStyle` 统一银灰主题的面板、三色键帽和导航图标。Fabric 与 NeoForge 的 26.3 目标还共用 `targets/gui-26.3/` 下的游戏界面组件。
 - `targets/glfw-keys/` 和 `targets/sdl-keys/` 把布局使用的物理键标识转换成游戏使用的键码。
 - `targets/<loader>-<version>/` 管理加载器入口、界面、游戏绑定和资源。各目标的 Gradle 构建读取同一份核心源码，并把它打进各自的模组 JAR。
 

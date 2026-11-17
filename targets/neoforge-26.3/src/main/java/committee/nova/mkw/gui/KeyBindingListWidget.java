@@ -3,6 +3,7 @@ package committee.nova.mkw.gui;
 import com.mojang.blaze3d.platform.InputConstants;
 import committee.nova.mkw.core.binding.BindingSearchParser;
 import committee.nova.mkw.core.binding.BindingSearchQuery;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,7 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
@@ -26,7 +28,7 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         super(Minecraft.getInstance(), top, left, width, height, itemHeight);
         this.keyWizardScreen = keyWizardScreen;
 
-        for (KeyMapping k : this.minecraft.options.keyMappings) {
+        for (KeyMapping k : KeyBindingUtil.getAllBindings()) {
             this.addEntry(new BindingEntry(k));
         }
         if (!this.children().isEmpty()) {
@@ -42,11 +44,11 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         return ((BindingEntry) this.getSelected()).keyMapping;
     }
 
-    private void updateList() {
+    private void updateList(boolean force) {
         boolean filterUpdate = !this.currentFilterText.equals(this.keyWizardScreen.getFilterText());
         boolean categoryUpdate = !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory());
 
-        if (categoryUpdate || filterUpdate) {
+        if (force || categoryUpdate || filterUpdate) {
             if (categoryUpdate) this.currentCategory = this.keyWizardScreen.getSelectedCategory();
 
             KeyMapping[] bindings = getBindingsByCategory(this.currentCategory);
@@ -110,13 +112,28 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         }
     }
 
+    void refreshSelectedBinding() {
+        KeyMapping selected = getSelectedKeyMapping();
+        double scroll = this.scrollAmount();
+        updateList(true);
+        if (selected != null) {
+            for (var rawEntry : this.children()) {
+                if (rawEntry instanceof BindingEntry entry && entry.keyMapping == selected) {
+                    this.setSelected(entry);
+                    this.setScrollAmount(scroll);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void tick() {
-        updateList();
+        updateList(false);
     }
 
     public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
-        private static final int CATEGORY_RIGHT_PADDING = 6;
+        private static final int CATEGORY_RIGHT_PADDING = 4;
         private static final int CATEGORY_BOTTOM_PADDING = 3;
         private final KeyMapping keyMapping;
 
@@ -128,20 +145,30 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             int contentX = this.getContentX();
             int contentY = this.getContentY();
-            int contentRight = KeyBindingListWidget.this.getRowRight() - 6;
-            int maxTextWidth = Math.max(0, contentRight - contentX);
+            int maxTextWidth = this.labelWidth();
+            List<Component> labels = this.labels();
 
-            graphics.text(minecraft.font, trimToWidth(Component.translatable(this.keyMapping.getName()), maxTextWidth), contentX, contentY, 0xFFFFFFFF);
-            graphics.text(minecraft.font, trimToWidth(this.keyMapping.getTranslatedKeyMessage(), maxTextWidth), contentX, contentY + minecraft.font.lineHeight + 5, 0xFF999999);
-
-            String categoryLabel = getCategoryDisplayLabel(this.keyMapping);
-            if (!categoryLabel.isEmpty()) {
-                String trimmedCategory = minecraft.font.plainSubstrByWidth(categoryLabel, maxTextWidth);
-                int categoryWidth = minecraft.font.width(trimmedCategory);
-                int categoryX = Math.max(contentX, contentRight - CATEGORY_RIGHT_PADDING - categoryWidth);
-                int categoryY = this.getContentY() + this.getContentHeight() - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
-                graphics.text(minecraft.font, trimmedCategory, categoryX, categoryY, 0xFF808080);
+            graphics.text(minecraft.font, PixelWidgets.fit(minecraft.font, labels.get(0), maxTextWidth),
+                    contentX, contentY, PixelKeyboardStyle.INK, false);
+            graphics.text(minecraft.font, PixelWidgets.fit(minecraft.font, labels.get(1), maxTextWidth),
+                    contentX, contentY + minecraft.font.lineHeight + 5, PixelKeyboardStyle.PANEL_FOOT, false);
+            var category = PixelWidgets.fit(minecraft.font, labels.get(2), maxTextWidth);
+            int categoryX = contentX + maxTextWidth - minecraft.font.width(category);
+            int categoryY = this.getContentBottom() - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
+            graphics.text(minecraft.font, category, categoryX, categoryY, PixelKeyboardStyle.PANEL_FOOT, false);
+            if (hovered && !keyWizardScreen.getCategorySelectorExtended()
+                    && labels.stream().anyMatch(label -> minecraft.font.width(label) > maxTextWidth)) {
+                PixelWidgets.showTooltip(graphics, minecraft.font, labels, mouseX, mouseY);
             }
+        }
+
+        private List<Component> labels() {
+            return List.of(Component.translatable(this.keyMapping.getName()), this.keyMapping.getTranslatedKeyMessage(),
+                    Component.literal(this.getCategoryDisplayLabel(this.keyMapping)));
+        }
+
+        private int labelWidth() {
+            return this.getContentWidth() - CATEGORY_RIGHT_PADDING;
         }
 
         private String getCategoryDisplayLabel(KeyMapping keyMapping) {
@@ -153,13 +180,6 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
                     .orElse(translatedCategory);
         }
 
-        private Component trimToWidth(Component component, int width) {
-            if (width <= 0) {
-                return Component.empty();
-            }
-            String text = component.getString();
-            return Component.literal(minecraft.font.plainSubstrByWidth(text, width));
-        }
     }
 
     @Override

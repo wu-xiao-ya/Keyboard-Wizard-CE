@@ -149,4 +149,5 @@ publishing {
 sourceSets.main.java {
     srcDir rootProject.file('../../shared-core/src/main/java')
     srcDir rootProject.file('../sdl-keys/src/main/java')
+    srcDir rootProject.file('../gui-26.3/src/main/java')
 }

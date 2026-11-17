@@ -5,9 +5,9 @@
 - Java: `25`
 - Build command: `.\gradlew.bat assemble`
 - Bundle command: `.\gradlew.bat releaseBundle`
-- Release jar: `build/libs/keyboard-wizard-ce-neoforge-26.3-1.0.0.jar`
-- Source jar: `build/libs/keyboard-wizard-ce-neoforge-26.3-1.0.0-sources.jar`
-- Release bundle: `build/release/keyboard-wizard-ce-neoforge-26.3-1.0.0-release.zip`
+- Release jar: `build/libs/keyboard-wizard-ce-neoforge-26.3-1.0.1.jar`
+- Source jar: `build/libs/keyboard-wizard-ce-neoforge-26.3-1.0.1-sources.jar`
+- Release bundle: `build/release/keyboard-wizard-ce-neoforge-26.3-1.0.1-release.zip`
 - Checksum file: `build/release/SHA256SUMS.txt`
 - Changelog: `CHANGELOG.md`
 - Release tag pattern: `neoforge-26.3-v*`

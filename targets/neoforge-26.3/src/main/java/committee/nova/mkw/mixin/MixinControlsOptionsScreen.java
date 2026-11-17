@@ -22,14 +22,18 @@ public abstract class MixinControlsOptionsScreen extends OptionsSubScreen {
     @Inject(at = @At("TAIL"), method = "addOptions")
     private void addScreenToggleButton(CallbackInfo info) {
         ModernKeyWizard.LOGGER.debug("Controls screen injector mixin loaded!");
-        Button screenToggleButton = KeyWizardScreen.createScreenToggleButton(
-                this.width - 22,
-                this.height - 22,
+        Button screenToggleButton = KeyWizardScreen.createControlsEntryButton((ControlsScreen) (Object) this,
                 btn -> {
                     if (minecraft == null) return;
                     minecraft.setScreenAndShow(new KeyWizardScreen(this.lastScreen));
                 }
         );
         this.addRenderableWidget(screenToggleButton);
+    }
+
+    @Override
+    protected void repositionElements() {
+        super.repositionElements();
+        KeyWizardScreen.layoutControlsEntryButton((ControlsScreen) (Object) this);
     }
 }

@@ -1,8 +1,8 @@
 package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle.KeyState;
 import committee.nova.mkw.keybinding.KeyModifier;
-import committee.nova.mkw.util.DrawingUtil;
 import committee.nova.mkw.util.KeyBindingUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -16,13 +16,12 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class KeyboardWidget extends AbstractContainerEventHandler implements Renderable, TickableElement, NarratableEntry {
     public KeyWizardScreen keyWizardScreen;
@@ -57,7 +56,8 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
         if (!keyWizardScreen.getCategorySelectorExtended()) {
             for (KeyboardKeyWidget k : keys) {
                 if (k.active && k.isHovered()) {
-                    graphics.setTooltipForNextFrame(Minecraft.getInstance().font, k.tooltipText.stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+                    PixelWidgets.showTooltip(graphics, Minecraft.getInstance().font, k.tooltipLines(), mouseX, mouseY);
+                    break;
                 }
             }
         }
@@ -110,42 +110,74 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
     }
 
     public class KeyboardKeyWidget extends AbstractButton implements TickableElement {
-        public float x;
-        public float y;
-
-        protected float width;
-        protected float height;
-
         private final InputConstants.Key key;
-        private List<Component> tooltipText = new ArrayList<>();
+        private final Component functionKeyLabel;
+        private final Component compactModifierLabel;
+        private List<Component> bindingNames = List.of();
 
         protected KeyboardKeyWidget(int keyCode, float x, float y, float width, float height, InputConstants.Type keyType) {
             super((int) x, (int) y, (int) width, (int) height, Component.empty());
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
             this.key = keyType.getOrCreate(keyCode);
-            this.setMessage(this.key.getDisplayName());
+            // SDL's F1–F12 scancodes are contiguous; these are the function keys in the layout.
+            this.functionKeyLabel = keyType == InputConstants.Type.KEYBOARD && keyCode >= InputConstants.KEY_F1
+                    && keyCode <= InputConstants.KEY_F12
+                    ? Component.literal("F" + (keyCode - InputConstants.KEY_F1 + 1)) : null;
+            this.compactModifierLabel = keyType == InputConstants.Type.KEYBOARD ? compactModifierLabel(keyCode) : null;
+            this.tick();
+        }
+
+        @Override
+        public Component getMessage() {
+            return this.key.getDisplayName();
+        }
+
+        private KeyState getState() {
+            if (!this.active || this.bindingNames.isEmpty()) return KeyState.UNASSIGNED;
+            return this.bindingNames.size() == 1 ? KeyState.ASSIGNED : KeyState.CONFLICT;
+        }
+
+        private List<Component> tooltipLines() {
+            Component status = switch (this.getState()) {
+                case UNASSIGNED -> Component.translatable("gui.keyboard_wizard_ce.state.unassigned");
+                case ASSIGNED -> Component.translatable("gui.keyboard_wizard_ce.state.assigned");
+                case CONFLICT -> Component.translatable("gui.keyboard_wizard_ce.state.conflict");
+            };
+            List<Component> tooltip = new ArrayList<>(this.bindingNames.size() + 2);
+            tooltip.add(this.getMessage());
+            tooltip.add(status);
+            this.bindingNames.stream().sorted(Comparator.comparing(Component::getString)).forEach(tooltip::add);
+            return tooltip;
         }
 
         @Override
         protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-            int bindingCount = this.tooltipText.size();
-            int color;
-            if (this.active) {
-                if (this.isHovered() && !keyWizardScreen.getCategorySelectorExtended()) {
-                    color = bindingCount == 0 ? 0xFFAAAAAA : bindingCount == 1 ? 0xFF00AA00 : 0xFFAA0000;
-                } else {
-                    color = bindingCount == 0 ? 0xFFFFFFFF : bindingCount == 1 ? 0xFF00FF00 : 0xFFFF0000;
-                }
-            } else {
-                color = 0xFF555555;
-            }
+            KeyMapping selected = keyWizardScreen.getSelectedKeyMapping();
+            boolean selectedKey = selected != null && this.key.equals(KeyBindingUtil.getKey(selected));
+            boolean highlighted = this.active && this.isHoveredOrFocused() && !keyWizardScreen.getCategorySelectorExtended();
+            PixelWidgets.drawKeyboardKey(graphics, this.keycapLabel(Minecraft.getInstance().font),
+                    this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    this.getState(), highlighted, selectedKey, this.functionKeyLabel != null);
+        }
 
-            DrawingUtil.drawNoFillRect(graphics, this.x, this.y, this.x + this.width, this.y + this.height, color);
-            Font font = Minecraft.getInstance().font;
-            graphics.text(font, getMessage(), (int) (this.x + this.width / 2 - font.width(this.getMessage()) / 2.0F), (int) (this.y + (this.height - 6) / 2), color);
+        private Component keycapLabel(Font font) {
+            Component label = this.getMessage();
+            Component compactLabel = this.functionKeyLabel != null ? this.functionKeyLabel : this.compactModifierLabel;
+            return compactLabel != null && font.width(label) > PixelWidgets.labelWidth(this.getWidth()) ? compactLabel : label;
+        }
+
+        private static Component compactModifierLabel(int keyCode) {
+            String compactLabel = switch (keyCode) {
+                case InputConstants.KEY_LSHIFT -> "left_shift";
+                case InputConstants.KEY_RSHIFT -> "right_shift";
+                case InputConstants.KEY_LCONTROL -> "left_control";
+                case InputConstants.KEY_RCONTROL -> "right_control";
+                case InputConstants.KEY_LALT -> "left_alt";
+                case InputConstants.KEY_RALT -> "right_alt";
+                case InputConstants.KEY_LGUI -> "left_meta";
+                case InputConstants.KEY_RGUI -> "right_meta";
+                default -> null;
+            };
+            return compactLabel == null ? null : Component.translatable("gui.keyboard_wizard_ce.keycap." + compactLabel);
         }
 
         @Override
@@ -181,19 +213,15 @@ public class KeyboardWidget extends AbstractContainerEventHandler implements Ren
             }
         }
 
-        private void updateTooltip() {
-            ArrayList<String> tooltipText = new ArrayList<>();
-            for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
-                if (KeyBindingUtil.getKey(b).equals(this.key)) {
-                    tooltipText.add(I18n.get(b.getName()));
-                }
-            }
-            this.tooltipText = tooltipText.stream().sorted().map(Component::literal).collect(Collectors.toCollection(ArrayList::new));
-        }
-
         @Override
         public void tick() {
-            updateTooltip();
+            List<Component> names = new ArrayList<>();
+            for (KeyMapping b : Minecraft.getInstance().options.keyMappings) {
+                if (KeyBindingUtil.getKey(b).equals(this.key)) {
+                    names.add(Component.translatable(b.getName()));
+                }
+            }
+            this.bindingNames = names;
         }
     }
 

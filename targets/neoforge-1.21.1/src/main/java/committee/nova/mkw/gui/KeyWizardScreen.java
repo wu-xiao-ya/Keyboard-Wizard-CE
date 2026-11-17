@@ -318,9 +318,6 @@ public class KeyWizardScreen extends OptionsSubScreen {
     }
 
     private static class ScreenToggleButton extends Button {
-        private static final int KEYBOARD_WIDTH = 16;
-        private static final int KEYBOARD_HEIGHT = 10;
-
         private ScreenToggleButton(int x, int y, int size, Component label, Button.OnPress onPress) {
             super(x, y, size, size, label, onPress, DEFAULT_NARRATION);
         }
@@ -329,31 +326,8 @@ public class KeyWizardScreen extends OptionsSubScreen {
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             PixelKeyboardStyle.drawKeycap(graphics::fill, this.getX(), this.getY(), this.getWidth(), this.getHeight(),
                     KeyState.UNASSIGNED, this.isHoveredOrFocused());
-            renderKeyboardIcon(graphics);
-        }
-
-        private void renderKeyboardIcon(GuiGraphics graphics) {
-            float scale = Math.min(1.0F, (this.getWidth() - 6.0F) / KEYBOARD_WIDTH);
-            var pose = graphics.pose();
-            pose.pushPose();
-            pose.translate(this.getX() + (this.getWidth() - KEYBOARD_WIDTH * scale) / 2.0F,
-                    this.getY() + (this.getHeight() - KEYBOARD_HEIGHT * scale) / 2.0F, 0.0F);
-            pose.scale(scale, scale, 1.0F);
-            graphics.fill(1, 0, KEYBOARD_WIDTH - 1, KEYBOARD_HEIGHT, PixelKeyboardStyle.BORDER);
-            graphics.fill(0, 1, KEYBOARD_WIDTH, KEYBOARD_HEIGHT - 1, PixelKeyboardStyle.BORDER);
-            graphics.fill(1, 1, KEYBOARD_WIDTH - 1, 2, PixelKeyboardStyle.PANEL_FOOT);
-
-            for (int column = 0; column < 4; column++) {
-                int keyX = 2 + 3 * column;
-                graphics.fill(keyX, 2, keyX + 2, 4, PixelKeyboardStyle.PANEL_HIGHLIGHT);
-                graphics.fill(keyX + 1, 5, keyX + 3, 6, PixelKeyboardStyle.PANEL);
-            }
-
-            graphics.fill(2, 7, 4, 8, KeyState.ASSIGNED.bevel);
-            graphics.fill(5, 7, 11, 8, PixelKeyboardStyle.PANEL_HIGHLIGHT);
-            graphics.fill(12, 7, 14, 8, KeyState.CONFLICT.bevel);
-            graphics.fill(2, 8, 14, 9, PixelKeyboardStyle.PANEL_FOOT);
-            pose.popPose();
+            PixelKeyboardStyle.drawKeyboardIcon(graphics::fill, this.getX(), this.getY(),
+                    this.getWidth(), this.getHeight());
         }
     }
 }
