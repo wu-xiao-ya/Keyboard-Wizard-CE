@@ -1,7 +1,7 @@
 # Notice
 
 - Distribution name: Keyboard Wizard CE
-- Mod id: `keyboard_wizard_ce`
+- Mod id: `keyboard_wizard_community_edition`
 - Original authors: MrNerdy42, Tapio
 - Art assets: WI_8614_ice
 - Source: [Keyboard-Wizard-CE](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE)

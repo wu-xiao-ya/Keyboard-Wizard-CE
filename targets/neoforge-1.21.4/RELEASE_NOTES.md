@@ -1,5 +1,6 @@
-# Keyboard Wizard CE 1.0.1 for NeoForge 1.21.4
+# Keyboard Wizard CE 1.1.0 for NeoForge 1.21.4
 
-Requires Minecraft 1.21.4, NeoForge 21.4.161 or later on that Minecraft version, and Java 21.
+- Set the mod ID and resource namespace to `keyboard_wizard_community_edition`.
+- Retained the `key.keyboard_wizard_ce.openKeyWizard` mapping so existing shortcut customizations carry forward.
 
-This target includes the pixel keyboard UI, an adaptive entry button in the vanilla Controls screen, and binding search and clearing from the on-screen keyboard. Press F7 to open it in-game.
+See [CHANGELOG.md](CHANGELOG.md) for the release history.

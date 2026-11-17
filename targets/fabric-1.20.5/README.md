@@ -3,7 +3,7 @@
 Keyboard Wizard CE is the community edition of Modern KeyWizard for Minecraft 1.20.5 on Fabric.
 
 - Adapter baseline: `origin/ce/fabric-1.20.5` at `642c6d5`
-- Mod id: `keyboard_wizard_ce`
+- Mod id: `keyboard_wizard_community_edition`
 - Mod name: `Keyboard Wizard CE`
 - Maven group: `io.github.wu_xiao_ya.keyboard_wizard_ce.fabric`
 - Archive base name: `keyboard-wizard-ce-fabric-1.20.5`

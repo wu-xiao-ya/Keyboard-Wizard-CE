@@ -19,9 +19,12 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod(ModernKeyWizard.MODID)
 public class ModernKeyWizard {
-    public static final String MODID = "keyboard_wizard_ce";
+    public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, ScreenToggleSprite.TEXTURE_PATH);
+
+    // The mapping name is stored in options.txt.
+    private static final String OPEN_KEY_WIZARD_MAPPING = "key.keyboard_wizard_ce.openKeyWizard";
 
     private static KeyMapping keyOpenKeyWizard;
     private static final KeyMapping.Category MKW_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MODID, "bindings"));
@@ -33,7 +36,7 @@ public class ModernKeyWizard {
 
     private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         keyOpenKeyWizard = new KeyMapping(
-                "key." + MODID + ".openKeyWizard",
+                OPEN_KEY_WIZARD_MAPPING,
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_F7,
                 MKW_CATEGORY

@@ -5,7 +5,8 @@ Minecraft 1.21.4 + NeoForge target for Keyboard Wizard CE, the Community Edition
 - Minecraft 1.21.4
 - NeoForge 21.4.161 or later on Minecraft 1.21.4
 - Java 21
-- Mod ID `keyboard_wizard_ce`
+- Mod ID `keyboard_wizard_community_edition`
+- CE version `1.1.0`
 - Community Edition maintainer WuXiaoYa
 - Original authors MrNerdy42 and Tapio
 - Art assets by WI_8614_ice

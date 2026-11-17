@@ -1,7 +1,9 @@
 import hashlib
+import json
 from pathlib import Path
 import struct
 import sys
+import tomllib
 import zlib
 from zipfile import ZipFile
 
@@ -16,6 +18,7 @@ CORE_COMPONENTS = (
     "gui/ScreenToggleSprite",
 )
 CORE_PREFIX = "committee/nova/mkw/core/"
+MOD_ID = "keyboard_wizard_community_edition"
 METADATA_FILES = {
     "fabric": "fabric.mod.json",
     "forge": "META-INF/mods.toml",
@@ -23,8 +26,8 @@ METADATA_FILES = {
 }
 SHARED_RESOURCE_DIR = Path(__file__).resolve().parents[1] / "shared-core/src/main/resources"
 SHARED_RESOURCES = (
-    "assets/keyboard_wizard_ce/textures/gui/key_wizard_background.png",
-    "assets/keyboard_wizard_ce/textures/gui/screen_toggle_widgets.png",
+    f"assets/{MOD_ID}/textures/gui/key_wizard_background.png",
+    f"assets/{MOD_ID}/textures/gui/screen_toggle_widgets.png",
     "keyboard_wizard_ce_icon.png",
 )
 
@@ -59,6 +62,30 @@ def verify_shared_resources(jar):
         if png != (SHARED_RESOURCE_DIR / resource).read_bytes():
             raise ValueError(f"Shared resource bytes differ in {name}")
 
+    if not any(name.startswith(f"assets/{MOD_ID}/lang/") and name.endswith((".json", ".lang"))
+               for name in entries):
+        raise ValueError(f"Missing mod translations in {jar.filename}")
+
+
+def verify_metadata(jar, metadata, minecraft_version, mod_version):
+    descriptor = jar.read(metadata).decode("utf-8")
+    if metadata == "fabric.mod.json":
+        mod = json.loads(descriptor)
+        mod_id = mod["id"]
+        minecraft = mod["depends"]["minecraft"]
+    elif metadata == "mcmod.info":
+        mod, = json.loads(descriptor)
+        mod_id = mod["modid"]
+        minecraft = mod["mcversion"]
+    else:
+        data = tomllib.loads(descriptor)
+        mod, = data["mods"]
+        mod_id = mod["modId"]
+        minecraft = next(dep["versionRange"] for dep in data["dependencies"][mod_id]
+                         if dep["modId"] == "minecraft")
+    if mod_id != MOD_ID or mod["version"] != mod_version or minecraft_version not in minecraft:
+        raise ValueError(f"Unexpected mod id, mod version or Minecraft version in {jar.filename}: {metadata}")
+
 
 def verify(target):
     properties = dict(
@@ -76,9 +103,7 @@ def verify(target):
     with ZipFile(binary) as jar:
         for component in CORE_COMPONENTS:
             jar.getinfo(CORE_PREFIX + component + ".class")
-        descriptor = jar.read(metadata).decode("utf-8")
-        if "keyboard_wizard_ce" not in descriptor or version not in descriptor:
-            raise ValueError(f"Mod id or Minecraft version missing from {metadata}")
+        verify_metadata(jar, metadata, version, properties["mod_version"])
         verify_shared_resources(jar)
         if target.name in {"forge-1.12.2", "forge-1.16.5"}:
             for name in jar.namelist():

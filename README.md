@@ -17,6 +17,12 @@
 
 Fabric 覆盖 Minecraft Java 版 1.20 至 26.3 的 24 个正式版本。1.20 至 1.20.4 用 JDK 17 构建，1.20.5 至 1.21.11 用 JDK 21，26.1 至 26.3 用 JDK 25。各版本的构建目标和产物名称见工作流。
 
+## 安装和升级
+
+从 [GitHub Releases](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases) 下载与 Minecraft 版本和加载器对应的模组 JAR。升级到 1.1.0 时，先移除旧的 Keyboard Wizard CE JAR，再把新版放入 `mods` 文件夹。
+
+1.1.0 的模组 ID 为 `keyboard_wizard_community_edition`。现有按键配置继续使用原有的键名。自定义资源包需要把该模组的资源移到 `assets/keyboard_wizard_community_edition/`。
+
 ## 架构
 
 - `shared-core/` 维护 Java 8 兼容的搜索、分类、键盘布局和绑定接口。

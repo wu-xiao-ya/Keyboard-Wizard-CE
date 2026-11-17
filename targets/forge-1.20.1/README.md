@@ -3,8 +3,8 @@
 This branch is the Community Edition / unofficial port of Modern KeyWizard, published as 按键精灵社区版（Keyboard Wizard CE） for Minecraft 1.20.1 + Forge.
 
 - Branch: `ce/forge-1.20.1`
-- Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.2beta`
+- Mod id: `keyboard_wizard_community_edition`
+- CE version: `1.1.0`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
 - Art assets: WI_8614_ice
@@ -21,5 +21,5 @@ This branch is the Community Edition / unofficial port of Modern KeyWizard, publ
 - Main keyboard, numpad, and auxiliary key layouts are available from the CE screen.
 - The vanilla Controls screen has a bottom-right toggle button for Keyboard Wizard CE.
 - The CE screen uses the packaged community background texture.
-- CE identity is published under `keyboard_wizard_ce`.
+- CE identity is published under `keyboard_wizard_community_edition`.
 - Optional Hide Key Binding compatibility hides entries that Hide Key Binding has hidden and skips them for reset/clear operations.

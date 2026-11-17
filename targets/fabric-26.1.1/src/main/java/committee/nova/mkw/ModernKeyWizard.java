@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 public class ModernKeyWizard implements ClientModInitializer {
-    public static final String MODID = "keyboard_wizard_ce";
+    public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, ScreenToggleSprite.TEXTURE_PATH);
 

@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 public class ModernKeyWizard implements ClientModInitializer {
-    public static final String MODID = "keyboard_wizard_ce";
+    public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final Identifier SCREEN_TOGGLE_WIDGETS = new Identifier(MODID, ScreenToggleSprite.TEXTURE_PATH);
 
@@ -23,7 +23,8 @@ public class ModernKeyWizard implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.debug("{} initialized!", MODID);
 
-        keyOpenKeyWizard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + MODID + ".openKeyWizard", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings"));
+        // Keep the binding ID stored in options.txt across mod ID changes.
+        keyOpenKeyWizard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.keyboard_wizard_ce.openKeyWizard", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings"));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyOpenKeyWizard.wasPressed()) {
                 client.setScreen(new KeyWizardScreen(client.currentScreen));

@@ -3,8 +3,8 @@
 Community Edition / unofficial port of Modern KeyWizard for Minecraft 1.18.2 on Forge.
 
 - Branch: `ce/forge-1.18.2`
-- Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.2beta`
+- Mod id: `keyboard_wizard_community_edition`
+- CE version: `1.1.0`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio
 - Art assets: WI_8614_ice

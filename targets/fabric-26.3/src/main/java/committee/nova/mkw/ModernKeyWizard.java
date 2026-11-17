@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 public class ModernKeyWizard implements ClientModInitializer {
-    public static final String MODID = "keyboard_wizard_ce";
+    public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final Identifier SCREEN_TOGGLE_WIDGETS = Identifier.fromNamespaceAndPath(MODID, ScreenToggleSprite.TEXTURE_PATH);
 

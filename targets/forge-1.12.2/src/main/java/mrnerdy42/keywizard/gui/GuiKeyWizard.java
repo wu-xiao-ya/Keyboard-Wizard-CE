@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import mrnerdy42.keywizard.KeyWizard;
 import mrnerdy42.keywizard.KeyWizardConfig;
 import mrnerdy42.keywizard.util.KeybindUtils;
 import mrnerdy42.keywizard.util.KeyboardFactory;
@@ -31,7 +32,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiKeyWizard extends GuiScreen {
 
-	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("keyboard_wizard_ce", "textures/gui/key_wizard_background.png");
+	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(KeyWizard.MODID, "textures/gui/key_wizard_background.png");
 	public static final String KEY_FILTER_PREFIX = "#key#";
 	private static final int RESET_ALL_DIALOG_ID = 0;
 

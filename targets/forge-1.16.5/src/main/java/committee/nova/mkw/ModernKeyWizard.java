@@ -21,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod(ModernKeyWizard.MODID)
 public class ModernKeyWizard {
-    public static final String MODID = "keyboard_wizard_ce";
+    public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final ResourceLocation SCREEN_TOGGLE_WIDGETS = new ResourceLocation(MODID, ScreenToggleSprite.TEXTURE_PATH);
 
@@ -35,7 +35,8 @@ public class ModernKeyWizard {
     public static class ModClientEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            keyOpenKeyWizard = new KeyBinding("key." + MODID + ".openKeyWizard", GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings");
+            // Keep the key ID used by options.txt and Hide Key Binding.
+            keyOpenKeyWizard = new KeyBinding("key.keyboard_wizard_ce.openKeyWizard", GLFW.GLFW_KEY_F7, "key.categories." + MODID + ".bindings");
             ClientRegistry.registerKeyBinding(keyOpenKeyWizard);
         }
     }

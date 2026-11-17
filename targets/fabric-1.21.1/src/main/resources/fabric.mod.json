@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "keyboard_wizard_ce",
+  "id": "keyboard_wizard_community_edition",
   "version": "${version}",
   "name": "\u6309\u952e\u7cbe\u7075\u793e\u533a\u7248 (Keyboard Wizard CE)",
   "description": "Keyboard Wizard CE makes finding and fixing key bind conflicts easier.",
@@ -25,7 +25,7 @@
     ]
   },
   "mixins": [
-    "keyboard_wizard_ce.mixins.json"
+    "keyboard_wizard_community_edition.mixins.json"
   ],
   "depends": {
     "fabricloader": "*",

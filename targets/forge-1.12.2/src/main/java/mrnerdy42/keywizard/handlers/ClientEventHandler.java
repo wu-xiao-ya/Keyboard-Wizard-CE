@@ -2,6 +2,7 @@ package mrnerdy42.keywizard.handlers;
 
 import org.lwjgl.input.Keyboard;
 
+import mrnerdy42.keywizard.KeyWizard;
 import mrnerdy42.keywizard.KeyWizardConfig;
 import mrnerdy42.keywizard.gui.GuiKeyWizard;
 import mrnerdy42.keywizard.gui.TexturedToggleButton;
@@ -21,10 +22,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientEventHandler {
     private static final int OPEN_KEY_WIZARD_BUTTON_ID = 420742;
 
+    // Keep the key ID used by options.txt and Hide Key Binding.
     public static final KeyBinding keyOpenKeyWizard = new KeyBinding(
             "key.keyboard_wizard_ce.openKeyWizard",
             Keyboard.KEY_F7,
-            "key.categories.keyboard_wizard_ce.bindings");
+            "key.categories." + KeyWizard.MODID + ".bindings");
 
     public ClientEventHandler() {
         ClientRegistry.registerKeyBinding(keyOpenKeyWizard);

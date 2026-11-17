@@ -1,6 +1,7 @@
 package committee.nova.mkw.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.ModernKeyWizard;
 import committee.nova.mkw.core.binding.BindingSearchParser;
 import committee.nova.mkw.core.binding.BindingSearchQuery;
 import committee.nova.mkw.core.gui.PixelKeyboardStyle;
@@ -179,6 +180,9 @@ public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidge
         private String getCategoryDisplayLabel(String categoryPath, String translatedCategory) {
             int separatorIndex = categoryPath.indexOf('.');
             String modId = separatorIndex > 0 ? categoryPath.substring(0, separatorIndex) : categoryPath;
+            if (ModernKeyWizard.KEY_WIZARD_CATEGORY.equals(CATEGORY_PREFIX + categoryPath)) {
+                modId = ModernKeyWizard.MODID;
+            }
             return ModList.get().getModContainerById(modId)
                     .map(mod -> mod.getModInfo().getDisplayName() + " / " + translatedCategory)
                     .orElse(translatedCategory);

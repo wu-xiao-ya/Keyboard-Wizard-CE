@@ -3,7 +3,7 @@
 Keyboard Wizard CE is the community edition branch of Modern KeyWizard for Minecraft 26.3 on Fabric.
 
 - Branch: `ce/fabric-26.3`
-- Mod id: `keyboard_wizard_ce`
+- Mod id: `keyboard_wizard_community_edition`
 - Mod name: `Keyboard Wizard CE`
 - Maven group: `io.github.wu_xiao_ya.keyboard_wizard_ce.fabric`
 - Archive base name: `keyboard-wizard-ce-fabric-26.3`

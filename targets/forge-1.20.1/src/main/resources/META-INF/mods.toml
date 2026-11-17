@@ -13,7 +13,7 @@ logoBlur=false
 description='''${mod_description}'''
 
 [[mixins]]
-config="keyboard_wizard_ce.mixins.json"
+config="keyboard_wizard_community_edition.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId="forge"

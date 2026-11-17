@@ -3,8 +3,8 @@
 Community Edition / unofficial port of Keyboard Wizard for Minecraft 1.12.2 on Forge/Cleanroom.
 
 - Branch: `ce/forge-1.12.2`
-- Mod id: `keyboard_wizard_ce`
-- CE version: `1.0.2beta`
+- Mod id: `keyboard_wizard_community_edition`
+- CE version: `1.1.0`
 - Target: Minecraft `1.12.2` + Forge `14.23.5.2847`
 - Current author: WuXiaoYa
 - Original authors: MrNerdy42, Tapio

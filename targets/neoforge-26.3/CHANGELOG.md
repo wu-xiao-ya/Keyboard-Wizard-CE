@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+- Set the mod ID and resource namespace to `keyboard_wizard_community_edition`.
+- Retained the `key.keyboard_wizard_ce.openKeyWizard` mapping so existing shortcut customizations carry forward.
+- Added English and Simplified Chinese labels for the category in the new namespace.
+
 ## NeoForge 26.3 stable port - 2026-09-27
 
 - Added `ce/neoforge-26.3` for stable Minecraft 26.3.

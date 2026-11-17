@@ -18,14 +18,18 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod(value = ModernKeyWizard.MODID, dist = Dist.CLIENT)
 public class ModernKeyWizard {
-    public static final String MODID = "keyboard_wizard_ce";
+    public static final String MODID = "keyboard_wizard_community_edition";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final String KEY_WIZARD_CATEGORY = "key.categories.keyboard_wizard_ce.bindings";
+
+    // The mapping name is stored in options.txt.
+    private static final String OPEN_KEY_WIZARD_MAPPING = "key.keyboard_wizard_ce.openKeyWizard";
 
     private static final KeyMapping KEY_OPEN_KEY_WIZARD = new KeyMapping(
-            "key." + MODID + ".openKeyWizard",
+            OPEN_KEY_WIZARD_MAPPING,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_F7,
-            "key.categories." + MODID + ".bindings"
+            KEY_WIZARD_CATEGORY
     );
 
     public ModernKeyWizard() {

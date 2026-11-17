@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+- Set the mod ID and resource namespace to `keyboard_wizard_community_edition`.
+- Retained the `key.keyboard_wizard_ce.openKeyWizard` mapping so existing shortcut customizations carry forward.
+- Added English and Simplified Chinese labels for the category in the new namespace.
+
 ## 1.0.1 CE - 2026-06-19
 
 - Published this branch under release tag neoforge-26.1.2-v1.0.1.
