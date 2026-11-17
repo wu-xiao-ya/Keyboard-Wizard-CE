@@ -11,6 +11,9 @@
 | Forge 1.16.5 | `8df2b23` | 17（产物兼容 Java 8） | 第二批第 2 个 |
 | Forge 1.12.2 / Cleanroom | `9b1ff94` | 8 | 第二批第 3 个 |
 | NeoForge 1.21.1 | `d0b6414` | 21 | 像素界面试验 |
+| NeoForge 1.21.4 | `26cbe95:targets/neoforge-1.21.1` | 21 | 从 1.21.1 移植 |
+| NeoForge 26.1.2 | `ab159e9` | 25 | 独立分支接入 |
+| NeoForge 26.2 | `2e8a6cc` | 25 | 独立分支接入 |
 
 ## 架构
 

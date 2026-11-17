@@ -1,0 +1,191 @@
+package committee.nova.mkw.gui;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import committee.nova.mkw.core.binding.BindingSearchParser;
+import committee.nova.mkw.core.binding.BindingSearchQuery;
+import committee.nova.mkw.core.gui.PixelKeyboardStyle;
+import committee.nova.mkw.util.KeyBindingUtil;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.neoforged.fml.ModList;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+public class KeyBindingListWidget extends FreeFormListWidget<KeyBindingListWidget.BindingEntry> implements TickableElement {
+    public KeyWizardScreen keyWizardScreen;
+    private String currentFilterText = "";
+    private String currentCategory = KeyBindingUtil.DYNAMIC_CATEGORY_ALL;
+
+    public KeyBindingListWidget(KeyWizardScreen keyWizardScreen, int top, int left, int width, int height, int itemHeight) {
+        super(Minecraft.getInstance(), top, left, width, height, itemHeight);
+        this.keyWizardScreen = keyWizardScreen;
+
+        for (KeyMapping k : this.minecraft.options.keyMappings) {
+            this.addEntry(new BindingEntry(k));
+        }
+        if (!this.children().isEmpty()) {
+            this.setSelected(this.children().get(0));
+        }
+    }
+
+    @Nullable
+    public KeyMapping getSelectedKeyMapping() {
+        if (this.getSelected() == null) {
+            return null;
+        }
+        return ((BindingEntry) this.getSelected()).keyMapping;
+    }
+
+    void refreshAfterClear() {
+        rebuildList(true);
+    }
+
+    private void rebuildList(boolean preserveSelection) {
+        KeyMapping selected = this.getSelectedKeyMapping();
+        double scrollAmount = this.scrollAmount();
+        this.currentFilterText = this.keyWizardScreen.getFilterText();
+        this.currentCategory = this.keyWizardScreen.getSelectedCategory();
+        BindingSearchQuery searchQuery = BindingSearchParser.parse(this.currentFilterText, KeyWizardScreen.KEY_FILTER_PREFIX);
+        KeyMapping[] bindings = getBindingsByCategory(searchQuery.keyFilter() ? KeyBindingUtil.DYNAMIC_CATEGORY_ALL : this.currentCategory);
+        bindings = filterBindings(bindings, searchQuery);
+
+        this.clearEntries();
+        BindingEntry selectedEntry = null;
+        for (KeyMapping binding : bindings) {
+            BindingEntry entry = new BindingEntry(binding);
+            this.addEntry(entry);
+            if (binding == selected) selectedEntry = entry;
+        }
+        this.setSelected(!preserveSelection && !this.children().isEmpty() ? this.children().get(0) : selectedEntry);
+        this.setScrollAmount(preserveSelection ? scrollAmount : 0);
+    }
+
+    private KeyMapping[] filterBindings(KeyMapping[] bindings, BindingSearchQuery searchQuery) {
+        KeyMapping[] bindingsFiltered = bindings;
+
+        if (searchQuery.hasKeyNameFilter()) {
+            bindingsFiltered = filterBindingsByKey(bindingsFiltered, searchQuery.keyNameFilter());
+        }
+
+        if (searchQuery.hasTextTerms()) {
+            bindingsFiltered = filterBindingsByName(bindingsFiltered, searchQuery.textTerms().toArray(String[]::new));
+        }
+
+        return bindingsFiltered;
+    }
+
+    private KeyMapping[] filterBindingsByName(KeyMapping[] bindings, String[] words) {
+        return Arrays.stream(bindings).filter(binding -> {
+            boolean flag = true;
+            for (String w : words) {
+                flag = flag && I18n.get(binding.getName()).toLowerCase().contains(w.toLowerCase());
+            }
+            return flag;
+        }).toArray(KeyMapping[]::new);
+    }
+
+    private KeyMapping[] filterBindingsByKey(KeyMapping[] bindings, String keyName) {
+        return Arrays.stream(bindings)
+                .filter(b -> KeyBindingUtil.getKey(b).getDisplayName().getString().equalsIgnoreCase(keyName))
+                .toArray(KeyMapping[]::new);
+    }
+
+    private KeyMapping[] getBindingsByCategory(String category) {
+        KeyMapping[] bindings = Arrays.copyOf(this.minecraft.options.keyMappings, this.minecraft.options.keyMappings.length);
+        switch (category) {
+            case KeyBindingUtil.DYNAMIC_CATEGORY_ALL:
+                return bindings;
+            case KeyBindingUtil.DYNAMIC_CATEGORY_CONFLICTS:
+                Map<InputConstants.Key, Integer> bindingCounts = KeyBindingUtil.getBindingCountsByKey();
+                return Arrays.stream(bindings)
+                        .filter(b -> bindingCounts.getOrDefault(KeyBindingUtil.getKey(b), 0) > 1 && KeyBindingUtil.getKey(b).getValue() != InputConstants.UNKNOWN.getValue())
+                        .toArray(KeyMapping[]::new);
+            case KeyBindingUtil.DYNAMIC_CATEGORY_UNBOUND:
+                return Arrays.stream(bindings).filter(KeyBindingUtil::isUnbound).toArray(KeyMapping[]::new);
+            case KeyBindingUtil.DYNAMIC_CATEGORY_CTRL:
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.neoforged.neoforge.client.settings.KeyModifier.CONTROL)).toArray(KeyMapping[]::new);
+            case KeyBindingUtil.DYNAMIC_CATEGORY_ALT:
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.neoforged.neoforge.client.settings.KeyModifier.ALT)).toArray(KeyMapping[]::new);
+            case KeyBindingUtil.DYNAMIC_CATEGORY_SHIFT:
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.neoforged.neoforge.client.settings.KeyModifier.SHIFT)).toArray(KeyMapping[]::new);
+            case KeyBindingUtil.DYNAMIC_CATEGORY_NONE:
+                return Arrays.stream(bindings).filter(k -> KeyBindingUtil.getModifier(k).equals(net.neoforged.neoforge.client.settings.KeyModifier.NONE)).toArray(KeyMapping[]::new);
+            default:
+                return Arrays.stream(bindings).filter(b -> b.getCategory().equals(category)).toArray(KeyMapping[]::new);
+        }
+    }
+
+    @Override
+    public void tick() {
+        if (!this.currentFilterText.equals(this.keyWizardScreen.getFilterText())
+                || !this.currentCategory.equals(this.keyWizardScreen.getSelectedCategory())) {
+            rebuildList(false);
+        }
+    }
+
+    List<Component> tooltipLines() {
+        if (!(this.getHovered() instanceof BindingEntry entry)) return List.of();
+        List<Component> labels = entry.getLabels();
+        return labels.stream().anyMatch(label -> this.minecraft.font.width(label) > this.getRowWidth() - 4)
+                ? labels : List.of();
+    }
+
+    public class BindingEntry extends FreeFormListWidget<KeyBindingListWidget.BindingEntry>.Entry {
+        private static final String CATEGORY_PREFIX = "key.categories.";
+        private static final int CATEGORY_RIGHT_PADDING = 4;
+        private static final int CATEGORY_BOTTOM_PADDING = 3;
+        private final KeyMapping keyMapping;
+
+        public BindingEntry(KeyMapping keyMapping) {
+            this.keyMapping = keyMapping;
+        }
+
+        @Override
+        public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            int maxWidth = entryWidth - CATEGORY_RIGHT_PADDING;
+            List<Component> labels = this.getLabels();
+            graphics.drawString(minecraft.font, PixelWidgets.fit(minecraft.font, labels.get(0), maxWidth),
+                    x, y, PixelKeyboardStyle.INK, false);
+            graphics.drawString(minecraft.font, PixelWidgets.fit(minecraft.font, labels.get(1), maxWidth),
+                    x, y + minecraft.font.lineHeight + 5, PixelKeyboardStyle.PANEL_FOOT, false);
+            var category = PixelWidgets.fit(minecraft.font, labels.get(2), maxWidth);
+            int categoryX = x + maxWidth - minecraft.font.width(category);
+            int categoryY = y + entryHeight - minecraft.font.lineHeight - CATEGORY_BOTTOM_PADDING;
+            graphics.drawString(minecraft.font, category, categoryX, categoryY, PixelKeyboardStyle.PANEL_FOOT, false);
+        }
+
+        private List<Component> getLabels() {
+            return List.of(Component.translatable(this.keyMapping.getName()), this.keyMapping.getTranslatedKeyMessage(),
+                    Component.literal(this.getCategoryDisplayLabel(this.keyMapping)));
+        }
+
+        private String getCategoryDisplayLabel(KeyMapping keyMapping) {
+            String category = keyMapping.getCategory();
+            String translatedCategory = Component.translatable(category).getString();
+            if (category.startsWith(CATEGORY_PREFIX)) {
+                return getCategoryDisplayLabel(category.substring(CATEGORY_PREFIX.length()), translatedCategory);
+            }
+
+            return translatedCategory;
+        }
+
+        private String getCategoryDisplayLabel(String categoryPath, String translatedCategory) {
+            int separatorIndex = categoryPath.indexOf('.');
+            String modId = separatorIndex > 0 ? categoryPath.substring(0, separatorIndex) : categoryPath;
+            return ModList.get().getModContainerById(modId)
+                    .map(mod -> mod.getModInfo().getDisplayName() + " / " + translatedCategory)
+                    .orElse(translatedCategory);
+        }
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput output) {
+    }
+}

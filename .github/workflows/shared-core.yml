@@ -36,6 +36,15 @@ jobs:
           - target: neoforge-1.21.1
             java: '21'
             tasks: assemble releaseBundle
+          - target: neoforge-1.21.4
+            java: '21'
+            tasks: assemble releaseBundle
+          - target: neoforge-26.1.2
+            java: '25'
+            tasks: assemble releaseBundle
+          - target: neoforge-26.2
+            java: '25'
+            tasks: assemble releaseBundle
           - target: neoforge-26.3
             java: '25'
             tasks: assemble releaseBundle
