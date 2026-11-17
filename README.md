@@ -1,14 +1,16 @@
-# Keyboard Wizard CE
+**简体中文** | [English](README.en.md)
 
-Keyboard Wizard CE is a community-maintained edition of Modern KeyWizard and Keyboard Wizard for Minecraft Java Edition. It lets you find, inspect, and change key bindings on an interactive keyboard.
+# 按键精灵社区版（Keyboard Wizard CE）
 
-[Download v1.1.0](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/v1.1.0) · [Shared source](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/tree/codex/shared-core) · [Release history](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases)
+按键精灵社区版是面向 Minecraft Java 版的 Modern KeyWizard 和 Keyboard Wizard 社区维护版本。你可以在交互式键盘界面中查找、查看和修改按键绑定。
 
-## Supported Minecraft versions
+[下载 v1.1.0](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases/tag/v1.1.0) · [共享源码](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/tree/codex/shared-core) · [历史版本](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/releases)
 
-Version 1.1.0 ships 33 builds across Fabric, Forge, and NeoForge. Fabric covers 24 official releases from 1.20 through 26.3.
+## 支持的 Minecraft 版本
 
-| Loader | Minecraft versions | Java |
+v1.1.0 共提供 33 个构建目标，覆盖 Fabric、Forge 和 NeoForge。其中 Fabric 支持从 1.20 到 26.3 的 24 个正式版本。
+
+| 加载器 | Minecraft 版本 | Java |
 | --- | --- | --- |
 | Fabric | 1.20, 1.20.1, 1.20.2, 1.20.3, 1.20.4 | 17 |
 | Fabric | 1.20.5, 1.20.6, 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9, 1.21.10, 1.21.11 | 21 |
@@ -18,33 +20,33 @@ Version 1.1.0 ships 33 builds across Fabric, Forge, and NeoForge. Fabric covers 
 | NeoForge | 1.21.1, 1.21.4 | 21 |
 | NeoForge | 26.1.2, 26.2, 26.3 | 25 |
 
-## Installation and upgrade
+## 安装和升级
 
-1. In the release assets, download the `-1.1.0.jar` that matches your Minecraft version and loader. For Fabric, also install Fabric API for your Minecraft version.
-2. When upgrading, remove the old Keyboard Wizard CE JAR from your `mods` folder, then place the new JAR there.
-3. Existing key bindings use the same saved option keys. If a custom resource pack overrides the mod's assets, move them from `assets/keyboard_wizard_ce/` to `assets/keyboard_wizard_community_edition/`. Update any modpack references to use the full mod ID, `keyboard_wizard_community_edition`.
+1. 从发布页下载与 Minecraft 版本和加载器匹配的 `-1.1.0.jar`。使用 Fabric 时，还需安装对应 Minecraft 版本的 Fabric API。
+2. 将下载的 JAR 放入 `mods` 文件夹。升级时，先移除其中旧版按键精灵社区版的 JAR。
+3. 已保存的按键绑定沿用原有的配置键名。如果自定义资源包覆盖了本模组的资源，请将这些资源从 `assets/keyboard_wizard_ce/` 移到 `assets/keyboard_wizard_community_edition/`。如果整合包引用了旧模组 ID，请改用完整的模组 ID `keyboard_wizard_community_edition`。
 
-The release also includes a matching `-sources.jar` for each build and a `SHA256SUMS.txt` file.
+发布页还为每个构建提供对应的 `-sources.jar`，并附有 `SHA256SUMS.txt` 校验文件。
 
-## Features
+## 功能
 
-- Press **F7** in game or use the toggle button on the vanilla Controls screen to open Keyboard Wizard CE.
-- View the main keyboard, numpad, and auxiliary key layouts.
-- Filter bindings by mod or category, search by binding name, or look up bindings by physical key.
-- Inspect each binding's name, assigned key, and owning mod or category in the side panel.
-- The silver-gray pixel theme and its keyboard icons ship with Fabric 26.3 and NeoForge 1.21.1, 1.21.4, and 26.3.
+- 在游戏中按 **F7**，或使用原版控制设置界面的切换按钮，打开按键精灵社区版。
+- 查看主键盘、数字小键盘和辅助按键布局。
+- 按模组或类别筛选，按绑定名称搜索，或按物理按键反查绑定。
+- 在侧栏查看绑定名称、已分配的按键及其所属模组或类别。
+- 银灰像素主题和配套键盘图标适用于 Fabric 26.3，以及 NeoForge 1.21.1、1.21.4 和 26.3。
 
-## Source and history
+## 源码和开发历史
 
-Current development takes place on `codex/shared-core`, where all 33 targets build from the same shared code. See the [build workflow](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/blob/codex/shared-core/.github/workflows/shared-core.yml) for the target matrix.
+当前开发集中在 `codex/shared-core` 分支，33 个目标基于同一份共享代码构建。完整的目标矩阵见[构建工作流](https://github.com/wu-xiao-ya/Keyboard-Wizard-CE/blob/codex/shared-core/.github/workflows/shared-core.yml)。
 
-Earlier builds were maintained on version-specific branches. The old Fabric 1.16.5 and 1.18.2 branches were never released. The [historical changelog](CHANGELOG.md) records the earlier branch builds, including the Fabric 26.3 snapshot builds.
+早期构建按 Minecraft 版本分别维护。旧的 Fabric 1.16.5 和 1.18.2 分支从未发布。[历史更新记录](CHANGELOG.md)收录了早期分支构建，包括 Fabric 26.3 的快照版构建。
 
-## License and credits
+## 许可证和致谢
 
-Keyboard Wizard CE is licensed under AGPL-3.0-only. If you distribute a binary JAR, provide its matching source code. See [LICENSE.md](LICENSE.md), [COPYING.md](COPYING.md), and [NOTICE.md](NOTICE.md).
+按键精灵社区版采用 AGPL-3.0-only 许可证。分发二进制 JAR 时，请一并提供对应的源码。详见 [LICENSE.md](LICENSE.md)、[COPYING.md](COPYING.md) 和 [NOTICE.md](NOTICE.md)。
 
-- [Modern KeyWizard upstream](https://github.com/VulpesStella/ModernKeyWizard)
-- [Keyboard Wizard upstream](https://github.com/Fuzss/keyboardwizard)
-- [Keyboard Wizard legacy reference](https://github.com/MrNerdy42/keywizard-legacy)
-- Art assets by WI_8614_ice
+- [Modern KeyWizard 上游项目](https://github.com/VulpesStella/ModernKeyWizard)
+- [Keyboard Wizard 上游项目](https://github.com/Fuzss/keyboardwizard)
+- [Keyboard Wizard 旧版参考](https://github.com/MrNerdy42/keywizard-legacy)
+- 美术资源由 WI_8614_ice 提供
